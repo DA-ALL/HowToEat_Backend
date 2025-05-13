@@ -1,4 +1,4 @@
-package com.daall.howtoeat.pt;
+package com.daall.howtoeat.domain.pt;
 
 import com.daall.howtoeat.common.Timestamped;
 import jakarta.persistence.*;
@@ -8,12 +8,16 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor
-@Table(name = "gyms")
-public class Gym extends Timestamped {
+@Table(name = "trainers")
+public class Trainer extends Timestamped {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true, nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "gym_id", nullable = false)
+    private Gym gym;
+
+    @Column( nullable = false)
     private String name;
 }

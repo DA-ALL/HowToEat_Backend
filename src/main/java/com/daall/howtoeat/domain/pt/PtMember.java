@@ -1,7 +1,7 @@
-package com.daall.howtoeat.pt;
+package com.daall.howtoeat.domain.pt;
 
 import com.daall.howtoeat.common.Timestamped;
-import com.daall.howtoeat.user.User;
+import com.daall.howtoeat.domain.user.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

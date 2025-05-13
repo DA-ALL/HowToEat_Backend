@@ -1,7 +1,6 @@
-package com.daall.howtoeat.user;
+package com.daall.howtoeat.domain.user;
 
 import com.daall.howtoeat.common.Timestamped;
-import com.daall.howtoeat.common.enums.Gender;
 import com.daall.howtoeat.common.enums.UserActivityLevel;
 import com.daall.howtoeat.common.enums.UserGoal;
 import jakarta.persistence.*;

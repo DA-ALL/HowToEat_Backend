@@ -1,20 +1,19 @@
-package com.daall.howtoeat.consumedfood;
+package com.daall.howtoeat.domain.favoritefood;
 
 import com.daall.howtoeat.common.Timestamped;
 import com.daall.howtoeat.common.enums.FoodType;
-import com.daall.howtoeat.common.enums.MealTime;
-import com.daall.howtoeat.user.User;
+import com.daall.howtoeat.domain.user.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
 @NoArgsConstructor
-@Table(name = "consumed_foods")
-public class ConsumedFood extends Timestamped {
+@Table(name = "favorite_foods")
+public class FavoriteFood extends Timestamped {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -22,6 +21,9 @@ public class ConsumedFood extends Timestamped {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+    @Column(nullable = false)
+    private String name;
 
     @Column(unique = true, nullable = false)
     private String foodCode;
@@ -52,15 +54,14 @@ public class ConsumedFood extends Timestamped {
     @Column(nullable = false)
     private String unit;
 
-    //식사 타입 : 아침/점심/저녁/간식
-    @Enumerated(EnumType.STRING)
+    //음식 데이터 출처 : 식약처 / 어드민 / 유저
     @Column(nullable = false)
-    private MealTime mealTime;
+    private String source;
 
-    //음식 원산지 : 회사/미국산 등
-    @Column(nullable = false)
-    private String provided_by;
+    //음식 데이터 출처가 유저인 경우, 음식 설명이 있을 수 있음
+    @Column
+    private String description;
 
     @Column
-    private String foodImageUrl;
+    private LocalDateTime sharedAt;
 }

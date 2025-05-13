@@ -1,4 +1,4 @@
-package com.daall.howtoeat.user;
+package com.daall.howtoeat.domain.user;
 
 import jakarta.persistence.*;
 import lombok.Getter;
