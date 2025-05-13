@@ -7,9 +7,9 @@ public enum UserActivityLevel {
     LOW(1.375),
     VERY_LOW(1.2);
 
-    private final Double kcalOffset;
+    private final Double activityFactor;
 
-    UserGoal(Double amount) {
-        this.kcalOffset = amount;
+    UserActivityLevel(Double amount) {
+        this.activityFactor = amount;
     }
 }
