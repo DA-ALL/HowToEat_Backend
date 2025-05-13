@@ -42,6 +42,9 @@ public class User extends Timestamped {
     @Column(nullable = false)
     private boolean isNextGym;
 
+    @Column
+    private String profileImageUrl;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private UserRole userRole;
