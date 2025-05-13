@@ -21,7 +21,7 @@ public class ConsumedFood extends Timestamped {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false)
     private String foodCode;
 
     //음식 타입 : 원재료/음식/가공식품/유저 생성

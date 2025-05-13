@@ -1,31 +1,21 @@
-package com.daall.howtoeat.domain.favoritefood;
+package com.daall.howtoeat.domain.food;
 
 import com.daall.howtoeat.common.Timestamped;
 import com.daall.howtoeat.common.enums.FoodType;
-import com.daall.howtoeat.domain.user.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
-
 @Entity
 @Getter
 @NoArgsConstructor
-@Table(name = "favorite_foods")
-public class FavoriteFood extends Timestamped {
+@Table(name = "foods")
+public class Food extends Timestamped {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
-
-    @Column(nullable = false)
-    private String name;
-
-    @Column(nullable = false)
+    @Column(unique = true, nullable = false)
     private String foodCode;
 
     //음식 타입 : 원재료/음식/가공식품/유저 생성
@@ -35,6 +25,10 @@ public class FavoriteFood extends Timestamped {
 
     @Column(nullable = false)
     private String foodName;
+
+    //대표음식명 : 소고기 입력시 한우볶음밥이 나올 수 있도록 하기 위한 컬럼
+    @Column
+    private String representative_name;
 
     @Column(nullable = false)
     private Double kcal;
@@ -54,14 +48,19 @@ public class FavoriteFood extends Timestamped {
     @Column(nullable = false)
     private String unit;
 
+    //음식 원산지 : 회사/미국산 등
+    @Column(nullable = false)
+    private String provided_by;
+
     //음식 데이터 출처 : 식약처 / 어드민 / 유저
     @Column(nullable = false)
     private String source;
 
-    //음식 데이터 출처가 유저인 경우, 음식 설명이 있을 수 있음
-    @Column
-    private String description;
+    //1인분인지 아닌지 판별
+    @Column(nullable = false)
+    private Boolean isPerServing;
 
+    //음식이 몇번 선택됐는지 -> 추후 인기있는 음식들을 추천 음식에 활용
     @Column
-    private LocalDateTime sharedAt;
+    private Long selectedCount;
 }
