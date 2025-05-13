@@ -22,7 +22,7 @@ public class UserTargets extends Timestamped {
     private User user;
 
     @Column(nullable = false)
-    private Integer kcal;
+    private Double kcal;
 
     @Column(nullable = false)
     private Double carbo;
