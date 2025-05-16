@@ -1,5 +1,6 @@
 package com.daall.howtoeat.domain.user;
 
+import com.daall.howtoeat.client.user.SignupRequestDto;
 import com.daall.howtoeat.common.Timestamped;
 import com.daall.howtoeat.common.enums.Gender;
 import com.daall.howtoeat.common.enums.SignupProvider;
@@ -24,7 +25,7 @@ public class User extends Timestamped {
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false)
+    @Column(unique = true, nullable = false)
     private String email;
 
     @Column(nullable = false)
@@ -60,4 +61,25 @@ public class User extends Timestamped {
 
     @Column(columnDefinition = "Text")
     private String refreshToken;
+
+    public User(SignupRequestDto requestDto, String encodedPassword) {
+        this.name = requestDto.getName();
+        this.email = requestDto.getEmail();
+        this.password = encodedPassword;
+        this.gender = Gender.MALE;
+        this.birth = LocalDate.now();
+        this.isNextGym = true;
+        this.profileImageUrl = profileImageUrl;
+        this.userRole = UserRole.USER;
+        this.userStatus = UserStatus.ACTIVATE;
+        this.signup_provider = SignupProvider.NAVER;
+    }
+
+    public void saveRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
+    }
+
+    public boolean validateRefreshToken(String refreshToken) {
+        return this.refreshToken != null && this.refreshToken.equals(refreshToken);
+    }
 }
