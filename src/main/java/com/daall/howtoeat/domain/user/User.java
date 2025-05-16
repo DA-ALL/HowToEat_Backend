@@ -7,6 +7,8 @@ import com.daall.howtoeat.common.enums.SignupProvider;
 import com.daall.howtoeat.common.enums.UserRole;
 import com.daall.howtoeat.common.enums.UserStatus;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -16,7 +18,6 @@ import java.time.LocalDate;
 @Getter
 @NoArgsConstructor
 @Table(name = "users")
-
 public class User extends Timestamped {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,7 +29,7 @@ public class User extends Timestamped {
     @Column(unique = true, nullable = false)
     private String email;
 
-    @Column(nullable = false)
+    @Column
     private String password;
 
     @Enumerated(EnumType.STRING)
@@ -62,10 +63,9 @@ public class User extends Timestamped {
     @Column(columnDefinition = "Text")
     private String refreshToken;
 
-    public User(SignupRequestDto requestDto, String encodedPassword) {
+    public User(SignupRequestDto requestDto) {
         this.name = requestDto.getName();
         this.email = requestDto.getEmail();
-        this.password = encodedPassword;
         this.gender = Gender.MALE;
         this.birth = LocalDate.now();
         this.isNextGym = true;

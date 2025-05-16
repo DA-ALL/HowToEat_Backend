@@ -13,9 +13,21 @@ import org.springframework.web.bind.annotation.RequestBody;
 public class UserController {
     private final UserService userService;
 
+//    @PostMapping("/signup")
+//    public ResponseEntity<String> createUser(@Valid @RequestBody SignupRequestDto requestDto) {
+//        userService.createUser(requestDto);
+//        return ResponseEntity.ok("회원가입 완료");
+//    }
+
     @PostMapping("/signup")
-    public ResponseEntity<String> createUser(@Valid @RequestBody SignupRequestDto requestDto) {
-        userService.createUser(requestDto);
+    public ResponseEntity<String> signupNaver(@RequestBody @Valid SignupRequestDto dto) {
+        userService.signup(dto);
+        return ResponseEntity.ok("회원가입 완료");
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<String> loginNaver(@RequestBody @Valid SignupRequestDto dto) {
+        userService.signup(dto);
         return ResponseEntity.ok("회원가입 완료");
     }
 }
