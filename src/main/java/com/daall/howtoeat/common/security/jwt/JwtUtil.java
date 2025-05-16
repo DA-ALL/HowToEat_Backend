@@ -137,5 +137,12 @@ public class JwtUtil {
         cookie.setMaxAge((int) (REFRESH_TOKEN_EXPIRE_TIME / 1000)); // 단위: 초
 
         response.addCookie(cookie);
+
+        // TODO: SameSite 알아보기
+        // SameSite 설정 추가 필요 (자바 서블릿은 기본적으로 직접 지원하지 않음)
+//        response.setHeader("Set-Cookie", String.format(
+//                "RefreshToken=%s; Max-Age=%d; Path=/; HttpOnly; Secure; SameSite=Strict",
+//                tokenValue, (int) (REFRESH_TOKEN_EXPIRE_TIME / 1000)
+//        ));
     }
 }
