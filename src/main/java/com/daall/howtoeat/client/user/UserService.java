@@ -30,6 +30,9 @@ public class UserService {
 
         //추후 userStatsService로 분리
         new UserStats(savedUser, requestDto);
+    }
 
+    public void test() {
+        System.out.println("test입니당~");
     }
 }

@@ -69,9 +69,10 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         jwtUtil.setHeaderAccessToken(response, accessToken);
         jwtUtil.addRefreshTokenToCookie(response, refreshToken);
 //      코드 변경 : addheader -> add to Cookie
-//      response.addHeader(JwtUtil.AUTH_ACCESS_HEADER, accessToken);
-//      response.addHeader(JwtUtil.AUTH_REFRESH_HEADER, refreshToken);
-        response.setHeader("Access-Control-Expose-Headers", "Authorization");
+        response.addHeader(JwtUtil.AUTH_ACCESS_HEADER, accessToken);
+        response.addHeader(JwtUtil.AUTH_REFRESH_HEADER, refreshToken);
+        response.setHeader("Access-Control-Expose-Headers", "Authorization, RefreshToken");
+        System.out.println(":ㅆㄸㄴㅆ;");
 
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");

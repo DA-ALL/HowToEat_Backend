@@ -8,12 +8,14 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import java.security.Key;
 import java.util.Base64;
 import java.util.Date;
+import java.util.Map;
 
 @Component
 @Slf4j(topic = "JwtUtil")
@@ -51,6 +53,19 @@ public class JwtUtil {
                 .claim(AUTHORIZATION_KEY, role)
                 .setExpiration(new Date(date.getTime() + ACCESS_TOKEN_EXPIRE_TIME))
                 .setIssuedAt(date)
+                .signWith(key, signatureAlgorithm)
+                .compact();
+    }
+
+    //OAuth2 첫 회원가입 시, 유저 정보를 담은 accessToken 생성
+    public String createAccessTokenWithClaims(Map<String, Object> claims) {
+        Date now = new Date();
+        Date expiry = new Date(now.getTime() + 1000L * 60 * 60); // 1시간
+
+        return Jwts.builder()
+                .setClaims(claims)
+                .setIssuedAt(now)
+                .setExpiration(expiry)
                 .signWith(key, signatureAlgorithm)
                 .compact();
     }
@@ -126,23 +141,36 @@ public class JwtUtil {
     }
 
     // 리프레시 토큰을 HttpOnly 쿠키에 담아 응답에 추가
+//    public void addRefreshTokenToCookie(HttpServletResponse response, String refreshToken) {
+//        // "Bearer " 접두어 제거
+//        String tokenValue = refreshToken.substring(BEARER_PREFIX.length());
+//
+//        jakarta.servlet.http.Cookie cookie = new jakarta.servlet.http.Cookie("RefreshToken", tokenValue);
+//        cookie.setHttpOnly(true); // 자바스크립트 접근 차단
+//        cookie.setSecure(false);   // HTTPS에서만 전송 (local 테스트시에 false로)
+//        cookie.setPath("/");      // 모든 경로에서 쿠키 전송
+//        cookie.setMaxAge((int) (REFRESH_TOKEN_EXPIRE_TIME / 1000)); // 단위: 초
+//
+//        response.addCookie(cookie);
+//
+//        // TODO: SameSite 알아보기
+//        // SameSite 설정 추가 필요 (자바 서블릿은 기본적으로 직접 지원하지 않음)
+////        response.setHeader("Set-Cookie", String.format(
+////                "RefreshToken=%s; Max-Age=%d; Path=/; HttpOnly; Secure; SameSite=Strict",
+////                tokenValue, (int) (REFRESH_TOKEN_EXPIRE_TIME / 1000)
+////        ));
+//    }
     public void addRefreshTokenToCookie(HttpServletResponse response, String refreshToken) {
-        // "Bearer " 접두어 제거
         String tokenValue = refreshToken.substring(BEARER_PREFIX.length());
 
-        jakarta.servlet.http.Cookie cookie = new jakarta.servlet.http.Cookie("RefreshToken", tokenValue);
-        cookie.setHttpOnly(true); // 자바스크립트 접근 차단
-        cookie.setSecure(true);   // HTTPS에서만 전송 (local 테스트시에 false로)
-        cookie.setPath("/");      // 모든 경로에서 쿠키 전송
-        cookie.setMaxAge((int) (REFRESH_TOKEN_EXPIRE_TIME / 1000)); // 단위: 초
+        ResponseCookie cookie = ResponseCookie.from("RefreshToken", tokenValue)
+                .httpOnly(true)
+                .secure(false) // HTTPS 환경에서만 사용
+//                .sameSite("None") // 💡 이게 핵심!
+                .path("/")
+                .maxAge(REFRESH_TOKEN_EXPIRE_TIME / 1000)
+                .build();
 
-        response.addCookie(cookie);
-
-        // TODO: SameSite 알아보기
-        // SameSite 설정 추가 필요 (자바 서블릿은 기본적으로 직접 지원하지 않음)
-//        response.setHeader("Set-Cookie", String.format(
-//                "RefreshToken=%s; Max-Age=%d; Path=/; HttpOnly; Secure; SameSite=Strict",
-//                tokenValue, (int) (REFRESH_TOKEN_EXPIRE_TIME / 1000)
-//        ));
+        response.addHeader("Set-Cookie", cookie.toString());
     }
 }

@@ -28,20 +28,36 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
 
         OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
         Map<String, Object> attributes = oAuth2User.getAttributes();
+
+        System.out.println("OAuth2 attributes: " + attributes); // 디버그
+
         String email = (String) attributes.get("email");
+        String name = (String) attributes.get("name");
+        String birthyear = (String) attributes.get("birthyear");
+        String birthday = (String) attributes.get("birthday");
+        String gender = (String) attributes.get("gender");
 
         boolean isNewUser = !userRepository.existsByEmail(email);
-        System.out.println(email);
 
-        // 동작 제대로 하는지 테스트 필요
-//        UserRole role = ((UserDetailsImpl) authentication.getPrincipal()).getUser().getUserRole();
-//        System.out.println(role);
+        Map<String, Object> claims = Map.of(
+                "email", email,
+                "name", name,
+                "birthyear", birthyear,
+                "birthday", birthday,
+                "gender", gender,
+                "isNew", isNewUser
+        );
 
-        String token = jwtUtil.createAccessToken(email, UserRole.USER);
+        String claimsToken = jwtUtil.createAccessTokenWithClaims(claims);
+        String accessToken = jwtUtil.createAccessToken(email, UserRole.USER);
+        String refreshToken = jwtUtil.createRefreshToken(email, UserRole.USER);
+        jwtUtil.addRefreshTokenToCookie(response, refreshToken);
+        System.out.println(refreshToken);
 
         String redirectUrl = isNewUser
-                ? "http://localhost:3000/survey?email=" + email + "&token=" + token
-                : "http://localhost:3000/main?token=" + token;
+                ? "http://localhost:3000/survey?token=" + claimsToken
+//                : "http://localhost:3000/main?token=" + accessToken;
+                : "http://localhost:3000/main";
 
         response.sendRedirect(redirectUrl);
     }

@@ -73,11 +73,15 @@ public class SecurityConfig {
                 sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         );
 
-        http.authorizeHttpRequests((authorizeHttpRequests) ->
+        http
+            .authorizeHttpRequests((authorizeHttpRequests) ->
                 authorizeHttpRequests
-                        .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
-                        .requestMatchers(HttpMethod.POST, "/signup").permitAll()
-                        .anyRequest().authenticated()
+                    .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
+                    .requestMatchers(HttpMethod.POST, "/signup").permitAll()
+                    .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                    .requestMatchers("/oauth2/**").permitAll()
+                    .anyRequest().authenticated()
+//                        .anyRequest().permitAll()
         );
         http
             .oauth2Login(oauth -> oauth
