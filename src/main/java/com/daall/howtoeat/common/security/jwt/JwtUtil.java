@@ -139,7 +139,7 @@ public class JwtUtil {
         ResponseCookie cookie = ResponseCookie.from("RefreshToken", tokenValue)
                 .httpOnly(true)
                 .secure(false) // HTTPS 환경에서만 사용
-//                .sameSite("None") // HTTPS 적용후 테스트
+//                .sameSite("None") // Strict? 나중에 테스트
                 .path("/")
                 .maxAge(REFRESH_TOKEN_EXPIRE_TIME / 1000)
                 .build();

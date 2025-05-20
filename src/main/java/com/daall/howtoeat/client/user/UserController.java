@@ -1,6 +1,7 @@
 package com.daall.howtoeat.client.user;
 
 import com.daall.howtoeat.common.security.UserDetailsImpl;
+import com.daall.howtoeat.domain.user.User;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -20,7 +21,7 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
-
+    private final AuthService authService;
 //    @PostMapping("/signup")
 //    public ResponseEntity<String> createUser(@Valid @RequestBody SignupRequestDto requestDto) {
 //        userService.createUser(requestDto);
@@ -28,9 +29,11 @@ public class UserController {
 //    }
 
     @PostMapping("/signup")
-    public ResponseEntity<String> signupNaver(@RequestBody @Valid SignupRequestDto dto) {
-        System.out.println("안녕하세요안녕하세요안녕하세요안녕하세요");
-        userService.signup(dto);
+    public ResponseEntity<String> signupNaver(@RequestBody @Valid SignupRequestDto dto, HttpServletResponse response) {
+        User user = userService.signup(dto);
+
+        authService.issueTokens(user, response);
+
         return ResponseEntity.ok("회원가입 완료");
     }
 
