@@ -1,10 +1,14 @@
 package com.daall.howtoeat.client.user;
 
 import com.daall.howtoeat.common.enums.Gender;
+import com.daall.howtoeat.common.enums.UserActivityLevel;
+import com.daall.howtoeat.common.enums.UserGoal;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
+
+import java.time.LocalDate;
 
 @Getter
 public class SignupRequestDto {
@@ -17,11 +21,11 @@ public class SignupRequestDto {
             message = "이름은 숫자나 특수문자를 포함할 수 없으며, 최소 1글자 이상이어야 합니다.")
     private String name;
 
-    private String birthday;  // yyyy-MM-dd 형식
+    private LocalDate birthday;  // yyyy-MM-dd 형식
     private Gender gender;
     private Double height;
     private Double weight;
-    private String goal;
-    private String activityLevel;
+    private UserGoal goal;
+    private UserActivityLevel activityLevel;
     private boolean isNextGym;
 }

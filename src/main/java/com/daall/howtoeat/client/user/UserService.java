@@ -1,7 +1,7 @@
 package com.daall.howtoeat.client.user;
 
 import com.daall.howtoeat.domain.user.User;
-import com.daall.howtoeat.domain.user.UserStats;
+import com.daall.howtoeat.domain.user.UserStat;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -11,8 +11,9 @@ import org.springframework.stereotype.Service;
 public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final UserTargetService userTargetService;
 
-//    public void createUser(SignupRequestDto requestDto){
+    //    public void createUser(SignupRequestDto requestDto){
 //        String encodedPassword = passwordEncoder.encode(requestDto.getPassword());
 //        User user = new User(requestDto, encodedPassword);
 //
@@ -28,8 +29,11 @@ public class UserService {
 
         User savedUser = userRepository.save(user);
 
+        userTargetService.createTarget(requestDto, savedUser);
+
         //추후 userStatsService로 분리
-        new UserStats(savedUser, requestDto);
+
+        UserStat userStats = new UserStat(savedUser, requestDto);
     }
 
     public void test() {
