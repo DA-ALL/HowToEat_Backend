@@ -4,6 +4,7 @@ import com.daall.howtoeat.client.user.UserRepository;
 import com.daall.howtoeat.common.enums.UserRole;
 import com.daall.howtoeat.common.security.UserDetailsImpl;
 import com.daall.howtoeat.common.security.jwt.JwtUtil;
+import com.daall.howtoeat.domain.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -48,16 +49,20 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
                 "isNew", isNewUser
         );
 
-        String claimsToken = jwtUtil.createAccessTokenWithClaims(claims);
-        String accessToken = jwtUtil.createAccessToken(email, UserRole.USER);
-        String refreshToken = jwtUtil.createRefreshToken(email, UserRole.USER);
-        jwtUtil.addRefreshTokenToCookie(response, refreshToken);
-        System.out.println(refreshToken);
+        String redirectUrl = "";
+        if(isNewUser) {
+            String claimsToken = jwtUtil.createAccessTokenWithClaims(claims);
+            redirectUrl = "http://localhost:3000/survey?token=" + claimsToken;
+        } else {
+            String refreshToken = jwtUtil.createRefreshToken(email, UserRole.USER);
 
-        String redirectUrl = isNewUser
-                ? "http://localhost:3000/survey?token=" + claimsToken
-//                : "http://localhost:3000/main?token=" + accessToken;
-                : "http://localhost:3000/main";
+            User user = userRepository.findByEmail(email).get();
+            user.saveRefreshToken(refreshToken);
+            userRepository.save(user);
+            jwtUtil.addRefreshTokenToCookie(response, refreshToken);
+
+            redirectUrl = "http://localhost:3000/main";
+        }
 
         response.sendRedirect(redirectUrl);
     }

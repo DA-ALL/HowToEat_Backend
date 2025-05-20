@@ -76,10 +76,6 @@ public class User extends Timestamped {
     }
 
     public void saveRefreshToken(String refreshToken) {
-        this.refreshToken = refreshToken;
-    }
-
-    public boolean validateRefreshToken(String refreshToken) {
-        return this.refreshToken != null && this.refreshToken.equals(refreshToken);
+        this.refreshToken = refreshToken.substring(7);
     }
 }

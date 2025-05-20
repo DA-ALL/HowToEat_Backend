@@ -30,6 +30,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        System.out.println("검증 시작");
         String accessToken = jwtUtil.getAccessTokenFromHeader(request);
 
         if(StringUtils.hasText(accessToken)){
@@ -40,6 +41,9 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                 // accessToken이 유효하지 않을 때
                 validateAndAuthenticateWithRefreshToken(request, response);
             }
+        } else {
+            // accessToken이 없을때 리프래시 토큰 사용.
+            validateAndAuthenticateWithRefreshToken(request, response);
         }
 
         filterChain.doFilter(request, response);
@@ -59,22 +63,27 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
     // accessToken이 유효하지 않은 경우, 리프레스 토큰 검증 및 엑세스토큰 재발급
     public void validateAndAuthenticateWithRefreshToken(HttpServletRequest request, HttpServletResponse response){
+
         String refreshToken = jwtUtil.getRefreshTokenFromCookie(request);
+        System.out.println("리프래쉬 토큰 확인: " + refreshToken);
 
         if(StringUtils.hasText(refreshToken) && jwtUtil.validateToken(refreshToken)){
             Claims info = jwtUtil.getUserInfoFromToken(refreshToken);
             UserDetailsImpl userDetails = (UserDetailsImpl) userDetailsService.loadUserByUsername(info.getSubject());
             User user = userDetails.getUser();
 
-            if(user.validateRefreshToken(refreshToken)){
+            if(user.getRefreshToken().equals(refreshToken) && jwtUtil.validateToken(refreshToken)){
+                System.out.println("리프레쉬토큰 검증");
                 UserRole role = user.getUserRole();
                 String newAccessToken = jwtUtil.createAccessToken(info.getSubject(), role);
                 jwtUtil.setHeaderAccessToken(response, newAccessToken);
 
                 try{
                     setAuthentication(info.getSubject());
+                    System.out.println("헤더에 엑세스토큰 보내기");
                 } catch (Exception e) {
                     log.error(e.getMessage());
+                    System.out.println("에러");
 //                    throw new CustomException(ErrorType.NOT_FOUND_AUTHENTICATION_INFO);
                 }
             } else {
