@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -22,11 +23,6 @@ import java.io.IOException;
 public class UserController {
     private final UserService userService;
     private final AuthService authService;
-//    @PostMapping("/signup")
-//    public ResponseEntity<String> createUser(@Valid @RequestBody SignupRequestDto requestDto) {
-//        userService.createUser(requestDto);
-//        return ResponseEntity.ok("회원가입 완료");
-//    }
 
     @PostMapping("/signup")
     public ResponseEntity<String> signupNaver(@RequestBody @Valid SignupRequestDto dto, HttpServletResponse response) {

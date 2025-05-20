@@ -11,7 +11,7 @@ import java.time.LocalDate;
 @Getter
 @NoArgsConstructor
 @Table(name = "user_stats")
-public class UserStats {
+public class UserStat {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -32,7 +32,7 @@ public class UserStats {
     @Column(nullable = false)
     private LocalDate heightRecordedAt;
 
-    public UserStats(User user, SignupRequestDto requestDto) {
+    public UserStat(User user, SignupRequestDto requestDto) {
         this.user = user;
         this.weight = requestDto.getWeight();
         this.height = requestDto.getHeight();

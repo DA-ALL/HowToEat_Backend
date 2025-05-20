@@ -1,5 +1,8 @@
 package com.daall.howtoeat.common.enums;
 
+import lombok.Getter;
+
+@Getter
 public enum UserActivityLevel {
     VERY_HIGH(1.9),
     HIGH(1.725),
