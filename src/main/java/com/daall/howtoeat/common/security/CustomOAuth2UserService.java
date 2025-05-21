@@ -1,14 +1,15 @@
 package com.daall.howtoeat.common.security;
 
+import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
-import org.springframework.security.oauth2.core.user.OAuth2User;
-import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
+import org.springframework.security.oauth2.core.user.OAuth2User;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
@@ -19,32 +20,41 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
 
         OAuth2UserService<OAuth2UserRequest, OAuth2User> delegate = new DefaultOAuth2UserService();
         OAuth2User oAuth2User = delegate.loadUser(userRequest);
+        String registrationId = userRequest.getClientRegistration().getRegistrationId();
 
-        // 네이버인 경우 response 안에 유저 정보가 있음
         Map<String, Object> attributes = oAuth2User.getAttributes();
-        Map<String, Object> response = (Map<String, Object>) attributes.get("response");
+        Map<String, Object> userInfo = new HashMap<>();
 
-        // 필요한 정보 꺼내기
-        String name = (String) response.get("name");
-        String email = (String) response.get("email");
-        String birthyear = (String) response.get("birthyear");
-        String birthday = (String) response.get("birthday");
-        String gender = (String) response.get("gender");
-        String profile_image = (String) response.get("profile_image");
+        System.out.println("[CustomOAuth2UserService] OAUTH 프로바이더 : " + registrationId);
 
-        System.out.println(name);
-        System.out.println(email);
-        System.out.println(birthyear);
-        System.out.println(birthday);
-        System.out.println(profile_image);
-        System.out.println(gender);
+        if ("naver".equals(registrationId)) {
+            Map<String, Object> response = (Map<String, Object>) attributes.get("response");
 
-        // 필요하면 여기에 DB 저장 또는 JWT 발급 등 추가 작업
+            userInfo.put("provider", registrationId);
+            userInfo.put("name", response.get("name"));
+            userInfo.put("email", response.get("email"));
+            userInfo.put("birthyear", response.get("birthyear"));
+            userInfo.put("birthday", response.get("birthday"));
+            userInfo.put("gender", response.get("gender"));
+            userInfo.put("profile_image", response.get("profile_image"));
+
+        } else if ("kakao".equals(registrationId)) {
+            Map<String, Object> kakaoAccount = (Map<String, Object>) attributes.get("kakao_account");
+            Map<String, Object> profile = (Map<String, Object>) kakaoAccount.get("profile");
+
+            userInfo.put("provider", registrationId);
+            userInfo.put("name", profile.get("nickname"));
+            userInfo.put("email", kakaoAccount.get("email"));
+            userInfo.put("profile_image", profile.get("profile_image_url"));
+        }
+
+        // 디버깅 출력
+        userInfo.forEach((k, v) -> System.out.println(k + ": " + v));
 
         return new DefaultOAuth2User(
                 Collections.singleton(new SimpleGrantedAuthority("ROLE_USER")),
-                response, // attributes
-                "email"   // 유저를 식별할 key 값 (보통 email, id 등)
+                userInfo,
+                "email"  // 고유 식별자
         );
     }
 }
