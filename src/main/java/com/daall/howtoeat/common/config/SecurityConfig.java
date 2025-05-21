@@ -1,7 +1,9 @@
 package com.daall.howtoeat.common.config;
 
 import com.daall.howtoeat.client.user.UserRepository;
+import com.daall.howtoeat.common.security.CustomOAuth2UserService;
 import com.daall.howtoeat.common.security.UserDetailsServiceImpl;
+import com.daall.howtoeat.common.security.handler.OAuth2SuccessHandler;
 import com.daall.howtoeat.common.security.jwt.JwtAuthenticationFilter;
 import com.daall.howtoeat.common.security.jwt.JwtAuthorizationFilter;
 import com.daall.howtoeat.common.security.jwt.JwtUtil;
@@ -17,6 +19,10 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
+import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -67,12 +73,23 @@ public class SecurityConfig {
                 sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         );
 
-        http.authorizeHttpRequests((authorizeHttpRequests) ->
+        http
+            .authorizeHttpRequests((authorizeHttpRequests) ->
                 authorizeHttpRequests
-                        .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
-                        .requestMatchers(HttpMethod.POST, "/signup").permitAll()
-                        .anyRequest().authenticated()
+                    .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
+                    .requestMatchers(HttpMethod.POST, "/signup").permitAll()
+                    .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                    .requestMatchers("/oauth2/**").permitAll()
+                    .anyRequest().authenticated()
+//                        .anyRequest().permitAll()
         );
+        http
+            .oauth2Login(oauth -> oauth
+                    .userInfoEndpoint(userInfo -> userInfo
+                            .userService(customOAuth2UserService())
+                    )
+                    .successHandler(oAuth2SuccessHandler())
+            );
 
 //        http.exceptionHandling(exception ->
 //                exception
@@ -85,5 +102,15 @@ public class SecurityConfig {
 //        http.addFilterBefore(jwtExceptionFilter(), JwtAuthorizationFilter.class);
 
         return http.build();
+    }
+
+    @Bean
+    public AuthenticationSuccessHandler oAuth2SuccessHandler() {
+        return new OAuth2SuccessHandler(userRepository, jwtUtil);
+    }
+
+    @Bean
+    public OAuth2UserService<OAuth2UserRequest, OAuth2User> customOAuth2UserService() {
+        return new CustomOAuth2UserService();
     }
 }

@@ -1,4 +1,4 @@
-package com.daall.howtoeat.client.user;
+package com.daall.howtoeat.client.user.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

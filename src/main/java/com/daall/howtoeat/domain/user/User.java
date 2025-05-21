@@ -1,6 +1,6 @@
 package com.daall.howtoeat.domain.user;
 
-import com.daall.howtoeat.client.user.SignupRequestDto;
+import com.daall.howtoeat.client.user.dto.SignupRequestDto;
 import com.daall.howtoeat.common.Timestamped;
 import com.daall.howtoeat.common.enums.Gender;
 import com.daall.howtoeat.common.enums.SignupProvider;
@@ -16,7 +16,6 @@ import java.time.LocalDate;
 @Getter
 @NoArgsConstructor
 @Table(name = "users")
-
 public class User extends Timestamped {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,7 +27,7 @@ public class User extends Timestamped {
     @Column(unique = true, nullable = false)
     private String email;
 
-    @Column(nullable = false)
+    @Column
     private String password;
 
     @Enumerated(EnumType.STRING)
@@ -62,12 +61,11 @@ public class User extends Timestamped {
     @Column(columnDefinition = "Text")
     private String refreshToken;
 
-    public User(SignupRequestDto requestDto, String encodedPassword) {
+    public User(SignupRequestDto requestDto) {
         this.name = requestDto.getName();
         this.email = requestDto.getEmail();
-        this.password = encodedPassword;
         this.gender = Gender.MALE;
-        this.birth = LocalDate.now();
+        this.birth = requestDto.getBirthday();
         this.isNextGym = true;
         this.profileImageUrl = profileImageUrl;
         this.userRole = UserRole.USER;
@@ -76,10 +74,6 @@ public class User extends Timestamped {
     }
 
     public void saveRefreshToken(String refreshToken) {
-        this.refreshToken = refreshToken;
-    }
-
-    public boolean validateRefreshToken(String refreshToken) {
-        return this.refreshToken != null && this.refreshToken.equals(refreshToken);
+        this.refreshToken = refreshToken.substring(7);
     }
 }

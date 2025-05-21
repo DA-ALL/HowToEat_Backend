@@ -1,5 +1,6 @@
 package com.daall.howtoeat.domain.user;
 
+import com.daall.howtoeat.client.user.dto.SignupRequestDto;
 import com.daall.howtoeat.common.Timestamped;
 import com.daall.howtoeat.common.enums.UserActivityLevel;
 import com.daall.howtoeat.common.enums.UserGoal;
@@ -11,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @Table(name = "user_targets")
-public class UserTargets extends Timestamped {
+public class UserTarget extends Timestamped {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -40,4 +41,24 @@ public class UserTargets extends Timestamped {
     @Column(nullable = false)
     private UserActivityLevel activityLevel;
 
+    public UserTarget(SignupRequestDto signupRequestDto, User user) {
+        this.user = user;
+        this.kcal = kcal;
+        this.carbo = carbo;
+        this.protein = protein;
+        this.fat = fat;
+        this.goal = goal;
+        this.activityLevel = activityLevel;
+    }
+
+    public UserTarget(User user, Double kcal, Double carbo, Double protein, Double fat,
+                      UserGoal goal, UserActivityLevel activityLevel) {
+        this.user = user;
+        this.kcal = kcal;
+        this.carbo = carbo;
+        this.protein = protein;
+        this.fat = fat;
+        this.goal = goal;
+        this.activityLevel = activityLevel;
+    }
 }

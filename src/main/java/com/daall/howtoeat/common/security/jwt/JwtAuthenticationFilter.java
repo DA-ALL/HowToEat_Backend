@@ -1,6 +1,6 @@
 package com.daall.howtoeat.common.security.jwt;
 
-import com.daall.howtoeat.client.user.LoginRequestDto;
+import com.daall.howtoeat.client.user.dto.LoginRequestDto;
 import com.daall.howtoeat.client.user.UserRepository;
 import com.daall.howtoeat.common.enums.UserRole;
 import com.daall.howtoeat.common.enums.UserStatus;
@@ -11,7 +11,6 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -27,7 +26,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     public JwtAuthenticationFilter(JwtUtil jwtUtil, UserRepository userRepository) {
         this.jwtUtil =jwtUtil;
         this.userRepository = userRepository;
-        setFilterProcessesUrl("/login");
+        setFilterProcessesUrl("/admin/login");
     }
 
 
@@ -69,9 +68,9 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         jwtUtil.setHeaderAccessToken(response, accessToken);
         jwtUtil.addRefreshTokenToCookie(response, refreshToken);
 //      코드 변경 : addheader -> add to Cookie
-//      response.addHeader(JwtUtil.AUTH_ACCESS_HEADER, accessToken);
-//      response.addHeader(JwtUtil.AUTH_REFRESH_HEADER, refreshToken);
-        response.setHeader("Access-Control-Expose-Headers", "Authorization");
+        response.addHeader(JwtUtil.AUTH_ACCESS_HEADER, accessToken);
+        response.addHeader(JwtUtil.AUTH_REFRESH_HEADER, refreshToken);
+        response.setHeader("Access-Control-Expose-Headers", "Authorization, RefreshToken");
 
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");

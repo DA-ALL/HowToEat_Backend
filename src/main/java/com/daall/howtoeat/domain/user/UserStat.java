@@ -1,5 +1,6 @@
 package com.daall.howtoeat.domain.user;
 
+import com.daall.howtoeat.client.user.dto.SignupRequestDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,7 +11,7 @@ import java.time.LocalDate;
 @Getter
 @NoArgsConstructor
 @Table(name = "user_stats")
-public class UserStats {
+public class UserStat {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -30,4 +31,13 @@ public class UserStats {
 
     @Column(nullable = false)
     private LocalDate heightRecordedAt;
+
+    public UserStat(User user, SignupRequestDto requestDto) {
+        this.user = user;
+        this.weight = requestDto.getWeight();
+        this.height = requestDto.getHeight();
+        LocalDate date = LocalDate.now();
+        this.weightRecordedAt = date;
+        this.heightRecordedAt = date;
+    }
 }
