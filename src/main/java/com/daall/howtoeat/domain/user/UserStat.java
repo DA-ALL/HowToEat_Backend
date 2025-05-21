@@ -1,6 +1,6 @@
 package com.daall.howtoeat.domain.user;
 
-import com.daall.howtoeat.client.user.SignupRequestDto;
+import com.daall.howtoeat.client.user.dto.SignupRequestDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

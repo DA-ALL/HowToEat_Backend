@@ -1,11 +1,11 @@
 package com.daall.howtoeat.client.user;
 
+import com.daall.howtoeat.client.user.dto.SignupRequestDto;
 import com.daall.howtoeat.common.enums.Gender;
 import com.daall.howtoeat.common.enums.UserActivityLevel;
 import com.daall.howtoeat.common.enums.UserGoal;
 import com.daall.howtoeat.domain.user.User;
 import com.daall.howtoeat.domain.user.UserTarget;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

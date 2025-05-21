@@ -1,6 +1,6 @@
 package com.daall.howtoeat.domain.user;
 
-import com.daall.howtoeat.client.user.SignupRequestDto;
+import com.daall.howtoeat.client.user.dto.SignupRequestDto;
 import com.daall.howtoeat.common.Timestamped;
 import com.daall.howtoeat.common.enums.UserActivityLevel;
 import com.daall.howtoeat.common.enums.UserGoal;

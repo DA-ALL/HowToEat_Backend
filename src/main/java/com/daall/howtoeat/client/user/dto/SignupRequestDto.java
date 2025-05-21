@@ -1,4 +1,4 @@
-package com.daall.howtoeat.client.user;
+package com.daall.howtoeat.client.user.dto;
 
 import com.daall.howtoeat.common.enums.Gender;
 import com.daall.howtoeat.common.enums.UserActivityLevel;

@@ -1,14 +1,12 @@
 package com.daall.howtoeat.domain.user;
 
-import com.daall.howtoeat.client.user.SignupRequestDto;
+import com.daall.howtoeat.client.user.dto.SignupRequestDto;
 import com.daall.howtoeat.common.Timestamped;
 import com.daall.howtoeat.common.enums.Gender;
 import com.daall.howtoeat.common.enums.SignupProvider;
 import com.daall.howtoeat.common.enums.UserRole;
 import com.daall.howtoeat.common.enums.UserStatus;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

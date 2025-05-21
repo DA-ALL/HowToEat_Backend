@@ -1,5 +1,6 @@
 package com.daall.howtoeat.client.user;
 
+import com.daall.howtoeat.client.user.dto.SignupRequestDto;
 import com.daall.howtoeat.domain.user.User;
 import com.daall.howtoeat.domain.user.UserStat;
 import lombok.RequiredArgsConstructor;
