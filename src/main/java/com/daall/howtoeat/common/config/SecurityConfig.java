@@ -4,9 +4,7 @@ import com.daall.howtoeat.client.user.UserRepository;
 import com.daall.howtoeat.common.security.CustomOAuth2UserService;
 import com.daall.howtoeat.common.security.UserDetailsServiceImpl;
 import com.daall.howtoeat.common.security.handler.OAuth2SuccessHandler;
-import com.daall.howtoeat.common.security.jwt.JwtAuthenticationFilter;
-import com.daall.howtoeat.common.security.jwt.JwtAuthorizationFilter;
-import com.daall.howtoeat.common.security.jwt.JwtUtil;
+import com.daall.howtoeat.common.security.jwt.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
@@ -34,8 +32,8 @@ public class SecurityConfig {
     private final UserDetailsServiceImpl userDetailsService;
     private final AuthenticationConfiguration authenticationConfiguration;
     private final UserRepository userRepository;
-//    private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
-//    private final CustomAccessDeniedHandler customAccessDeniedHandler;
+    private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
+    private final CustomAccessDeniedHandler customAccessDeniedHandler;
 
     @Bean
     public PasswordEncoder passwordEncoder(){
@@ -59,10 +57,10 @@ public class SecurityConfig {
         return new JwtAuthorizationFilter(jwtUtil, userDetailsService);
     }
 
-//    @Bean
-//    public JwtExceptionFilter jwtExceptionFilter(){
-//        return new JwtExceptionFilter();
-//    }
+    @Bean
+    public JwtExceptionFilter jwtExceptionFilter(){
+        return new JwtExceptionFilter();
+    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -81,7 +79,6 @@ public class SecurityConfig {
                     .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                     .requestMatchers("/oauth2/**").permitAll()
                     .anyRequest().authenticated()
-//                        .anyRequest().permitAll()
         );
         http
             .oauth2Login(oauth -> oauth
@@ -91,15 +88,15 @@ public class SecurityConfig {
                     .successHandler(oAuth2SuccessHandler())
             );
 
-//        http.exceptionHandling(exception ->
-//                exception
-//                        .authenticationEntryPoint(customAuthenticationEntryPoint)
-//                        .accessDeniedHandler(customAccessDeniedHandler)
-//        );
+        http.exceptionHandling(exception ->
+                exception
+                        .authenticationEntryPoint(customAuthenticationEntryPoint)
+                        .accessDeniedHandler(customAccessDeniedHandler)
+        );
 
         http.addFilterBefore(jwtAuthorizationFilter(), JwtAuthenticationFilter.class);
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
-//        http.addFilterBefore(jwtExceptionFilter(), JwtAuthorizationFilter.class);
+        http.addFilterBefore(jwtExceptionFilter(), JwtAuthorizationFilter.class);
 
         return http.build();
     }

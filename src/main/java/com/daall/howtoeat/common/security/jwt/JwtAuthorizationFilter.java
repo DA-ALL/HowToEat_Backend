@@ -1,6 +1,8 @@
 package com.daall.howtoeat.common.security.jwt;
 
+import com.daall.howtoeat.common.enums.ErrorType;
 import com.daall.howtoeat.common.enums.UserRole;
+import com.daall.howtoeat.common.exception.CustomException;
 import com.daall.howtoeat.common.security.UserDetailsImpl;
 import com.daall.howtoeat.common.security.UserDetailsServiceImpl;
 import com.daall.howtoeat.domain.user.User;
@@ -30,7 +32,6 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        System.out.println("검증 시작");
         String accessToken = jwtUtil.getAccessTokenFromHeader(request);
 
         if(StringUtils.hasText(accessToken)){
@@ -57,7 +58,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             setAuthentication(info.getSubject());
         } catch (Exception e){
             log.error("username = {}, message = {}", info.getSubject(), "인증 정보를 찾을 수 없습니다.");
-//            throw new CustomException(ErrorType.NOT_FOUND_AUTHENTICATION_INFO);
+            throw new CustomException(ErrorType.NOT_FOUND_AUTHENTICATION_INFO);
         }
     }
 
@@ -65,29 +66,25 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
     public void validateAndAuthenticateWithRefreshToken(HttpServletRequest request, HttpServletResponse response){
 
         String refreshToken = jwtUtil.getRefreshTokenFromCookie(request);
-        System.out.println("리프래쉬 토큰 확인: " + refreshToken);
 
         if(StringUtils.hasText(refreshToken) && jwtUtil.validateToken(refreshToken)){
             Claims info = jwtUtil.getUserInfoFromToken(refreshToken);
             UserDetailsImpl userDetails = (UserDetailsImpl) userDetailsService.loadUserByUsername(info.getSubject());
             User user = userDetails.getUser();
 
-            if(user.getRefreshToken().equals(refreshToken) && jwtUtil.validateToken(refreshToken)){
-                System.out.println("리프레쉬토큰 검증");
+            if(user.getRefreshToken().equals(refreshToken)){
                 UserRole role = user.getUserRole();
                 String newAccessToken = jwtUtil.createAccessToken(info.getSubject(), role);
                 jwtUtil.setHeaderAccessToken(response, newAccessToken);
 
                 try{
                     setAuthentication(info.getSubject());
-                    System.out.println("헤더에 엑세스토큰 보내기");
                 } catch (Exception e) {
                     log.error(e.getMessage());
-                    System.out.println("에러");
-//                    throw new CustomException(ErrorType.NOT_FOUND_AUTHENTICATION_INFO);
+                    throw new CustomException(ErrorType.NOT_FOUND_AUTHENTICATION_INFO);
                 }
             } else {
-//                throw new CustomException(ErrorType.INVALID_REFRESH_TOKEN);
+                throw new CustomException(ErrorType.INVALID_REFRESH_TOKEN);
             }
         }
     }

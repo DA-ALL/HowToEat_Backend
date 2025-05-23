@@ -2,8 +2,11 @@ package com.daall.howtoeat.common.security.jwt;
 
 import com.daall.howtoeat.client.user.dto.LoginRequestDto;
 import com.daall.howtoeat.client.user.UserRepository;
+import com.daall.howtoeat.common.enums.ErrorType;
 import com.daall.howtoeat.common.enums.UserRole;
 import com.daall.howtoeat.common.enums.UserStatus;
+import com.daall.howtoeat.common.exception.CustomException;
+import com.daall.howtoeat.common.exception.ExceptionResponseDto;
 import com.daall.howtoeat.common.security.UserDetailsImpl;
 import com.daall.howtoeat.domain.user.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -11,6 +14,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -53,7 +57,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException {
         User user = ((UserDetailsImpl) authResult.getPrincipal()).getUser();
         if(user.getUserStatus().equals(UserStatus.DEACTIVATE)){
-//            throw new CustomException(ErrorType.NOT_FOUND_USER);
+            throw new CustomException(ErrorType.NOT_FOUND_USER);
         }
 
         String username = ((UserDetailsImpl) authResult.getPrincipal()).getUsername();
@@ -67,10 +71,9 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         jwtUtil.setHeaderAccessToken(response, accessToken);
         jwtUtil.addRefreshTokenToCookie(response, refreshToken);
-//      코드 변경 : addheader -> add to Cookie
+
         response.addHeader(JwtUtil.AUTH_ACCESS_HEADER, accessToken);
-        response.addHeader(JwtUtil.AUTH_REFRESH_HEADER, refreshToken);
-        response.setHeader("Access-Control-Expose-Headers", "Authorization, RefreshToken");
+        response.setHeader("Access-Control-Expose-Headers", "Authorization");
 
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
@@ -81,11 +84,11 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     // 로그인 실패시 처리
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException {
-//        ErrorType errorType = ErrorType.NOT_FOUND_AUTHENTICATION_INFO;
-//        response.setStatus(errorType.getHttpStatus().value());
+        ErrorType errorType = ErrorType.NOT_FOUND_AUTHENTICATION_INFO;
+        response.setStatus(errorType.getHttpStatus().value());
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
-//        response.getWriter().write(new ObjectMapper().writeValueAsString(ResponseEntity.status(errorType.getHttpStatus()).body(new ExceptionDto(errorType))));
+        response.getWriter().write(new ObjectMapper().writeValueAsString(ResponseEntity.status(errorType.getHttpStatus()).body(new ExceptionResponseDto(errorType))));
         response.getWriter().flush();
     }
 }
