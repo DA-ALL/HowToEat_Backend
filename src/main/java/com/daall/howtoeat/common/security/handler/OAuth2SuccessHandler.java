@@ -56,7 +56,6 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
             birthday = attributes.get("birthday") != null ? attributes.get("birthday").toString() : null;
             gender = attributes.get("gender") != null ? attributes.get("gender").toString() : null;
             profileImage = attributes.get("profile_image") != null ? attributes.get("profile_image").toString() : null;
-
         }
 
         if (email == null || email.equals("null")) {
@@ -72,7 +71,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
         claims.put("email", email);
         claims.put("name", name);
         claims.put("profile_image_url", profileImage);
-        claims.put("isNew", isNewUser);
+        claims.put("signup_provider", provider != null ? provider.toUpperCase() : "");
 
         if ("naver".equals(provider)) {
             claims.put("birthyear", birthyear);
