@@ -1,7 +1,9 @@
 package com.daall.howtoeat.common.security.handler;
 
 import com.daall.howtoeat.client.user.UserRepository;
+import com.daall.howtoeat.common.enums.ErrorType;
 import com.daall.howtoeat.common.enums.UserRole;
+import com.daall.howtoeat.common.exception.CustomException;
 import com.daall.howtoeat.common.security.UserDetailsImpl;
 import com.daall.howtoeat.common.security.jwt.JwtUtil;
 import com.daall.howtoeat.domain.user.User;
@@ -15,6 +17,8 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 @RequiredArgsConstructor
@@ -56,7 +60,6 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
             birthday = attributes.get("birthday") != null ? attributes.get("birthday").toString() : null;
             gender = attributes.get("gender") != null ? attributes.get("gender").toString() : null;
             profileImage = attributes.get("profile_image") != null ? attributes.get("profile_image").toString() : null;
-
         }
 
         if (email == null || email.equals("null")) {
@@ -72,7 +75,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
         claims.put("email", email);
         claims.put("name", name);
         claims.put("profile_image_url", profileImage);
-        claims.put("isNew", isNewUser);
+        claims.put("signup_provider", provider != null ? provider.toUpperCase() : "");
 
         if ("naver".equals(provider)) {
             claims.put("birthyear", birthyear);
@@ -87,8 +90,20 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
             String claimsToken = jwtUtil.createAccessTokenWithClaims(claims);
             redirectUrl = "http://localhost:3000/survey?token=" + claimsToken;
         } else {
-            String refreshToken = jwtUtil.createRefreshToken(email, UserRole.USER);
             User user = userRepository.findByEmail(email).orElseThrow(); // orElseThrow로 안정성
+
+            // 유저의 이메일이 같지만, signupProvider가 다를경우(naver로 회원가입했는데 같은 이메일로 카카오 로그인 시도할 경우)
+            if(!user.getSignup_provider().toString().equals(provider != null ? provider.toUpperCase() : "")){
+                String message = ErrorType.ALREADY_EXISTS_EMAIL.getMessage();
+                String encodedMessage = URLEncoder.encode(message, StandardCharsets.UTF_8.toString());
+
+                response.setStatus(HttpServletResponse.SC_FOUND); // 302 redirect
+                response.setHeader("Location", "http://localhost:3000/error-page?message=" + encodedMessage);
+                response.flushBuffer();
+                return;
+            }
+
+            String refreshToken = jwtUtil.createRefreshToken(email, user.getUserRole());
             user.saveRefreshToken(refreshToken);
             userRepository.save(user);
             jwtUtil.addRefreshTokenToCookie(response, refreshToken);

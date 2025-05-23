@@ -11,10 +11,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
     private final UserTargetService userTargetService;
-
-
 
     public User signup(SignupRequestDto requestDto) {
         if (userRepository.existsByEmail(requestDto.getEmail())) {
@@ -27,7 +24,6 @@ public class UserService {
 
         userTargetService.createTarget(requestDto, savedUser);
 
-        //추후 userStatsService로 분리
         UserStat userStats = new UserStat(savedUser, requestDto);
         return user;
     }

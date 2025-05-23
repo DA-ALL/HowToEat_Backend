@@ -1,10 +1,12 @@
 package com.daall.howtoeat.client.user.dto;
 
 import com.daall.howtoeat.common.enums.Gender;
+import com.daall.howtoeat.common.enums.SignupProvider;
 import com.daall.howtoeat.common.enums.UserActivityLevel;
 import com.daall.howtoeat.common.enums.UserGoal;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
 
@@ -28,4 +30,7 @@ public class SignupRequestDto {
     private UserGoal goal;
     private UserActivityLevel activityLevel;
     private boolean isNextGym;
+    @NotNull(message = "signup provider를 입력해 주세요.")
+    private SignupProvider signupProvider;
+    private String profileImageUrl;
 }
