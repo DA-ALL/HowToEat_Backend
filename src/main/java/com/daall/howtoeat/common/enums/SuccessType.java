@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 @RequiredArgsConstructor
 public enum SuccessType {
     USER_SIGN_UP_SUCCESS(HttpStatus.OK, "회원가입에 성공하였습니다."),
+    USER_LOGIN_SUCCESS(HttpStatus.OK, "로그인에 성공하였습니다."),
     ;
 
 

@@ -2,7 +2,9 @@ package com.daall.howtoeat.common.security.jwt;
 
 import com.daall.howtoeat.client.user.dto.LoginRequestDto;
 import com.daall.howtoeat.client.user.UserRepository;
+import com.daall.howtoeat.common.ResponseMessageDto;
 import com.daall.howtoeat.common.enums.ErrorType;
+import com.daall.howtoeat.common.enums.SuccessType;
 import com.daall.howtoeat.common.enums.UserRole;
 import com.daall.howtoeat.common.enums.UserStatus;
 import com.daall.howtoeat.common.exception.CustomException;
@@ -77,7 +79,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
-//        response.getWriter().write(new ObjectMapper().writeValueAsString(ResponseEntity.ok().body(new ResponseMessageDto(SuccessStatus.USER_LOGIN_SUCCESS))));
+        response.getWriter().write(new ObjectMapper().writeValueAsString(ResponseEntity.ok().body(new ResponseMessageDto(SuccessType.USER_LOGIN_SUCCESS))));
         response.getWriter().flush();
     }
 
