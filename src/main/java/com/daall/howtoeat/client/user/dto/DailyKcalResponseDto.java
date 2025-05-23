@@ -1,12 +1,11 @@
 package com.daall.howtoeat.client.user.dto;
 
-import com.daall.howtoeat.domain.user.UserDailySummary;
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.Getter;
 
 import java.time.LocalDate;
 
+@Getter
 @AllArgsConstructor
 public class DailyKcalResponseDto {
     private LocalDate date;

@@ -29,8 +29,16 @@ public class UserDailySummaryService {
             LocalDate date = dailySummary.getCreatedAt().toLocalDate();
             Double targetKcal = dailySummary.getUserTarget().getKcal();
             Double consumedKcal = dailySummary.getTotalKcal();
+
             responseDto.add(new DailyKcalResponseDto(date, targetKcal, consumedKcal));
         }
+
+        System.out.println("시작");
+        for (UserDailySummary dailySummary : dailySummaries) {
+            System.out.println(dailySummary.toString());
+            System.out.println(dailySummary.getUserTarget().toString());
+        }
+        System.out.println("끝");
 
         return responseDto;
     }

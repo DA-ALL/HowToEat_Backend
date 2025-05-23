@@ -6,6 +6,7 @@ import com.daall.howtoeat.common.security.UserDetailsImpl;
 import com.daall.howtoeat.common.security.jwt.JwtUtil;
 import com.daall.howtoeat.domain.user.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -14,14 +15,19 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+
 @RequiredArgsConstructor
 public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
 
     private final UserRepository userRepository;
     private final JwtUtil jwtUtil;
+
+    @Value("${DOMAIN_URL}")
+    private String domainUrl;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
@@ -83,16 +89,17 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
         // 리다이렉트 URL 설정
         String redirectUrl;
 
+
         if (isNewUser) {
             String claimsToken = jwtUtil.createAccessTokenWithClaims(claims);
-            redirectUrl = "http://localhost:3000/survey?token=" + claimsToken;
+            redirectUrl = "http://" + domainUrl + ":3000/survey?token=" + claimsToken;
         } else {
             String refreshToken = jwtUtil.createRefreshToken(email, UserRole.USER);
-            User user = userRepository.findByEmail(email).orElseThrow(); // orElseThrow로 안정성
+             User user = userRepository.findByEmail(email).orElseThrow(); // orElseThrow로 안정성
             user.saveRefreshToken(refreshToken);
             userRepository.save(user);
             jwtUtil.addRefreshTokenToCookie(response, refreshToken);
-            redirectUrl = "http://localhost:3000/main";
+            redirectUrl = "http://" + domainUrl + ":3000/main";
         }
 
         response.sendRedirect(redirectUrl);
