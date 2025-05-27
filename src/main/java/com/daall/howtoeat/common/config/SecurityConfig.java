@@ -1,6 +1,7 @@
 package com.daall.howtoeat.common.config;
 
 import com.daall.howtoeat.client.user.UserRepository;
+import com.daall.howtoeat.common.enums.UserRole;
 import com.daall.howtoeat.common.security.CustomOAuth2UserService;
 import com.daall.howtoeat.common.security.UserDetailsServiceImpl;
 import com.daall.howtoeat.common.security.handler.OAuth2SuccessHandler;
@@ -78,6 +79,7 @@ public class SecurityConfig {
                     .requestMatchers(HttpMethod.POST, "/signup").permitAll()
                     .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                     .requestMatchers("/oauth2/**").permitAll()
+                    .requestMatchers("/admin/accounts").hasAuthority(UserRole.MASTER.getAuthority())
                     .anyRequest().authenticated()
         );
         http
