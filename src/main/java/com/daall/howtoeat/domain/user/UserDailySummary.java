@@ -18,6 +18,10 @@ public class UserDailySummary extends Timestamped {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_target_id", nullable = false)
+    private UserTarget userTarget;
+
     // TOTAL 전체 //
     @Column(nullable = false)
     private Double totalKcal;
@@ -86,6 +90,4 @@ public class UserDailySummary extends Timestamped {
 
     @Column(nullable = false)
     private Double snackFat;
-
-
 }
