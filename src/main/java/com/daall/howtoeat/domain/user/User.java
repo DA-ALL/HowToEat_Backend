@@ -64,13 +64,13 @@ public class User extends Timestamped {
     public User(SignupRequestDto requestDto) {
         this.name = requestDto.getName();
         this.email = requestDto.getEmail();
-        this.gender = Gender.MALE;
+        this.gender = requestDto.getGender();
         this.birth = requestDto.getBirthday();
-        this.isNextGym = true;
-        this.profileImageUrl = profileImageUrl;
+        this.isNextGym = requestDto.isNextGym();
+        this.profileImageUrl = requestDto.getProfileImageUrl();
         this.userRole = UserRole.USER;
         this.userStatus = UserStatus.ACTIVATE;
-        this.signup_provider = SignupProvider.NAVER;
+        this.signup_provider = requestDto.getSignupProvider();
     }
 
     public void saveRefreshToken(String refreshToken) {
