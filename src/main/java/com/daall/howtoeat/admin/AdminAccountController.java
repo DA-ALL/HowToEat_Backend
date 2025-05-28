@@ -1,15 +1,14 @@
 package com.daall.howtoeat.admin;
 
+import com.daall.howtoeat.common.PageResponseDto;
+import com.daall.howtoeat.common.ResponseDataDto;
 import com.daall.howtoeat.common.ResponseMessageDto;
 import com.daall.howtoeat.common.enums.SuccessType;
 import com.daall.howtoeat.common.security.UserDetailsImpl;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/admin")
@@ -17,8 +16,19 @@ import org.springframework.web.bind.annotation.RestController;
 public class AdminAccountController {
     private final AdminAccountService adminAccountService;
 
+    @GetMapping("/accounts")
+    private ResponseEntity<PageResponseDto<AdminAccountResponseDto>> getAdminAccounts (
+            @RequestParam(value = "page", defaultValue = "1") Integer page,
+            @RequestParam(value = "size", defaultValue = "20") Integer size
+            ){
+        PageResponseDto<AdminAccountResponseDto> adminAccounts = adminAccountService.getAdminAccounts(page - 1, size);
+
+        return ResponseEntity.ok(adminAccounts);
+    }
+
+
     @PostMapping("/accounts")
-    private ResponseEntity<ResponseMessageDto> createAdminAccount(
+    private ResponseEntity<ResponseMessageDto> createAdminAccount (
             UserDetailsImpl userDetails,
             @Valid @RequestBody AdminAccountRequestDto requestDto){
         adminAccountService.createAdminAccount(userDetails.getUser(), requestDto);
