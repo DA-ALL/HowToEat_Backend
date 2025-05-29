@@ -16,6 +16,12 @@ import org.springframework.web.bind.annotation.*;
 public class AdminAccountController {
     private final AdminAccountService adminAccountService;
 
+    /**
+     * 관리자 계정 전체 조회
+     * @param page 페이지 번호
+     * @param size 페이지 크기
+     * @return
+     */
     @GetMapping("/accounts")
     private ResponseEntity<PageResponseDto<AdminAccountResponseDto>> getAdminAccounts (
             @RequestParam(value = "page", defaultValue = "1") Integer page,
@@ -26,7 +32,19 @@ public class AdminAccountController {
         return ResponseEntity.ok(adminAccounts);
     }
 
+    @GetMapping("/accounts/{accountId}")
+    private ResponseEntity<ResponseDataDto<AdminAccountResponseDto>> getAdminAccounts (@PathVariable Long accountId){
+        ResponseDataDto<AdminAccountResponseDto> adminAccount = adminAccountService.getAdminAccount(accountId);
 
+        return ResponseEntity.ok(adminAccount);
+    }
+
+    /**
+     * 관리자 계정 추가
+     * @param userDetails
+     * @param requestDto
+     * @return
+     */
     @PostMapping("/accounts")
     private ResponseEntity<ResponseMessageDto> createAdminAccount (
             UserDetailsImpl userDetails,

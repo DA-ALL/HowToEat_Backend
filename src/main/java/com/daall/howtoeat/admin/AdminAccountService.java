@@ -2,7 +2,9 @@ package com.daall.howtoeat.admin;
 
 import com.daall.howtoeat.client.user.UserRepository;
 import com.daall.howtoeat.common.PageResponseDto;
+import com.daall.howtoeat.common.ResponseDataDto;
 import com.daall.howtoeat.common.enums.ErrorType;
+import com.daall.howtoeat.common.enums.SuccessType;
 import com.daall.howtoeat.common.enums.UserRole;
 import com.daall.howtoeat.common.exception.CustomException;
 import com.daall.howtoeat.domain.user.User;
@@ -16,6 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -40,7 +43,14 @@ public class AdminAccountService {
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
         Page<User> adminAccounts = userRepository.findAllByUserRole(UserRole.ADMIN, pageable);
 
-        PageResponseDto<AdminAccountResponseDto> responseDto = new PageResponseDto<>(adminAccounts.map(AdminAccountResponseDto::new));
-        return responseDto;
+        return new PageResponseDto<>(adminAccounts.map(AdminAccountResponseDto::new));
+    }
+
+    public ResponseDataDto<AdminAccountResponseDto> getAdminAccount(Long accountId) {
+        User user = userRepository.findById(accountId).orElseThrow(
+                ()-> new CustomException(ErrorType.NOT_FOUND_USER)
+        );
+
+        return new ResponseDataDto<>(SuccessType.ADMIN_ACCOUNT_CREATE_SUCCESS, new AdminAccountResponseDto(user));
     }
 }
