@@ -1,5 +1,7 @@
 package com.daall.howtoeat.admin;
 
+import com.daall.howtoeat.admin.dto.AdminAccountRequestDto;
+import com.daall.howtoeat.admin.dto.AdminAccountResponseDto;
 import com.daall.howtoeat.common.PageResponseDto;
 import com.daall.howtoeat.common.ResponseDataDto;
 import com.daall.howtoeat.common.ResponseMessageDto;
@@ -71,6 +73,11 @@ public class AdminAccountController {
         return ResponseEntity.ok(new ResponseMessageDto(SuccessType.ADMIN_ACCOUNT_UPDATE_SUCCESS));
     }
 
+    /**
+     * 관리자 계정 삭제
+     * @param accountId 삭제할 계정 아이디
+     * @return 성공 메시지
+     */
     @DeleteMapping("/accounts/{accountId}")
     private ResponseEntity<ResponseMessageDto> deleteAdminAccount(@PathVariable Long accountId) {
         adminAccountService.deleteAdminAccount(accountId);

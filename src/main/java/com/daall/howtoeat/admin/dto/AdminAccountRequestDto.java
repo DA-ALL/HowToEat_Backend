@@ -1,4 +1,4 @@
-package com.daall.howtoeat.admin;
+package com.daall.howtoeat.admin.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;

@@ -1,5 +1,6 @@
 package com.daall.howtoeat.admin;
 
+import com.daall.howtoeat.admin.dto.AdminAccountRequestDto;
 import com.daall.howtoeat.common.enums.UserRole;
 import com.daall.howtoeat.domain.user.User;
 import org.junit.jupiter.api.Test;
@@ -9,7 +10,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDate;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest

@@ -1,5 +1,7 @@
 package com.daall.howtoeat.admin;
 
+import com.daall.howtoeat.admin.dto.AdminAccountRequestDto;
+import com.daall.howtoeat.admin.dto.AdminAccountResponseDto;
 import com.daall.howtoeat.client.user.UserRepository;
 import com.daall.howtoeat.common.PageResponseDto;
 import com.daall.howtoeat.common.ResponseDataDto;
@@ -16,9 +18,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor

@@ -1,4 +1,4 @@
-package com.daall.howtoeat.admin;
+package com.daall.howtoeat.admin.dto;
 
 import com.daall.howtoeat.domain.user.User;
 import lombok.Getter;
