@@ -59,9 +59,21 @@ public class AdminAccountController {
         return ResponseEntity.ok(new ResponseMessageDto(SuccessType.ADMIN_ACCOUNT_CREATE_SUCCESS));
     }
 
+    /**
+     * 관리자 계정 수정
+     * @param accountId 수정할 아이디
+     * @param requestDto 수정할 아이디와 비밀번호
+     * @return 성공 메시지
+     */
     @PutMapping("/accounts/{accountId}")
     private ResponseEntity<ResponseMessageDto> updateAdminAccount(@PathVariable Long accountId, @Valid @RequestBody AdminAccountRequestDto requestDto) {
         adminAccountService.updateAdminAccount(accountId, requestDto);
         return ResponseEntity.ok(new ResponseMessageDto(SuccessType.ADMIN_ACCOUNT_UPDATE_SUCCESS));
+    }
+
+    @DeleteMapping("/accounts/{accountId}")
+    private ResponseEntity<ResponseMessageDto> deleteAdminAccount(@PathVariable Long accountId) {
+        adminAccountService.deleteAdminAccount(accountId);
+        return ResponseEntity.ok(new ResponseMessageDto(SuccessType.ADMIN_ACCOUNT_DELETE_SUCCESS));
     }
 }

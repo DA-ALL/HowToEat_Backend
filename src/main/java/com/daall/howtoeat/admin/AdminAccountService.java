@@ -9,7 +9,6 @@ import com.daall.howtoeat.common.enums.SuccessType;
 import com.daall.howtoeat.common.enums.UserRole;
 import com.daall.howtoeat.common.exception.CustomException;
 import com.daall.howtoeat.domain.user.User;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -70,5 +69,17 @@ public class AdminAccountService {
         String encoded = passwordEncoder.encode(requestDto.getPassword());
         user.updateAdminAccount(requestDto, encoded);
         userRepository.save(user);
+    }
+
+    public void deleteAdminAccount(Long accountId) {
+        User user = userRepository.findById(accountId).orElseThrow(
+                ()-> new CustomException(ErrorType.NOT_FOUND_USER)
+        );
+
+        if(!user.getUserRole().equals(UserRole.ADMIN) || !user.getSignup_provider().equals(SignupProvider.ADMIN)) {
+            throw new CustomException(ErrorType.NOT_ADMIN_ACCOUNT);
+        }
+
+        userRepository.delete(user);
     }
 }
