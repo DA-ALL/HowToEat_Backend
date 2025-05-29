@@ -49,7 +49,7 @@ public class AdminAccountService {
                 ()-> new CustomException(ErrorType.NOT_FOUND_USER)
         );
 
-        return new ResponseDataDto<>(SuccessType.ADMIN_ACCOUNT_GET_SUCCESS, new AdminAccountResponseDto(user));
+        return new ResponseDataDto<>(SuccessType.GET_ADMIN_ACCOUNT_SUCCESS, new AdminAccountResponseDto(user));
     }
 
     public void updateAdminAccount(Long accountId, AdminAccountRequestDto requestDto) {

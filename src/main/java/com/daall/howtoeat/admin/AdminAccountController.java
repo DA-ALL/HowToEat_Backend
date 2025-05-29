@@ -58,7 +58,7 @@ public class AdminAccountController {
             @Valid @RequestBody AdminAccountRequestDto requestDto){
         adminAccountService.createAdminAccount(requestDto);
 
-        return ResponseEntity.ok(new ResponseMessageDto(SuccessType.ADMIN_ACCOUNT_CREATE_SUCCESS));
+        return ResponseEntity.ok(new ResponseMessageDto(SuccessType.CREATE_ADMIN_ACCOUNT_SUCCESS));
     }
 
     /**
@@ -70,7 +70,7 @@ public class AdminAccountController {
     @PutMapping("/accounts/{accountId}")
     private ResponseEntity<ResponseMessageDto> updateAdminAccount(@PathVariable Long accountId, @Valid @RequestBody AdminAccountRequestDto requestDto) {
         adminAccountService.updateAdminAccount(accountId, requestDto);
-        return ResponseEntity.ok(new ResponseMessageDto(SuccessType.ADMIN_ACCOUNT_UPDATE_SUCCESS));
+        return ResponseEntity.ok(new ResponseMessageDto(SuccessType.UPDATE_ADMIN_ACCOUNT_SUCCESS));
     }
 
     /**
@@ -81,6 +81,6 @@ public class AdminAccountController {
     @DeleteMapping("/accounts/{accountId}")
     private ResponseEntity<ResponseMessageDto> deleteAdminAccount(@PathVariable Long accountId) {
         adminAccountService.deleteAdminAccount(accountId);
-        return ResponseEntity.ok(new ResponseMessageDto(SuccessType.ADMIN_ACCOUNT_DELETE_SUCCESS));
+        return ResponseEntity.ok(new ResponseMessageDto(SuccessType.DELETE_ADMIN_ACCOUNT_SUCCESS));
     }
 }
