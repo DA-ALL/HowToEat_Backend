@@ -57,12 +57,11 @@ public class AdminAccountController {
      * @return ResponseMessageDto
      */
     @PostMapping("/accounts")
-    private ResponseEntity<ResponseMessageDto> createAdminAccount (
-            UserDetailsImpl userDetails,
-            @Valid @RequestBody AdminAccountRequestDto requestDto){
+    private ResponseEntity<ResponseMessageDto> createAdminAccount (@Valid @RequestBody AdminAccountRequestDto requestDto) {
         adminAccountService.createAdminAccount(requestDto);
 
-        return ResponseEntity.ok(new ResponseMessageDto(SuccessType.CREATE_ADMIN_ACCOUNT_SUCCESS));
+        SuccessType successType = SuccessType.CREATE_ADMIN_ACCOUNT_SUCCESS;
+        return ResponseEntity.status(successType.getHttpStatus()).body(new ResponseMessageDto(successType));
     }
 
     /**
@@ -74,7 +73,9 @@ public class AdminAccountController {
     @PutMapping("/accounts/{accountId}")
     private ResponseEntity<ResponseMessageDto> updateAdminAccount(@PathVariable Long accountId, @Valid @RequestBody AdminAccountRequestDto requestDto) {
         adminAccountService.updateAdminAccount(accountId, requestDto);
-        return ResponseEntity.ok(new ResponseMessageDto(SuccessType.UPDATE_ADMIN_ACCOUNT_SUCCESS));
+        SuccessType successType = SuccessType.UPDATE_ADMIN_ACCOUNT_SUCCESS;
+
+        return ResponseEntity.status(successType.getHttpStatus()).body(new ResponseMessageDto(successType));
     }
 
     /**
@@ -85,6 +86,8 @@ public class AdminAccountController {
     @DeleteMapping("/accounts/{accountId}")
     private ResponseEntity<ResponseMessageDto> deleteAdminAccount(@PathVariable Long accountId) {
         adminAccountService.deleteAdminAccount(accountId);
-        return ResponseEntity.ok(new ResponseMessageDto(SuccessType.DELETE_ADMIN_ACCOUNT_SUCCESS));
+        SuccessType successType = SuccessType.DELETE_ADMIN_ACCOUNT_SUCCESS;
+
+        return ResponseEntity.status(successType.getHttpStatus()).body(new ResponseMessageDto(successType));
     }
 }
