@@ -26,8 +26,7 @@ public class AdminAccountService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public void createAdminAccount(User user, @Valid AdminAccountRequestDto requestDto) {
-        // User Role은 시큐리티에서 확인
+    public void createAdminAccount(AdminAccountRequestDto requestDto) {
         // 이미 존재하는 아이디인지
         if(userRepository.existsByEmail(requestDto.getAccountId())){
             throw new CustomException(ErrorType.ALREADY_EXISTS_EMAIL);

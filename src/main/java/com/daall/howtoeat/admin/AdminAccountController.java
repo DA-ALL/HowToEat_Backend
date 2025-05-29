@@ -20,7 +20,7 @@ public class AdminAccountController {
      * 관리자 계정 전체 조회
      * @param page 페이지 번호
      * @param size 페이지 크기
-     * @return
+     * @return PageResponseDto<AdminAccountResponseDto>
      */
     @GetMapping("/accounts")
     private ResponseEntity<PageResponseDto<AdminAccountResponseDto>> getAdminAccounts (
@@ -32,6 +32,11 @@ public class AdminAccountController {
         return ResponseEntity.ok(adminAccounts);
     }
 
+    /**
+     * 관리자 계정 단일 조회
+     * @param accountId 조회할 아이디
+     * @return ResponseDataDto<AdminAccountResponseDto>
+     */
     @GetMapping("/accounts/{accountId}")
     private ResponseEntity<ResponseDataDto<AdminAccountResponseDto>> getAdminAccounts (@PathVariable Long accountId){
         ResponseDataDto<AdminAccountResponseDto> adminAccount = adminAccountService.getAdminAccount(accountId);
@@ -41,15 +46,15 @@ public class AdminAccountController {
 
     /**
      * 관리자 계정 추가
-     * @param userDetails
-     * @param requestDto
-     * @return
+     * API 요청 보내는 User의 권한은 시큐리티에서 확인
+     * @param requestDto 아이디, 비밀번호
+     * @return ResponseMessageDto
      */
     @PostMapping("/accounts")
     private ResponseEntity<ResponseMessageDto> createAdminAccount (
             UserDetailsImpl userDetails,
             @Valid @RequestBody AdminAccountRequestDto requestDto){
-        adminAccountService.createAdminAccount(userDetails.getUser(), requestDto);
+        adminAccountService.createAdminAccount(requestDto);
 
         return ResponseEntity.ok(new ResponseMessageDto(SuccessType.ADMIN_ACCOUNT_CREATE_SUCCESS));
     }

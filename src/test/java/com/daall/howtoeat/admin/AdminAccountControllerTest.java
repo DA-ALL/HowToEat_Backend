@@ -30,6 +30,6 @@ class AdminAccountControllerTest {
         when(userMock.getBirth()).thenReturn(LocalDate.now());
         when(userMock.getName()).thenReturn("admin");
 
-        adminAccountService.createAdminAccount(new User(), mock1);
+        adminAccountService.createAdminAccount(mock1);
     }
 }
