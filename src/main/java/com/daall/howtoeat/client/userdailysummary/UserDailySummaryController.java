@@ -1,6 +1,6 @@
-package com.daall.howtoeat.client.user;
+package com.daall.howtoeat.client.userdailysummary;
 
-import com.daall.howtoeat.client.user.dto.DailyKcalResponseDto;
+import com.daall.howtoeat.client.userdailysummary.dto.DailyKcalResponseDto;
 import com.daall.howtoeat.common.ResponseDataDto;
 import com.daall.howtoeat.common.enums.SuccessType;
 import com.daall.howtoeat.common.security.UserDetailsImpl;
@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor

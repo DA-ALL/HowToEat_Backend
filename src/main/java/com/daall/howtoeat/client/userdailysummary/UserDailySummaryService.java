@@ -1,6 +1,7 @@
-package com.daall.howtoeat.client.user;
+package com.daall.howtoeat.client.userdailysummary;
 
-import com.daall.howtoeat.client.user.dto.DailyKcalResponseDto;
+import com.daall.howtoeat.client.user.UserTargetService;
+import com.daall.howtoeat.client.userdailysummary.dto.DailyKcalResponseDto;
 import com.daall.howtoeat.domain.user.User;
 import com.daall.howtoeat.domain.user.UserDailySummary;
 import lombok.AllArgsConstructor;

@@ -1,4 +1,4 @@
-package com.daall.howtoeat.client.user;
+package com.daall.howtoeat.client.userdailysummary;
 
 import com.daall.howtoeat.domain.user.User;
 import com.daall.howtoeat.domain.user.UserDailySummary;
