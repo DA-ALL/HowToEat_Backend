@@ -37,19 +37,19 @@ public class AdminAccountService {
         userRepository.save(newUser);
     }
 
-    public PageResponseDto<AdminAccountResponseDto> getAdminAccounts(int page, int size) {
+    public Page<AdminAccountResponseDto> getAdminAccounts(int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
         Page<User> adminAccounts = userRepository.findAllByUserRole(UserRole.ADMIN, pageable);
 
-        return new PageResponseDto<>(adminAccounts.map(AdminAccountResponseDto::new));
+        return adminAccounts.map(AdminAccountResponseDto::new);
     }
 
-    public ResponseDataDto<AdminAccountResponseDto> getAdminAccount(Long accountId) {
+    public AdminAccountResponseDto getAdminAccount(Long accountId) {
         User user = userRepository.findById(accountId).orElseThrow(
                 ()-> new CustomException(ErrorType.NOT_FOUND_USER)
         );
 
-        return new ResponseDataDto<>(SuccessType.GET_ADMIN_ACCOUNT_SUCCESS, new AdminAccountResponseDto(user));
+        return new AdminAccountResponseDto(user);
     }
 
     public void updateAdminAccount(Long accountId, AdminAccountRequestDto requestDto) {

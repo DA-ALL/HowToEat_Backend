@@ -9,6 +9,7 @@ import com.daall.howtoeat.common.enums.SuccessType;
 import com.daall.howtoeat.common.security.UserDetailsImpl;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,9 +30,11 @@ public class AdminAccountController {
             @RequestParam(value = "page", defaultValue = "1") Integer page,
             @RequestParam(value = "size", defaultValue = "20") Integer size
             ){
-        PageResponseDto<AdminAccountResponseDto> adminAccounts = adminAccountService.getAdminAccounts(page - 1, size);
+        Page<AdminAccountResponseDto> adminAccounts = adminAccountService.getAdminAccounts(page - 1, size);
+        SuccessType successType = SuccessType.GET_ALL_ADMIN_ACCOUNTS_SUCCESS;
+        PageResponseDto<AdminAccountResponseDto> responseDto = new PageResponseDto<>(successType, adminAccounts);
 
-        return ResponseEntity.ok(adminAccounts);
+        return ResponseEntity.status(successType.getHttpStatus()).body(responseDto);
     }
 
     /**
@@ -41,9 +44,10 @@ public class AdminAccountController {
      */
     @GetMapping("/accounts/{accountId}")
     private ResponseEntity<ResponseDataDto<AdminAccountResponseDto>> getAdminAccounts (@PathVariable Long accountId){
-        ResponseDataDto<AdminAccountResponseDto> adminAccount = adminAccountService.getAdminAccount(accountId);
+        AdminAccountResponseDto adminAccount = adminAccountService.getAdminAccount(accountId);
+        SuccessType successType = SuccessType.GET_ADMIN_ACCOUNT_SUCCESS;
 
-        return ResponseEntity.ok(adminAccount);
+        return ResponseEntity.status(successType.getHttpStatus()).body(new ResponseDataDto<>(successType, adminAccount));
     }
 
     /**
