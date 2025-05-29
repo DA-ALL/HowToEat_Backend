@@ -12,6 +12,7 @@ public enum SuccessType {
     CREATE_USER_SUCCESS(HttpStatus.CREATED, "회원가입에 성공하였습니다."),
     CREATE_ADMIN_ACCOUNT_SUCCESS(HttpStatus.CREATED, "관리자 계정 생성에 성공하였습니다."),
     GET_ADMIN_ACCOUNT_SUCCESS(HttpStatus.OK, "관리자 계정 조회에 성공하였습니다."),
+    GET_ALL_ADMIN_ACCOUNTS_SUCCESS(HttpStatus.OK, "관리자 계정 전체 조회에 성공하였습니다."),
     UPDATE_ADMIN_ACCOUNT_SUCCESS(HttpStatus.OK, "관리자 계정 변경에 성공하였습니다."),
     DELETE_ADMIN_ACCOUNT_SUCCESS(HttpStatus.OK, "관리자 계정 삭제에 성공하였습니다."),
     ADMIN_LOGIN_SUCCESS(HttpStatus.OK, "관리자 로그인에 성공하였습니다."),
