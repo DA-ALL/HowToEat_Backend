@@ -31,6 +31,6 @@ public class UserDailySummaryController {
         User loginUser = userDetails.getUser();
         ArrayList<DailyKcalResponseDto> responseDtos = userDailySummaryService.getDailyKcalSummaries(loginUser, startDate, endDate);
 
-        return ResponseEntity.ok(new ResponseDataDto<>(SuccessType.GET_DAILY_KCAL_SUMMARIES_SUSSESS, responseDtos));
+        return ResponseEntity.ok(new ResponseDataDto<>(SuccessType.GET_DAILY_KCAL_SUMMARIES_SUCCESS, responseDtos));
     }
 }

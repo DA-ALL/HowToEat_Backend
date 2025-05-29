@@ -11,6 +11,7 @@ public enum SuccessType {
     USER_LOGIN_SUCCESS(HttpStatus.OK, "로그인에 성공하였습니다."),
     ADMIN_ACCOUNT_CREATE_SUCCESS(HttpStatus.OK, "관리자 계정 생성에 성공하였습니다."),
     ADMIN_ACCOUNT_GET_SUCCESS(HttpStatus.OK, "관리자 계정 조회에 성공하였습니다."),
+    ADMIN_ACCOUNT_UPDATE_SUCCESS(HttpStatus.OK, "관리자 계정 변경에 성공하였습니다."),
 
     GET_DAILY_KCAL_SUMMARIES_SUCCESS(HttpStatus.OK, "날짜별 목표칼로리, 섭취칼로리 조회에 성공하였습니다."),
     ;

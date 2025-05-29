@@ -58,4 +58,10 @@ public class AdminAccountController {
 
         return ResponseEntity.ok(new ResponseMessageDto(SuccessType.ADMIN_ACCOUNT_CREATE_SUCCESS));
     }
+
+    @PutMapping("/accounts/{accountId}")
+    private ResponseEntity<ResponseMessageDto> updateAdminAccount(@PathVariable Long accountId, @Valid @RequestBody AdminAccountRequestDto requestDto) {
+        adminAccountService.updateAdminAccount(accountId, requestDto);
+        return ResponseEntity.ok(new ResponseMessageDto(SuccessType.ADMIN_ACCOUNT_UPDATE_SUCCESS));
+    }
 }

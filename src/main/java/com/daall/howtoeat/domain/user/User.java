@@ -87,6 +87,11 @@ public class User extends Timestamped {
         this.signup_provider = SignupProvider.ADMIN;
     }
 
+    public void updateAdminAccount(AdminAccountRequestDto requestDto, String password){
+        this.email = requestDto.getAccountId();
+        this.password = password;
+    }
+
     public void saveRefreshToken(String refreshToken) {
         this.refreshToken = refreshToken.substring(7);
     }

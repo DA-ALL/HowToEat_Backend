@@ -4,6 +4,7 @@ import com.daall.howtoeat.client.user.UserRepository;
 import com.daall.howtoeat.common.PageResponseDto;
 import com.daall.howtoeat.common.ResponseDataDto;
 import com.daall.howtoeat.common.enums.ErrorType;
+import com.daall.howtoeat.common.enums.SignupProvider;
 import com.daall.howtoeat.common.enums.SuccessType;
 import com.daall.howtoeat.common.enums.UserRole;
 import com.daall.howtoeat.common.exception.CustomException;
@@ -51,5 +52,23 @@ public class AdminAccountService {
         );
 
         return new ResponseDataDto<>(SuccessType.ADMIN_ACCOUNT_GET_SUCCESS, new AdminAccountResponseDto(user));
+    }
+
+    public void updateAdminAccount(Long accountId, AdminAccountRequestDto requestDto) {
+        User user = userRepository.findById(accountId).orElseThrow(
+                ()-> new CustomException(ErrorType.NOT_FOUND_USER)
+        );
+
+        if(!user.getUserRole().equals(UserRole.ADMIN) || !user.getSignup_provider().equals(SignupProvider.ADMIN)) {
+            throw new CustomException(ErrorType.NOT_ADMIN_ACCOUNT);
+        }
+
+        if(userRepository.existsByEmailAndIdNot(requestDto.getAccountId(), accountId)){
+            throw new CustomException(ErrorType.ALREADY_EXISTS_EMAIL);
+        }
+
+        String encoded = passwordEncoder.encode(requestDto.getPassword());
+        user.updateAdminAccount(requestDto, encoded);
+        userRepository.save(user);
     }
 }
