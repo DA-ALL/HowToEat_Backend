@@ -51,6 +51,6 @@ public class AdminAccountService {
                 ()-> new CustomException(ErrorType.NOT_FOUND_USER)
         );
 
-        return new ResponseDataDto<>(SuccessType.ADMIN_ACCOUNT_CREATE_SUCCESS, new AdminAccountResponseDto(user));
+        return new ResponseDataDto<>(SuccessType.ADMIN_ACCOUNT_GET_SUCCESS, new AdminAccountResponseDto(user));
     }
 }
