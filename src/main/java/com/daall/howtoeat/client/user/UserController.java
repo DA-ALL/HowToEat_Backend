@@ -1,6 +1,8 @@
 package com.daall.howtoeat.client.user;
 
 import com.daall.howtoeat.client.user.dto.SignupRequestDto;
+import com.daall.howtoeat.common.ResponseMessageDto;
+import com.daall.howtoeat.common.enums.SuccessType;
 import com.daall.howtoeat.common.security.UserDetailsImpl;
 import com.daall.howtoeat.domain.user.User;
 import jakarta.servlet.http.HttpServletRequest;
@@ -23,31 +25,13 @@ public class UserController {
     private final AuthService authService;
 
     @PostMapping("/signup")
-    public ResponseEntity<String> signupNaver(@RequestBody @Valid SignupRequestDto dto, HttpServletResponse response) {
+    public ResponseEntity<ResponseMessageDto> signup(@RequestBody @Valid SignupRequestDto dto, HttpServletResponse response) {
         User user = userService.signup(dto);
 
         authService.issueTokens(user, response);
+        SuccessType successType = SuccessType.CREATE_USER_SUCCESS;
 
-        return ResponseEntity.ok("회원가입 완료");
+        return ResponseEntity.status(successType.getHttpStatus()).body(new ResponseMessageDto(successType));
     }
 
-    @PostMapping("/login")
-    public ResponseEntity<String> loginNaver(@RequestBody @Valid SignupRequestDto dto) {
-        userService.signup(dto);
-        return ResponseEntity.ok("회원가입 완료");
-    }
-
-    @GetMapping("/force-login")
-    public void forceLogin(HttpServletRequest request, HttpServletResponse response) throws IOException, IOException {
-        // Spring Security context 로그아웃 처리
-        request.getSession().invalidate();
-
-        // 네이버 인증 페이지로 강제 이동
-        response.sendRedirect("/oauth2/authorization/naver");
-    }
-
-    @GetMapping("/test")
-    public ResponseEntity<String> getAccessToken(@AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return ResponseEntity.ok("테스트 완료");
-    }
 }

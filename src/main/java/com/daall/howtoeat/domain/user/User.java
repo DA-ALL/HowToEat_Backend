@@ -1,6 +1,6 @@
 package com.daall.howtoeat.domain.user;
 
-import com.daall.howtoeat.admin.AdminAccountRequestDto;
+import com.daall.howtoeat.admin.dto.AdminAccountRequestDto;
 import com.daall.howtoeat.client.user.dto.SignupRequestDto;
 import com.daall.howtoeat.common.Timestamped;
 import com.daall.howtoeat.common.enums.Gender;
@@ -85,6 +85,11 @@ public class User extends Timestamped {
         this.userRole = UserRole.ADMIN;
         this.userStatus = UserStatus.ACTIVATE;
         this.signup_provider = SignupProvider.ADMIN;
+    }
+
+    public void updateAdminAccount(AdminAccountRequestDto requestDto, String password){
+        this.email = requestDto.getAccountId();
+        this.password = password;
     }
 
     public void saveRefreshToken(String refreshToken) {

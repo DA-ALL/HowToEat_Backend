@@ -32,7 +32,7 @@ public class UserDailySummaryController {
         User loginUser = userDetails.getUser();
         ArrayList<DailyKcalResponseDto> responseDtos = userDailySummaryService.getDailyKcalSummaries(loginUser, startDate, endDate);
 
-        SuccessType successType = SuccessType.GET_DAILY_KCAL_SUMMARIES_SUSSESS;
+        SuccessType successType = SuccessType.GET_DAILY_KCAL_SUMMARIES_SUCCESS;
 
         return ResponseEntity.status(successType.getHttpStatus()).body(new ResponseDataDto<>(successType, responseDtos));
     }
@@ -45,8 +45,9 @@ public class UserDailySummaryController {
         User loginUser = userDetails.getUser();
         DailyConsumedMacrosResponseDto responseDto = userDailySummaryService.getDailyMacrosSummary(loginUser, date);
 
-        SuccessType successType = SuccessType.GET_DAILY_KCAL_SUMMARIES_SUSSESS;
+        SuccessType successType = SuccessType.GET_DAILY_KCAL_SUMMARIES_SUCCESS;
 
         return ResponseEntity.status(successType.getHttpStatus()).body(new ResponseDataDto<>(successType, responseDto));
+
     }
 }

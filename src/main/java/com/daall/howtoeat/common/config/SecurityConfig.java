@@ -79,7 +79,7 @@ public class SecurityConfig {
                     .requestMatchers(HttpMethod.POST, "/signup").permitAll()
                     .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                     .requestMatchers("/oauth2/**").permitAll()
-                    .requestMatchers("/admin/accounts").hasAuthority(UserRole.MASTER.getAuthority())
+                    .requestMatchers("/admin/accounts/**").hasAuthority(UserRole.MASTER.getAuthority())
                     .anyRequest().authenticated()
         );
         http
