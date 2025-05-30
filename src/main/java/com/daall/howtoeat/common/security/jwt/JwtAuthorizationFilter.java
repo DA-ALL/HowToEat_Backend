@@ -34,16 +34,10 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String accessToken = jwtUtil.getAccessTokenFromHeader(request);
 
-        if(StringUtils.hasText(accessToken)){
-            if(jwtUtil.validateToken(accessToken)){
-                // accessToken이 유효할 때
-                authenticateWithAccessToken(accessToken);
-            } else {
-                // accessToken이 유효하지 않을 때
-                validateAndAuthenticateWithRefreshToken(request, response);
-            }
+        if (StringUtils.hasText(accessToken) && jwtUtil.validateToken(accessToken)) {
+            authenticateWithAccessToken(accessToken);
         } else {
-            // accessToken이 없을때 리프래시 토큰 사용.
+            // accessToken이 없거나 유효하지 않은 경우
             validateAndAuthenticateWithRefreshToken(request, response);
         }
 
@@ -64,28 +58,33 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
     // accessToken이 유효하지 않은 경우, 리프레스 토큰 검증 및 엑세스토큰 재발급
     public void validateAndAuthenticateWithRefreshToken(HttpServletRequest request, HttpServletResponse response){
-
         String refreshToken = jwtUtil.getRefreshTokenFromCookie(request);
 
-        if(StringUtils.hasText(refreshToken) && jwtUtil.validateToken(refreshToken)){
-            Claims info = jwtUtil.getUserInfoFromToken(refreshToken);
-            UserDetailsImpl userDetails = (UserDetailsImpl) userDetailsService.loadUserByUsername(info.getSubject());
-            User user = userDetails.getUser();
+        if (!StringUtils.hasText(refreshToken)) {
+            throw new CustomException(ErrorType.MISSING_REFRESH_TOKEN);
+        }
 
-            if(user.getRefreshToken().equals(refreshToken)){
-                UserRole role = user.getUserRole();
-                String newAccessToken = jwtUtil.createAccessToken(info.getSubject(), role);
-                jwtUtil.setHeaderAccessToken(response, newAccessToken);
+        if (!jwtUtil.validateToken(refreshToken)) {
+            throw new CustomException(ErrorType.INVALID_REFRESH_TOKEN);
+        }
 
-                try{
-                    setAuthentication(info.getSubject());
-                } catch (Exception e) {
-                    log.error(e.getMessage());
-                    throw new CustomException(ErrorType.NOT_FOUND_AUTHENTICATION_INFO);
-                }
-            } else {
-                throw new CustomException(ErrorType.INVALID_REFRESH_TOKEN);
-            }
+        Claims claims = jwtUtil.getUserInfoFromToken(refreshToken);
+        String username = claims.getSubject();
+        UserDetailsImpl userDetails = (UserDetailsImpl) userDetailsService.loadUserByUsername(username);
+        User user = userDetails.getUser();
+
+        if (!refreshToken.equals(user.getRefreshToken())) {
+            throw new CustomException(ErrorType.INVALID_REFRESH_TOKEN);
+        }
+
+        String newAccessToken = jwtUtil.createAccessToken(username, user.getUserRole());
+        jwtUtil.setHeaderAccessToken(response, newAccessToken);
+
+        try {
+            setAuthentication(username);
+        } catch (Exception e) {
+            log.error("Failed to set authentication: {}", e.getMessage(), e);
+            throw new CustomException(ErrorType.NOT_FOUND_AUTHENTICATION_INFO);
         }
     }
 

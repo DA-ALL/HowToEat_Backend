@@ -79,18 +79,19 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
-        response.getWriter().write(new ObjectMapper().writeValueAsString(ResponseEntity.ok().body(new ResponseMessageDto(SuccessType.ADMIN_LOGIN_SUCCESS))));
+        response.getWriter().write(new ObjectMapper().writeValueAsString(new ResponseMessageDto(SuccessType.ADMIN_LOGIN_SUCCESS)));
         response.getWriter().flush();
     }
 
     // 로그인 실패시 처리
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException {
+        System.out.println("로그인 실패시 처리");
         ErrorType errorType = ErrorType.NOT_FOUND_AUTHENTICATION_INFO;
         response.setStatus(errorType.getHttpStatus().value());
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
-        response.getWriter().write(new ObjectMapper().writeValueAsString(ResponseEntity.status(errorType.getHttpStatus()).body(new ExceptionResponseDto(errorType))));
+        response.getWriter().write(new ObjectMapper().writeValueAsString(new ExceptionResponseDto(errorType)));
         response.getWriter().flush();
     }
 }
