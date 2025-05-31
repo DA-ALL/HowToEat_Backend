@@ -1,8 +1,10 @@
 package com.daall.howtoeat.client.userdailysummary;
 
 import com.daall.howtoeat.client.user.UserTargetService;
+import com.daall.howtoeat.client.userdailysummary.dto.DailyConsumedMacrosByMealTimeResponseDto;
 import com.daall.howtoeat.client.userdailysummary.dto.DailyConsumedMacrosResponseDto;
 import com.daall.howtoeat.client.userdailysummary.dto.DailyKcalResponseDto;
+import com.daall.howtoeat.common.enums.MealTime;
 import com.daall.howtoeat.domain.user.User;
 import com.daall.howtoeat.domain.user.UserDailySummary;
 import lombok.AllArgsConstructor;
@@ -47,5 +49,14 @@ public class UserDailySummaryService {
         UserDailySummary userDailySummary = userDailySummaryRepository.findByUserAndCreatedAtBetween(user, start, end);
 
         return new DailyConsumedMacrosResponseDto(userDailySummary);
+    }
+
+    public DailyConsumedMacrosByMealTimeResponseDto getDailyMacrosByMealTime(User user, LocalDate date, MealTime mealTime) {
+        LocalDateTime start = date.atStartOfDay();
+        LocalDateTime end = date.atTime(LocalTime.MAX);
+
+        UserDailySummary userDailySummary = userDailySummaryRepository.findByUserAndCreatedAtBetween(user, start, end);
+
+        return new DailyConsumedMacrosByMealTimeResponseDto(userDailySummary, mealTime);
     }
 }

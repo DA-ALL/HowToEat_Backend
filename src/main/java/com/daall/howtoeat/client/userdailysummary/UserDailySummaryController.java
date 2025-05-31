@@ -1,8 +1,10 @@
 package com.daall.howtoeat.client.userdailysummary;
 
+import com.daall.howtoeat.client.userdailysummary.dto.DailyConsumedMacrosByMealTimeResponseDto;
 import com.daall.howtoeat.client.userdailysummary.dto.DailyConsumedMacrosResponseDto;
 import com.daall.howtoeat.client.userdailysummary.dto.DailyKcalResponseDto;
 import com.daall.howtoeat.common.ResponseDataDto;
+import com.daall.howtoeat.common.enums.MealTime;
 import com.daall.howtoeat.common.enums.SuccessType;
 import com.daall.howtoeat.common.security.UserDetailsImpl;
 import com.daall.howtoeat.domain.user.User;
@@ -48,6 +50,19 @@ public class UserDailySummaryController {
         SuccessType successType = SuccessType.GET_DAILY_KCAL_SUMMARIES_SUCCESS;
 
         return ResponseEntity.status(successType.getHttpStatus()).body(new ResponseDataDto<>(successType, responseDto));
+    }
 
+
+    @GetMapping("daily-summaries/{date}/meal-time/{mealTime}/macros")
+    public ResponseEntity<ResponseDataDto<DailyConsumedMacrosByMealTimeResponseDto>> getDailyMacrosByMealTime(
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
+            @PathVariable("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
+            @PathVariable("mealTime") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) MealTime mealTime
+    ) {
+        User loginUser = userDetails.getUser();
+        DailyConsumedMacrosByMealTimeResponseDto responseDto = userDailySummaryService.getDailyMacrosByMealTime(loginUser, date, mealTime);
+
+        SuccessType successType = SuccessType.GET_USER_MACROS_BY_MEALTIME_SUCCESS;
+        return ResponseEntity.status(successType.getHttpStatus()).body(new ResponseDataDto<>(successType, responseDto));
     }
 }
