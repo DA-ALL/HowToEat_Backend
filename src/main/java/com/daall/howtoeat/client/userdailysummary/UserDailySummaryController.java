@@ -57,7 +57,7 @@ public class UserDailySummaryController {
     public ResponseEntity<ResponseDataDto<DailyConsumedMacrosByMealTimeResponseDto>> getDailyMacrosByMealTime(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
             @PathVariable("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
-            @PathVariable("mealTime") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) MealTime mealTime
+            @PathVariable("mealTime") MealTime mealTime
     ) {
         User loginUser = userDetails.getUser();
         DailyConsumedMacrosByMealTimeResponseDto responseDto = userDailySummaryService.getDailyMacrosByMealTime(loginUser, date, mealTime);

@@ -1,6 +1,7 @@
 package com.daall.howtoeat.client.userdailysummary.dto;
 
 import com.daall.howtoeat.domain.user.UserDailySummary;
+import com.daall.howtoeat.domain.user.UserTarget;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -38,5 +39,23 @@ public class DailyConsumedMacrosResponseDto {
         this.lunchKcal = userDailySummary.getLunchKcal();
         this.dinnerKcal = userDailySummary.getDinnerKcal();
         this.snackKcal = userDailySummary.getSnackKcal();
+    }
+
+    public DailyConsumedMacrosResponseDto(UserTarget target, LocalDate date) {
+        this.date = date;
+        this.targetKcal = target.getKcal();
+        this.targetCarbo = target.getCarbo();
+        this.targetFat = target.getFat();
+        this.targetProtein = target.getProtein();
+
+        this.consumedKcal = 0.0;
+        this.consumedCarbo = 0.0;
+        this.consumedProtein = 0.0;
+        this.consumedFat = 0.0;
+
+        this.breakfastKcal = 0.0;
+        this.lunchKcal = 0.0;
+        this.dinnerKcal = 0.0;
+        this.snackKcal = 0.0;
     }
 }

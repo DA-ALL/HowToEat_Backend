@@ -7,6 +7,7 @@ import com.daall.howtoeat.client.userdailysummary.dto.DailyKcalResponseDto;
 import com.daall.howtoeat.common.enums.MealTime;
 import com.daall.howtoeat.domain.user.User;
 import com.daall.howtoeat.domain.user.UserDailySummary;
+import com.daall.howtoeat.domain.user.UserTarget;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -46,9 +47,15 @@ public class UserDailySummaryService {
         LocalDateTime start = date.atStartOfDay();
         LocalDateTime end = date.atTime(LocalTime.MAX);
 
-        UserDailySummary userDailySummary = userDailySummaryRepository.findByUserAndCreatedAtBetween(user, start, end);
+        UserDailySummary summary = userDailySummaryRepository.findByUserAndCreatedAtBetween(user, start, end);
+        UserTarget target = userTargetService.getLatestTargetBeforeOrOn(user, date);
 
-        return new DailyConsumedMacrosResponseDto(userDailySummary);
+        if (summary == null) {
+            // 요약이 없으면 target만 넘김
+            return new DailyConsumedMacrosResponseDto(target, date);
+        }
+
+        return new DailyConsumedMacrosResponseDto(summary);
     }
 
     public DailyConsumedMacrosByMealTimeResponseDto getDailyMacrosByMealTime(User user, LocalDate date, MealTime mealTime) {

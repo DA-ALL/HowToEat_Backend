@@ -17,6 +17,8 @@ public enum ErrorType {
 
     NOT_FOUND_USER(HttpStatus.BAD_REQUEST, "존재하지 않는 회원입니다."),
     ALREADY_EXISTS_EMAIL(HttpStatus.BAD_REQUEST, "이미 존재하는 이메일입니다."),
+
+    NOT_FOUND_TARGET_ON_DATE(HttpStatus.BAD_REQUEST, "해당 날짜에 대한 목표 정보가 없습니다."),
     ;
 
     private final HttpStatus httpStatus;

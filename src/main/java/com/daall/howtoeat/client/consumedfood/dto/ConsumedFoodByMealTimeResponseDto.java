@@ -10,6 +10,6 @@ public class ConsumedFoodByMealTimeResponseDto {
     private Long consumedFoodId;
     private String foodName;
     private Double kcal;
-    private Double weigh;
+    private Double weight;
     private String unit;
 }

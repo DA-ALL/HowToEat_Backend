@@ -1,9 +1,11 @@
 package com.daall.howtoeat.client.user;
 
 import com.daall.howtoeat.client.user.dto.SignupRequestDto;
+import com.daall.howtoeat.common.enums.ErrorType;
 import com.daall.howtoeat.common.enums.Gender;
 import com.daall.howtoeat.common.enums.UserActivityLevel;
 import com.daall.howtoeat.common.enums.UserGoal;
+import com.daall.howtoeat.common.exception.CustomException;
 import com.daall.howtoeat.domain.user.User;
 import com.daall.howtoeat.domain.user.UserTarget;
 import lombok.Getter;
@@ -11,6 +13,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.Period;
 
 @Service
@@ -71,7 +75,21 @@ public class UserTargetService {
             if (birthday == null) return 0;
             return Period.between(birthday, LocalDate.now()).getYears();
         }
+    }
 
 
+    /**
+     * 회원의 특정 날짜 기준으로 가장 최근의 목표 정보를 조회
+     *
+     * @param user  조회 대상 유저
+     * @param date  기준 날짜 (이 날짜 이전 또는 당일 기준으로 가장 최근 타겟 조회)
+     * @return      가장 최근에 등록된 UserTarget
+     * @throws      CustomException NOT_FOUND_TARGET_ON_DATE 예외 발생 가능
+     */
+    public UserTarget getLatestTargetBeforeOrOn(User user, LocalDate date) {
+        LocalDateTime dateTime = date.atTime(LocalTime.MAX);
+
+        return userTargetRepository.findTopByUserAndCreatedAtLessThanEqualOrderByCreatedAtDesc(user, dateTime)
+                .orElseThrow(() -> new CustomException(ErrorType.NOT_FOUND_TARGET_ON_DATE));
     }
 }
