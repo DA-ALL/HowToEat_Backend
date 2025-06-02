@@ -4,7 +4,9 @@ import com.daall.howtoeat.client.user.UserTargetService;
 import com.daall.howtoeat.client.userdailysummary.dto.DailyConsumedMacrosByMealTimeResponseDto;
 import com.daall.howtoeat.client.userdailysummary.dto.DailyConsumedMacrosResponseDto;
 import com.daall.howtoeat.client.userdailysummary.dto.DailyKcalResponseDto;
+import com.daall.howtoeat.common.enums.ErrorType;
 import com.daall.howtoeat.common.enums.MealTime;
+import com.daall.howtoeat.common.exception.CustomException;
 import com.daall.howtoeat.domain.user.User;
 import com.daall.howtoeat.domain.user.UserDailySummary;
 import com.daall.howtoeat.domain.user.UserTarget;
@@ -51,19 +53,37 @@ public class UserDailySummaryService {
         UserTarget target = userTargetService.getLatestTargetBeforeOrOn(user, date);
 
         if (summary == null) {
-            // 요약이 없으면 target만 넘김
+            // 음식을 섭취한 적이 없으면 target만 넘김 -> 데이터가 없기 때문에 목표 탄단지만 보내야함
             return new DailyConsumedMacrosResponseDto(target, date);
         }
 
         return new DailyConsumedMacrosResponseDto(summary);
     }
 
-    public DailyConsumedMacrosByMealTimeResponseDto getDailyMacrosByMealTime(User user, LocalDate date, MealTime mealTime) {
+
+    /**
+     * 선택한 사용자, 날짜, 끼니 정보에 따라 해당 시간대의 목표 및 섭취 탄수화물/단백질/지방(macros)을 반환합니다.
+     *
+     * ※ 목표(macros)는 UserDailySummary에 저장된 UserTarget을 기준으로 추출됩니다.
+     *     만약 해당 날짜에 UserDailySummary가 존재하지 않을 경우 예외가 발생합니다.
+     *
+     * @param user     대상 사용자
+     * @param date     조회할 날짜
+     * @param mealTime 조회할 끼니 (아침, 점심, 저녁, 간식)
+     * @return 선택한 날짜와 끼니에 대한 목표 및 섭취 탄단지 정보 DTO
+     */
+    public DailyConsumedMacrosByMealTimeResponseDto getMacrosByUserDateAndMealTime(User user, LocalDate date, MealTime mealTime) {
         LocalDateTime start = date.atStartOfDay();
         LocalDateTime end = date.atTime(LocalTime.MAX);
 
-        UserDailySummary userDailySummary = userDailySummaryRepository.findByUserAndCreatedAtBetween(user, start, end);
+        UserDailySummary summary = userDailySummaryRepository.findByUserAndCreatedAtBetween(user, start, end);
+        UserTarget target = userTargetService.getLatestTargetBeforeOrOn(user, date);
 
-        return new DailyConsumedMacrosByMealTimeResponseDto(userDailySummary, mealTime);
+        if(summary == null) {
+            // 음식을 섭취한 적이 없으면 target만 넘김 -> 데이터가 없기 때문에 목표 탄단지만 보내야함
+            return new DailyConsumedMacrosByMealTimeResponseDto(target, mealTime);
+        }
+
+        return new DailyConsumedMacrosByMealTimeResponseDto(summary, mealTime);
     }
 }
