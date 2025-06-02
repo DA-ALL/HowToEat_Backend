@@ -1,4 +1,4 @@
-package com.daall.howtoeat.client.user;
+package com.daall.howtoeat.client.userdailysummary;
 
 import com.daall.howtoeat.domain.user.User;
 import com.daall.howtoeat.domain.user.UserDailySummary;
@@ -11,4 +11,5 @@ import java.util.List;
 @Repository
 public interface UserDailySummaryRepository extends JpaRepository<UserDailySummary, Long> {
     List<UserDailySummary> findAllByUserAndCreatedAtBetween (User user, LocalDateTime start, LocalDateTime end);
+    UserDailySummary findByUserAndCreatedAtBetween(User user, LocalDateTime start, LocalDateTime end);
 }

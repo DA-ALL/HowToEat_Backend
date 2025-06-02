@@ -1,4 +1,4 @@
-package com.daall.howtoeat.client.user.dto;
+package com.daall.howtoeat.client.userdailysummary.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -1,10 +1,12 @@
-package com.daall.howtoeat.client.user;
+package com.daall.howtoeat.client.consumedfood;
 
-import com.daall.howtoeat.client.user.dto.DailyKcalResponseDto;
+import com.daall.howtoeat.client.consumedfood.dto.ConsumedFoodByMealTimeResponseDto;
 import com.daall.howtoeat.common.ResponseDataDto;
+import com.daall.howtoeat.common.enums.MealTime;
 import com.daall.howtoeat.common.enums.SuccessType;
 import com.daall.howtoeat.common.security.UserDetailsImpl;
 import com.daall.howtoeat.domain.user.User;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
@@ -19,18 +21,18 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-public class UserDailySummaryController {
-    private final UserDailySummaryService userDailySummaryService;
+public class ConsumedFoodController {
+    private final ConsumedFoodService consumedFoodService;
 
-    @GetMapping("/daily-summary/kcals")
-    public ResponseEntity<ResponseDataDto<ArrayList<DailyKcalResponseDto>>> getDailyKcalSummary(
+    @GetMapping("/consumed-foods")
+    public ResponseEntity<ResponseDataDto<List<ConsumedFoodByMealTimeResponseDto>>> getConsumedFoodListByMealTime(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
-            @RequestParam("start_date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-            @RequestParam("end_date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate
+            @RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
+            @RequestParam("meal_time") MealTime mealTime
     ) {
         User loginUser = userDetails.getUser();
-        ArrayList<DailyKcalResponseDto> responseDtos = userDailySummaryService.getDailyKcalSummaries(loginUser, startDate, endDate);
+        List<ConsumedFoodByMealTimeResponseDto> responseDto = consumedFoodService.getConsumedFoodList(loginUser, date, mealTime);
 
-        return ResponseEntity.ok(new ResponseDataDto<>(SuccessType.GET_DAILY_KCAL_SUMMARIES_SUCCESS, responseDtos));
+        return ResponseEntity.ok(new ResponseDataDto<>(SuccessType.GET_DAILY_KCAL_SUMMARIES_SUCCESS, responseDto));
     }
 }
