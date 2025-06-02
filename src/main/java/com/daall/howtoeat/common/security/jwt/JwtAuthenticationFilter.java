@@ -16,7 +16,6 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -74,23 +73,23 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         jwtUtil.setHeaderAccessToken(response, accessToken);
         jwtUtil.addRefreshTokenToCookie(response, refreshToken);
 
-        response.addHeader(JwtUtil.AUTH_ACCESS_HEADER, accessToken);
         response.setHeader("Access-Control-Expose-Headers", "Authorization");
 
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
-        response.getWriter().write(new ObjectMapper().writeValueAsString(ResponseEntity.ok().body(new ResponseMessageDto(SuccessType.ADMIN_LOGIN_SUCCESS))));
+        response.getWriter().write(new ObjectMapper().writeValueAsString(new ResponseMessageDto(SuccessType.ADMIN_LOGIN_SUCCESS)));
         response.getWriter().flush();
     }
 
     // 로그인 실패시 처리
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException {
+        System.out.println("로그인 실패시 처리");
         ErrorType errorType = ErrorType.NOT_FOUND_AUTHENTICATION_INFO;
         response.setStatus(errorType.getHttpStatus().value());
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
-        response.getWriter().write(new ObjectMapper().writeValueAsString(ResponseEntity.status(errorType.getHttpStatus()).body(new ExceptionResponseDto(errorType))));
+        response.getWriter().write(new ObjectMapper().writeValueAsString(new ExceptionResponseDto(errorType)));
         response.getWriter().flush();
     }
 }
