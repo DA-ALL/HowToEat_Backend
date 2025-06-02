@@ -1,21 +1,23 @@
 package com.daall.howtoeat.admin.dto;
 
+import com.daall.howtoeat.common.enums.UserRole;
 import com.daall.howtoeat.domain.user.User;
 import lombok.Getter;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Getter
 public class AdminAccountResponseDto {
-    private Long id;
-    private String accountId;
-    private LocalDateTime createdAt;
-    private LocalDateTime modifiedAt;
+    private final Long id;
+    private final String accountId;
+    private final UserRole userRole;
+    private final LocalDate createdAt;
+
 
     public AdminAccountResponseDto(User user) {
         this.id = user.getId();
         this.accountId = user.getEmail();
-        this.createdAt = user.getCreatedAt();
-        this.modifiedAt = user.getModifiedAt();
+        this.userRole = user.getUserRole();
+        this.createdAt = user.getCreatedAt().toLocalDate();
     }
 }

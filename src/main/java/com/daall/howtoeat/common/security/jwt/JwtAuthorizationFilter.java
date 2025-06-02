@@ -32,6 +32,14 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        String path = request.getRequestURI();
+
+        // 로그인 요청은 토큰 검증하지 않음
+        if ("/admin/login".equals(path)) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         String accessToken = jwtUtil.getAccessTokenFromHeader(request);
 
         if (StringUtils.hasText(accessToken) && jwtUtil.validateToken(accessToken)) {
@@ -56,7 +64,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         }
     }
 
-    // accessToken이 유효하지 않은 경우, 리프레스 토큰 검증 및 엑세스토큰 재발급
+    // accessToken이 유효하지 않은 경우, 리프레쉬 토큰 검증 및 엑세스토큰 재발급
     public void validateAndAuthenticateWithRefreshToken(HttpServletRequest request, HttpServletResponse response){
         String refreshToken = jwtUtil.getRefreshTokenFromCookie(request);
 
@@ -79,6 +87,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
         String newAccessToken = jwtUtil.createAccessToken(username, user.getUserRole());
         jwtUtil.setHeaderAccessToken(response, newAccessToken);
+        response.setHeader("Access-Control-Expose-Headers", "Authorization");
 
         try {
             setAuthentication(username);
