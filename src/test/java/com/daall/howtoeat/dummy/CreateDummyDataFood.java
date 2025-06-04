@@ -2,13 +2,12 @@ package com.daall.howtoeat.dummy;
 
 import com.daall.howtoeat.common.enums.FoodType;
 import com.daall.howtoeat.domain.food.Food;
-import com.daall.howtoeat.domain.food.FoodRepository;
+import com.daall.howtoeat.client.food.FoodRepository;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
@@ -16,8 +15,6 @@ import org.springframework.test.annotation.Rollback;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.mockito.Mockito.when;
 
 @SpringBootTest
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
