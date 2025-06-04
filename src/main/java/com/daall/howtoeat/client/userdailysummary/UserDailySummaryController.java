@@ -60,7 +60,7 @@ public class UserDailySummaryController {
             @PathVariable("mealTime") MealTime mealTime
     ) {
         User loginUser = userDetails.getUser();
-        DailyConsumedMacrosByMealTimeResponseDto responseDto = userDailySummaryService.getDailyMacrosByMealTime(loginUser, date, mealTime);
+        DailyConsumedMacrosByMealTimeResponseDto responseDto = userDailySummaryService.getMacrosByUserDateAndMealTime(loginUser, date, mealTime);
 
         SuccessType successType = SuccessType.GET_USER_MACROS_BY_MEALTIME_SUCCESS;
         return ResponseEntity.status(successType.getHttpStatus()).body(new ResponseDataDto<>(successType, responseDto));
