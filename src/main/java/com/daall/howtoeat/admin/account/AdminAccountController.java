@@ -1,12 +1,11 @@
-package com.daall.howtoeat.admin;
+package com.daall.howtoeat.admin.account;
 
-import com.daall.howtoeat.admin.dto.AdminAccountRequestDto;
-import com.daall.howtoeat.admin.dto.AdminAccountResponseDto;
+import com.daall.howtoeat.admin.account.dto.AdminAccountRequestDto;
+import com.daall.howtoeat.admin.account.dto.AdminAccountResponseDto;
 import com.daall.howtoeat.common.PageResponseDto;
 import com.daall.howtoeat.common.ResponseDataDto;
 import com.daall.howtoeat.common.ResponseMessageDto;
 import com.daall.howtoeat.common.enums.SuccessType;
-import com.daall.howtoeat.common.security.UserDetailsImpl;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -43,7 +42,7 @@ public class AdminAccountController {
      * @return ResponseDataDto<AdminAccountResponseDto>
      */
     @GetMapping("/accounts/{accountId}")
-    private ResponseEntity<ResponseDataDto<AdminAccountResponseDto>> getAdminAccounts (@PathVariable Long accountId){
+    private ResponseEntity<ResponseDataDto<AdminAccountResponseDto>> getAdminAccount (@PathVariable Long accountId){
         AdminAccountResponseDto adminAccount = adminAccountService.getAdminAccount(accountId);
         SuccessType successType = SuccessType.GET_ADMIN_ACCOUNT_SUCCESS;
 

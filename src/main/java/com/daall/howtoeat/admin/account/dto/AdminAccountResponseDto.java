@@ -1,4 +1,4 @@
-package com.daall.howtoeat.admin.dto;
+package com.daall.howtoeat.admin.account.dto;
 
 import com.daall.howtoeat.common.enums.UserRole;
 import com.daall.howtoeat.domain.user.User;
