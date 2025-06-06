@@ -18,6 +18,9 @@ public class Trainer extends Timestamped {
     @JoinColumn(name = "gym_id", nullable = false)
     private Gym gym;
 
-    @Column( nullable = false)
+    @Column(nullable = false)
     private String name;
+
+    @Column
+    private String imageUrl;
 }
