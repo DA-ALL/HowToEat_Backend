@@ -47,6 +47,7 @@ public enum SuccessType {
     CREATE_FAVORITE_FOOD_SUCCESS(HttpStatus.CREATED, "즐겨찾기 음식 추가에 성공하였습니다."),
 
     // ======================= FOOD =======================
+    GET_FOOD_SUCCESS(HttpStatus.OK, "음식 조회에 성공하였습니다."),
     CREATE_FOOD_SUCCESS(HttpStatus.CREATED, "음식 추가에 성공하였습니다."),
     UPDATE_FOOD_SUCCESS(HttpStatus.OK, "음식 수정에 성공하였습니다."),
     DELETE_FOOD_SUCCESS(HttpStatus.OK, "음식 삭제에 성공하였습니다."),

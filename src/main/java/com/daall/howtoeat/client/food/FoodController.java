@@ -8,6 +8,7 @@ import com.daall.howtoeat.common.enums.SuccessType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -26,8 +27,18 @@ public class FoodController {
 
             ScrollResponseDto<FoodResponseDto> result = foodService.getFoods(name, page, size);
 
-            SuccessType successType = SuccessType.GET_DAILY_KCAL_SUMMARIES_SUCCESS;
+            SuccessType successType = SuccessType.GET_ALL_FOODS_SUCCESS;
 
             return ResponseEntity.status(successType.getHttpStatus()).body(new ResponseDataDto<>(successType, result));
+    }
+
+    @GetMapping("/food/{foodId}")
+    public ResponseEntity<ResponseDataDto<FoodResponseDto>> getFood(
+            @PathVariable Long foodId
+    ) {
+            SuccessType successType = SuccessType.GET_FOOD_SUCCESS;
+            FoodResponseDto responseDto = foodService.getFood(foodId);
+            return ResponseEntity.status(successType.getHttpStatus()).body(new ResponseDataDto<>(successType, responseDto));
+
     }
 }

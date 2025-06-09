@@ -4,8 +4,9 @@ import com.daall.howtoeat.domain.food.Food;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import java.sql.SQLOutput;
+
 @Getter
-@AllArgsConstructor
 public class FoodResponseDto {
     private Long foodId;
     private String foodCode;
@@ -20,20 +21,18 @@ public class FoodResponseDto {
     private Boolean isPerServing;
     private String unit;
 
-    public static FoodResponseDto from(Food food) {
-        return new FoodResponseDto(
-                food.getId(),
-                food.getFoodCode(),
-                food.getFoodName(),
-                food.getFoodWeight(),
-                food.getKcal(),
-                food.getFoodType().name(),
-                food.getCarbo(),
-                food.getProtein(),
-                food.getFat(),
-                food.getProvided_by(),
-                food.getIsPerServing(),
-                food.getUnit()
-        );
+    public FoodResponseDto(Food food) {
+        this.foodId = food.getId();
+        this.foodCode = food.getFoodCode();
+        this.foodName = food.getFoodName();
+        this.foodWeight = food.getFoodWeight();
+        this.kcal = food.getKcal();
+        this.type = food.getFoodType().name();
+        this.carbo = food.getCarbo();
+        this.protein = food.getProtein();
+        this.fat = food.getFat();
+        this.providedBy = food.getProvided_by();
+        this.isPerServing = food.getIsPerServing();
+        this.unit = food.getUnit();
     }
 }

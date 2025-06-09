@@ -2,6 +2,8 @@ package com.daall.howtoeat.client.food;
 
 import com.daall.howtoeat.client.food.dto.FoodResponseDto;
 import com.daall.howtoeat.common.dto.ScrollResponseDto;
+import com.daall.howtoeat.common.enums.ErrorType;
+import com.daall.howtoeat.common.exception.CustomException;
 import com.daall.howtoeat.domain.food.Food;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -40,9 +42,26 @@ public class FoodService {
         Page<Food> foodPage = foodRepository.findByFoodNameContaining(name, pageable);
 
         List<FoodResponseDto> dtoList = foodPage.getContent().stream()
-                .map(FoodResponseDto::from)
+                .map(FoodResponseDto::new)
                 .toList();
 
         return new ScrollResponseDto<>(dtoList, foodPage.hasNext());
+    }
+
+
+    /**
+     * 주어진 음식 ID를 기반으로 단일 음식 정보를 조회합니다.
+     *
+     * - ID에 해당하는 음식 정보가 존재하지 않을 경우 {@link CustomException}을 발생시키며,
+     * {@link ErrorType#NOT_FOUND_FOOD} 에러를 응답합니다.
+     *
+     * @param foodId 조회할 음식의 고유 ID
+     * @return {@link FoodResponseDto} 해당 ID에 대한 음식 응답 DTO
+     * @throws CustomException 음식 ID에 해당하는 데이터가 존재하지 않는 경우
+     */
+    public FoodResponseDto getFood(Long foodId) {
+        Food food = foodRepository.findById(foodId).orElseThrow(() -> new CustomException(ErrorType.NOT_FOUND_FOOD));
+
+        return new FoodResponseDto(food);
     }
 }
