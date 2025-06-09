@@ -24,9 +24,13 @@ public enum ErrorType {
     //TARGET
     NOT_FOUND_TARGET_ON_DATE(HttpStatus.BAD_REQUEST, "해당 날짜에 대한 목표 정보가 없습니다."),
 
+    //FOOD
+    NOT_FOUND_FOOD(HttpStatus.BAD_REQUEST, "존재하지 않은 음식입니다.");
+
     // GYM
     NOT_FOUND_GYM(HttpStatus.NOT_FOUND, "존재하지 않는 헬스장입니다."),
     ALREADY_EXISTS_GYM_NAME(HttpStatus.BAD_REQUEST, "이미 존재하는 헬스장 이름입니다.");
+
 
     private final HttpStatus httpStatus;
     private final String message;
