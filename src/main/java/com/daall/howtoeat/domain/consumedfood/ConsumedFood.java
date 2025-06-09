@@ -1,5 +1,6 @@
 package com.daall.howtoeat.domain.consumedfood;
 
+import com.daall.howtoeat.client.consumedfood.dto.ConsumedFoodsRequestDto;
 import com.daall.howtoeat.common.Timestamped;
 import com.daall.howtoeat.common.enums.FoodType;
 import com.daall.howtoeat.common.enums.MealTime;
@@ -61,4 +62,21 @@ public class ConsumedFood extends Timestamped {
 
     @Column
     private String foodImageUrl;
+
+
+    public ConsumedFood(ConsumedFoodsRequestDto requestDto, User loginUser) {
+        this.user = loginUser;
+        this.foodCode = requestDto.getFoodCode();
+        this.foodType = requestDto.getFoodType();
+        this.foodName = requestDto.getFoodName();
+        this.kcal = requestDto.getKcal();
+        this.carbo = requestDto.getCarbo();
+        this.protein = requestDto.getProtein();
+        this.fat = requestDto.getFat();
+        this.foodWeight = requestDto.getFoodWeight();
+        this.unit = requestDto.getUnit();
+        this.mealTime = requestDto.getMealTime();
+        this.provided_by = requestDto.getProvidedBy();
+        this.foodImageUrl = requestDto.getFoodCode();
+    }
 }

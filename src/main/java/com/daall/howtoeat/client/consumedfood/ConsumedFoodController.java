@@ -1,19 +1,21 @@
 package com.daall.howtoeat.client.consumedfood;
 
 import com.daall.howtoeat.client.consumedfood.dto.ConsumedFoodByMealTimeResponseDto;
+import com.daall.howtoeat.client.consumedfood.dto.ConsumedFoodsRequestDto;
 import com.daall.howtoeat.common.ResponseDataDto;
+import com.daall.howtoeat.common.ResponseMessageDto;
 import com.daall.howtoeat.common.enums.MealTime;
 import com.daall.howtoeat.common.enums.SuccessType;
 import com.daall.howtoeat.common.security.UserDetailsImpl;
 import com.daall.howtoeat.domain.user.User;
+import jakarta.validation.Valid;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Value;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -34,5 +36,20 @@ public class ConsumedFoodController {
         List<ConsumedFoodByMealTimeResponseDto> responseDto = consumedFoodService.getConsumedFoodList(loginUser, date, mealTime);
 
         return ResponseEntity.ok(new ResponseDataDto<>(SuccessType.GET_DAILY_KCAL_SUMMARIES_SUCCESS, responseDto));
+    }
+
+    /**
+     * 섭취 음식 등록
+     * @param requestDtoList - 섭취 음식에 필요한 데이터
+     */
+    @PostMapping("/consumed-foods")
+    public ResponseEntity<ResponseMessageDto> addConsumedFoods(
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
+            @RequestBody @Valid List<ConsumedFoodsRequestDto> requestDtoList
+    ) {
+        User loginUser = userDetails.getUser();
+        consumedFoodService.addConsumedFoods(loginUser, requestDtoList);
+        SuccessType successType = SuccessType.ADD_CONSUMED_FOOD_SUCCESS;
+        return ResponseEntity.status(successType.getHttpStatus()).body(new ResponseMessageDto(successType));
     }
 }
