@@ -1,16 +1,14 @@
-package com.daall.howtoeat.admin;
+package com.daall.howtoeat.admin.account;
 
-import com.daall.howtoeat.admin.dto.AdminAccountRequestDto;
-import com.daall.howtoeat.admin.dto.AdminAccountResponseDto;
+import com.daall.howtoeat.admin.account.dto.AdminAccountRequestDto;
+import com.daall.howtoeat.admin.account.dto.AdminAccountResponseDto;
 import com.daall.howtoeat.client.user.UserRepository;
-import com.daall.howtoeat.common.PageResponseDto;
-import com.daall.howtoeat.common.ResponseDataDto;
 import com.daall.howtoeat.common.enums.ErrorType;
 import com.daall.howtoeat.common.enums.SignupProvider;
-import com.daall.howtoeat.common.enums.SuccessType;
 import com.daall.howtoeat.common.enums.UserRole;
 import com.daall.howtoeat.common.exception.CustomException;
 import com.daall.howtoeat.domain.user.User;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -38,7 +36,7 @@ public class AdminAccountService {
     }
 
     public Page<AdminAccountResponseDto> getAdminAccounts(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
+        Pageable pageable = PageRequest.of(page, size, Sort.by("id").ascending());
         Page<User> adminAccounts = userRepository.findAllByUserRole(UserRole.ADMIN, pageable);
 
         return adminAccounts.map(AdminAccountResponseDto::new);
@@ -52,6 +50,7 @@ public class AdminAccountService {
         return new AdminAccountResponseDto(user);
     }
 
+    @Transactional
     public void updateAdminAccount(Long accountId, AdminAccountRequestDto requestDto) {
         User user = userRepository.findById(accountId).orElseThrow(
                 ()-> new CustomException(ErrorType.NOT_FOUND_USER)
@@ -67,9 +66,9 @@ public class AdminAccountService {
 
         String encoded = passwordEncoder.encode(requestDto.getPassword());
         user.updateAdminAccount(requestDto, encoded);
-        userRepository.save(user);
     }
 
+    @Transactional
     public void deleteAdminAccount(Long accountId) {
         User user = userRepository.findById(accountId).orElseThrow(
                 ()-> new CustomException(ErrorType.NOT_FOUND_USER)
