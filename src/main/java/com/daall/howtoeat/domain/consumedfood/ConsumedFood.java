@@ -64,7 +64,7 @@ public class ConsumedFood extends Timestamped {
     private String foodImageUrl;
 
 
-    public ConsumedFood(ConsumedFoodsRequestDto requestDto, User loginUser) {
+    public ConsumedFood(User loginUser, ConsumedFoodsRequestDto requestDto) {
         this.user = loginUser;
         this.foodCode = requestDto.getFoodCode();
         this.foodType = requestDto.getFoodType();
