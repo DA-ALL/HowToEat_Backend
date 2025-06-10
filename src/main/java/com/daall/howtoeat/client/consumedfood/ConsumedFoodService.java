@@ -22,23 +22,22 @@ import java.util.List;
 public class ConsumedFoodService {
     private final ConsumedFoodRepository consumedFoodRepository;
 
-    public List<ConsumedFoodByMealTimeResponseDto> getConsumedFoodList(User user, LocalDate localDate, MealTime mealTime) {
+    /**
+     * 섭취 음식 조회
+     * @param loginUser 유저 정보
+     * @param localDate 음식 섭취 날짜
+     * @param mealTime 음식 섭취 끼니(아침 점심 저녁 간식)
+     */
+    public List<ConsumedFoodByMealTimeResponseDto> getConsumedFoodList(User loginUser, LocalDate localDate, MealTime mealTime) {
         LocalDateTime start = localDate.atStartOfDay();
         LocalDateTime end = localDate.atTime(23, 59, 59);
 
-
-        List<ConsumedFood> consumedFoods = consumedFoodRepository.findAllByUserAndCreatedAtBetweenAndMealTime(user, start, end, mealTime);
-        for (ConsumedFood consumedFood : consumedFoods) {
-            System.out.println(consumedFood.getFoodName());
-            System.out.println(consumedFood.getFoodCode());
-            System.out.println("=======================");
-
-        }
+        List<ConsumedFood> consumedFoods = consumedFoodRepository.findAllByUserAndCreatedAtBetweenAndMealTime(loginUser, start, end, mealTime);
 
         List<ConsumedFoodByMealTimeResponseDto> responseDtos = new ArrayList<>();
 
         for (ConsumedFood consumedFood : consumedFoods) {
-            responseDtos.add(new ConsumedFoodByMealTimeResponseDto(consumedFood.getId(), consumedFood.getFoodName(), consumedFood.getKcal(), consumedFood.getFoodWeight(), consumedFood.getUnit()));
+            responseDtos.add(new ConsumedFoodByMealTimeResponseDto(consumedFood));
         }
 
         return responseDtos;

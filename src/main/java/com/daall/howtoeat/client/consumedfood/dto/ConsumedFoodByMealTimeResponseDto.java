@@ -1,5 +1,6 @@
 package com.daall.howtoeat.client.consumedfood.dto;
 
+import com.daall.howtoeat.domain.consumedfood.ConsumedFood;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -12,4 +13,12 @@ public class ConsumedFoodByMealTimeResponseDto {
     private Double kcal;
     private Double weight;
     private String unit;
+
+    public ConsumedFoodByMealTimeResponseDto(ConsumedFood consumedFood) {
+        this.consumedFoodId = consumedFood.getId();
+        this.foodName = consumedFood.getFoodName();
+        this.kcal = consumedFood.getKcal();
+        this.weight = consumedFood.getFoodWeight();
+        this.unit = consumedFood.getUnit();
+    }
 }
