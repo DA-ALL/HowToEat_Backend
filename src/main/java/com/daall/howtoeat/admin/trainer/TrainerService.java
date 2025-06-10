@@ -1,9 +1,14 @@
 package com.daall.howtoeat.admin.trainer;
 
+import com.daall.howtoeat.admin.gym.GymService;
 import com.daall.howtoeat.admin.gym.dto.GymResponseDto;
+import com.daall.howtoeat.admin.trainer.dto.TrainerRequestDto;
 import com.daall.howtoeat.admin.trainer.dto.TrainerResponseDto;
+import com.daall.howtoeat.common.enums.ErrorType;
+import com.daall.howtoeat.common.exception.CustomException;
 import com.daall.howtoeat.domain.pt.Gym;
 import com.daall.howtoeat.domain.pt.Trainer;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -11,15 +16,73 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class TrainerService {
     private final TrainerRepository trainerRepository;
+    private final GymService gymService;
 
-    public Page<TrainerResponseDto> getTrainers(int page, int size, String name, String gym) {
+    public Page<TrainerResponseDto> getTrainers(int page, int size, String name, String gymName) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("id").ascending());
-        Page<Trainer> trainers;
 
-        return null;
+        if (gymName != null && !gymName.trim().isEmpty()) {
+            Optional<Gym> gym = gymService.getOptionalGymEntity(gymName);
+            if (gym.isEmpty()) {
+                // Gym 이름으로 검색했는데 존재하지 않는 경우 → 빈 결과 리턴
+                return Page.empty(pageable);
+            }
+
+            Long gymId = gym.get().getId();
+
+            Page<Trainer> trainers = trainerRepository.searchTrainers(name, gymId, pageable);
+            return trainers.map(trainer -> new TrainerResponseDto(trainer, new GymResponseDto(trainer.getGym()), 0));
+        }
+
+        // gymName 조건이 없으면 전체 대상에서 검색
+        Page<Trainer> trainers = trainerRepository.searchTrainers(name, null, pageable);
+        return trainers.map(trainer -> new TrainerResponseDto(trainer, new GymResponseDto(trainer.getGym()), 0));
+    }
+
+    public TrainerResponseDto getTrainer(Long trainerId) {
+        Trainer trainer = trainerRepository.findById(trainerId).orElseThrow(
+                () -> new CustomException(ErrorType.NOT_FOUND_TRAINER)
+        );
+
+        return new TrainerResponseDto(trainer, new GymResponseDto(trainer.getGym()), 0);
+    }
+
+    public void createTrainer(TrainerRequestDto requestDto) {
+        Gym gym = gymService.getGymEntity(requestDto.getGymId());
+
+        Trainer trainer = new Trainer(requestDto, gym);
+
+        trainerRepository.save(trainer);
+    }
+
+    @Transactional
+    public void updateTrainer(Long trainerId, TrainerRequestDto requestDto) {
+        try {
+            Trainer trainer = trainerRepository.findById(trainerId).orElseThrow(
+                    () -> new CustomException(ErrorType.NOT_FOUND_TRAINER)
+            );
+
+            Gym gym = gymService.getGymEntity(requestDto.getGymId());
+
+            trainer.update(requestDto, gym);
+        }
+        catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+
+    @Transactional
+    public void deleteTrainer(Long trainerId) {
+        Trainer trainer = trainerRepository.findById(trainerId).orElseThrow(
+                () -> new CustomException(ErrorType.NOT_FOUND_TRAINER)
+        );
+
+        trainerRepository.delete(trainer);
     }
 }

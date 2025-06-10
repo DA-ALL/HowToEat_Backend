@@ -1,5 +1,6 @@
 package com.daall.howtoeat.admin.trainer;
 
+import com.daall.howtoeat.admin.trainer.dto.TrainerRequestDto;
 import com.daall.howtoeat.admin.trainer.dto.TrainerResponseDto;
 import com.daall.howtoeat.common.PageResponseDto;
 import com.daall.howtoeat.common.ResponseDataDto;
@@ -39,54 +40,54 @@ public class TrainerController {
 
     /**
      * 트레이너 단일 조회
-     * @param gymId 트레이너 아이디
+     * @param trainerId 트레이너 아이디
      * @return 해당 트레이너 데이터
      */
-//    @GetMapping("/{gymId}")
-//    private ResponseEntity<ResponseDataDto<GymResponseDto>> getTrainer (@PathVariable Long gymId){
-//        GymResponseDto gym = trainerService.getTrainer(gymId);
-//        SuccessType successType = SuccessType.GET_TRAINER_DETAIL_SUCCESS;
-//
-//        return ResponseEntity.status(successType.getHttpStatus()).body(new ResponseDataDto<>(successType, gym));
-//    }
-//
-//    /**
-//     * 트레이너 추가
-//     * @param requestDto 트레이너 데이터
-//     * @return 성공 메시지
-//     */
-//    @PostMapping
-//    private ResponseEntity<ResponseMessageDto> createTrainer(@RequestBody GymRequestDto requestDto){
-//        trainerService.createTrainer(requestDto);
-//        SuccessType successType = SuccessType.CREATE_TRAINER_SUCCESS;
-//
-//        return ResponseEntity.status(successType.getHttpStatus()).body(new ResponseMessageDto(successType));
-//    }
-//
-//    /**
-//     * 트레이너 수정
-//     * @param gymId 트레이너 아이디
-//     * @param requestDto 수정 정보
-//     * @return 성공 메시지
-//     */
-//    @PutMapping("/{gymId}")
-//    private ResponseEntity<ResponseMessageDto> updateTrainer(@PathVariable Long gymId ,@RequestBody GymRequestDto requestDto){
-//        trainerService.updateTrainer(gymId, requestDto);
-//        SuccessType successType = SuccessType.UPDATE_TRAINER_SUCCESS;
-//
-//        return ResponseEntity.status(successType.getHttpStatus()).body(new ResponseMessageDto(successType));
-//    }
-//
-//    /**
-//     * 트레이너 삭제
-//     * @param gymId 트레이너 아이디
-//     * @return 성공 메시지
-//     */
-//    @DeleteMapping("/{gymId}")
-//    private ResponseEntity<ResponseMessageDto> deleteTrainer(@PathVariable Long gymId){
-//        trainerService.deleteTrainer(gymId);
-//        SuccessType successType = SuccessType.DELETE_TRAINER_SUCCESS;
-//
-//        return ResponseEntity.status(successType.getHttpStatus()).body(new ResponseMessageDto(successType));
-//    }
+    @GetMapping("/{trainerId}")
+    private ResponseEntity<ResponseDataDto<TrainerResponseDto>> getTrainer (@PathVariable Long trainerId){
+        TrainerResponseDto gym = trainerService.getTrainer(trainerId);
+        SuccessType successType = SuccessType.GET_TRAINER_DETAIL_SUCCESS;
+
+        return ResponseEntity.status(successType.getHttpStatus()).body(new ResponseDataDto<>(successType, gym));
+    }
+
+    /**
+     * 트레이너 추가
+     * @param requestDto 트레이너 데이터
+     * @return 성공 메시지
+     */
+    @PostMapping
+    private ResponseEntity<ResponseMessageDto> createTrainer(@RequestBody TrainerRequestDto requestDto){
+        trainerService.createTrainer(requestDto);
+        SuccessType successType = SuccessType.CREATE_TRAINER_SUCCESS;
+
+        return ResponseEntity.status(successType.getHttpStatus()).body(new ResponseMessageDto(successType));
+    }
+
+    /**
+     * 트레이너 수정
+     * @param trainerId 트레이너 아이디
+     * @param requestDto 수정 정보
+     * @return 성공 메시지
+     */
+    @PutMapping("/{trainerId}")
+    private ResponseEntity<ResponseMessageDto> updateTrainer(@PathVariable Long trainerId ,@RequestBody TrainerRequestDto requestDto){
+        trainerService.updateTrainer(trainerId, requestDto);
+        SuccessType successType = SuccessType.UPDATE_TRAINER_SUCCESS;
+
+        return ResponseEntity.status(successType.getHttpStatus()).body(new ResponseMessageDto(successType));
+    }
+
+    /**
+     * 트레이너 삭제
+     * @param trainerId 트레이너 아이디
+     * @return 성공 메시지
+     */
+    @DeleteMapping("/{trainerId}")
+    private ResponseEntity<ResponseMessageDto> deleteTrainer(@PathVariable Long trainerId){
+        trainerService.deleteTrainer(trainerId);
+        SuccessType successType = SuccessType.DELETE_TRAINER_SUCCESS;
+
+        return ResponseEntity.status(successType.getHttpStatus()).body(new ResponseMessageDto(successType));
+    }
 }

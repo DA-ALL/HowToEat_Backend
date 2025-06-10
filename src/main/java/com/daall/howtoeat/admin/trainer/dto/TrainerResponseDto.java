@@ -2,6 +2,7 @@ package com.daall.howtoeat.admin.trainer.dto;
 
 import com.daall.howtoeat.admin.gym.dto.GymResponseDto;
 import com.daall.howtoeat.domain.pt.Gym;
+import com.daall.howtoeat.domain.pt.Trainer;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -16,4 +17,13 @@ public class TrainerResponseDto {
     private final GymResponseDto gym;
     private final Integer memberCount;
     private final LocalDate createdAt;
+
+    public TrainerResponseDto(Trainer trainer, GymResponseDto gymResponseDto, Integer memberCount){
+        this.id = trainer.getId();
+        this.name = trainer.getName();
+        this.imageUrl = trainer.getImageUrl();
+        this.gym = gymResponseDto;
+        this.memberCount = memberCount;
+        this.createdAt = trainer.getCreatedAt().toLocalDate();
+    }
 }

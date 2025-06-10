@@ -1,5 +1,7 @@
 package com.daall.howtoeat.domain.pt;
 
+import com.daall.howtoeat.admin.trainer.dto.TrainerRequestDto;
+import com.daall.howtoeat.admin.trainer.dto.TrainerResponseDto;
 import com.daall.howtoeat.common.Timestamped;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -23,4 +25,16 @@ public class Trainer extends Timestamped {
 
     @Column
     private String imageUrl;
+
+    public Trainer(TrainerRequestDto requestDto, Gym gym) {
+        this.gym = gym;
+        this.name = requestDto.getName();
+        this.imageUrl = requestDto.getImageUrl();
+    }
+
+    public void update(TrainerRequestDto requestDto, Gym gymEntity) {
+        this.name = requestDto.getName();
+        this.imageUrl = requestDto.getImageUrl();
+        this.gym = gymEntity;
+    }
 }

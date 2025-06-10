@@ -2,6 +2,7 @@ package com.daall.howtoeat.admin.gym;
 
 import com.daall.howtoeat.admin.gym.dto.GymRequestDto;
 import com.daall.howtoeat.admin.gym.dto.GymResponseDto;
+import com.daall.howtoeat.admin.gym.dto.GymWithTrainerCountResponseDto;
 import com.daall.howtoeat.common.PageResponseDto;
 import com.daall.howtoeat.common.ResponseDataDto;
 import com.daall.howtoeat.common.ResponseMessageDto;
@@ -24,14 +25,14 @@ public class GymController {
      * @return 헬스장 리스트
      */
     @GetMapping
-    private ResponseEntity<PageResponseDto<GymResponseDto>> getGyms (
+    private ResponseEntity<PageResponseDto<GymWithTrainerCountResponseDto>> getGyms (
             @RequestParam(value = "page", defaultValue = "1") Integer page,
             @RequestParam(value = "size", defaultValue = "20") Integer size,
             @RequestParam(value = "name", required = false) String name
     ){
-        Page<GymResponseDto> gyms = gymService.getGyms(page - 1, size, name);
+        Page<GymWithTrainerCountResponseDto> gyms = gymService.getGyms(page - 1, size, name);
         SuccessType successType = SuccessType.GET_ALL_GYMS_SUCCESS;
-        PageResponseDto<GymResponseDto> responseDto = new PageResponseDto<>(successType, gyms);
+        PageResponseDto<GymWithTrainerCountResponseDto> responseDto = new PageResponseDto<>(successType, gyms);
 
         return ResponseEntity.status(successType.getHttpStatus()).body(responseDto);
     }
