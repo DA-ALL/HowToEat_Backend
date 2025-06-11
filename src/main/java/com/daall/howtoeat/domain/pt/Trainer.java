@@ -26,15 +26,15 @@ public class Trainer extends Timestamped {
     @Column
     private String imageUrl;
 
-    public Trainer(TrainerRequestDto requestDto, Gym gym) {
+    public Trainer(Gym gym, String name, String imageUrl) {
         this.gym = gym;
-        this.name = requestDto.getName();
-        this.imageUrl = requestDto.getImageUrl();
+        this.name = name;
+        this.imageUrl = imageUrl;
     }
 
-    public void update(TrainerRequestDto requestDto, Gym gymEntity) {
-        this.name = requestDto.getName();
-        this.imageUrl = requestDto.getImageUrl();
-        this.gym = gymEntity;
+    public void update(Gym gym, String name, String imageUrl) {
+        this.gym = gym;
+        this.name = name;
+        this.imageUrl = imageUrl;
     }
 }

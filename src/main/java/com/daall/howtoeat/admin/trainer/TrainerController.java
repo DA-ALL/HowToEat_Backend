@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequiredArgsConstructor
@@ -53,12 +54,18 @@ public class TrainerController {
 
     /**
      * 트레이너 추가
-     * @param requestDto 트레이너 데이터
+     * @param name 트레이너 이름
+     * @param gym gymId
+     * @param image image파일
      * @return 성공 메시지
      */
     @PostMapping
-    private ResponseEntity<ResponseMessageDto> createTrainer(@RequestBody TrainerRequestDto requestDto){
-        trainerService.createTrainer(requestDto);
+    private ResponseEntity<ResponseMessageDto> createTrainer(
+            @RequestParam("name") String name,
+            @RequestParam("gym") Long gym,
+            @RequestParam(value = "image", required = false) MultipartFile image
+    ){
+        trainerService.createTrainer(name, gym, image);
         SuccessType successType = SuccessType.CREATE_TRAINER_SUCCESS;
 
         return ResponseEntity.status(successType.getHttpStatus()).body(new ResponseMessageDto(successType));
@@ -71,8 +78,13 @@ public class TrainerController {
      * @return 성공 메시지
      */
     @PutMapping("/{trainerId}")
-    private ResponseEntity<ResponseMessageDto> updateTrainer(@PathVariable Long trainerId ,@RequestBody TrainerRequestDto requestDto){
-        trainerService.updateTrainer(trainerId, requestDto);
+    private ResponseEntity<ResponseMessageDto> updateTrainer(
+            @PathVariable Long trainerId ,
+            @RequestParam("name") String name,
+            @RequestParam("gym") Long gym,
+            @RequestParam(value = "image", required = false) MultipartFile image
+    ){
+        trainerService.updateTrainer(trainerId, name, gym, image);
         SuccessType successType = SuccessType.UPDATE_TRAINER_SUCCESS;
 
         return ResponseEntity.status(successType.getHttpStatus()).body(new ResponseMessageDto(successType));

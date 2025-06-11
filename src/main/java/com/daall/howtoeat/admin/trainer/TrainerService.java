@@ -15,6 +15,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Optional;
 
@@ -27,7 +28,7 @@ public class TrainerService {
     public Page<TrainerResponseDto> getTrainers(int page, int size, String name, String gymName) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("id").ascending());
 
-        if (gymName != null && !gymName.trim().isEmpty()) {
+        if (gymName != null && !gymName.trim().isEmpty() && !gymName.equals("all")) {
             Optional<Gym> gym = gymService.getOptionalGymEntity(gymName);
             if (gym.isEmpty()) {
                 // Gym 이름으로 검색했는데 존재하지 않는 경우 → 빈 결과 리턴
@@ -53,28 +54,28 @@ public class TrainerService {
         return new TrainerResponseDto(trainer, new GymResponseDto(trainer.getGym()), 0);
     }
 
-    public void createTrainer(TrainerRequestDto requestDto) {
-        Gym gym = gymService.getGymEntity(requestDto.getGymId());
+    public void createTrainer(String name, Long gymId, MultipartFile image) {
+        // TODO: 이미지 처리
+        String imageUrl = "";
+        System.out.println("이미지 파일: " + image);
 
-        Trainer trainer = new Trainer(requestDto, gym);
+        Gym gym = gymService.getGymEntity(gymId);
+
+        Trainer trainer = new Trainer(gym, name, imageUrl);
 
         trainerRepository.save(trainer);
     }
 
     @Transactional
-    public void updateTrainer(Long trainerId, TrainerRequestDto requestDto) {
-        try {
-            Trainer trainer = trainerRepository.findById(trainerId).orElseThrow(
-                    () -> new CustomException(ErrorType.NOT_FOUND_TRAINER)
-            );
+    public void updateTrainer(Long trainerId, String name, Long gymId, MultipartFile image) {
+        // TODO: 이미지 처리
+        Trainer trainer = trainerRepository.findById(trainerId).orElseThrow(
+                () -> new CustomException(ErrorType.NOT_FOUND_TRAINER)
+        );
 
-            Gym gym = gymService.getGymEntity(requestDto.getGymId());
-
-            trainer.update(requestDto, gym);
-        }
-        catch (Exception e) {
-            System.out.println(e);
-        }
+        Gym gym = gymService.getGymEntity(gymId);
+        String imageUrl = "";
+        trainer.update(gym, name, imageUrl);
     }
 
     @Transactional
