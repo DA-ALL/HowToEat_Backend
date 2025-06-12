@@ -45,5 +45,8 @@ public class FavoriteFoodAddBySearchRequestDto {
     @NotBlank(message = "단위 정보가 비어있습니다. 다시 시도해주세요.")
     private String unit;
 
+    @NotBlank(message = "단위 정보가 비어있습니다. 다시 시도해주세요.")
+    private String source;
+
     private String foodImageUrl;
 }
