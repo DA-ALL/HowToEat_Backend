@@ -1,6 +1,10 @@
 package com.daall.howtoeat.domain.user;
 
+import com.daall.howtoeat.client.consumedfood.dto.ConsumedFoodsRequestDto;
+import com.daall.howtoeat.client.user.UserTargetService;
+import com.daall.howtoeat.client.userdailysummary.dto.DailyNutritionSummary;
 import com.daall.howtoeat.common.Timestamped;
+import com.daall.howtoeat.common.enums.MealTime;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -90,4 +94,30 @@ public class UserDailySummary extends Timestamped {
 
     @Column(nullable = false)
     private Double snackFat;
+
+    //오늘 처음 음식들을 섭취 후 등록했을 때
+    public void setData(User loginUser, UserTarget userTarget, DailyNutritionSummary dailyNutritionSummary) {
+        this.user = loginUser;
+        this.userTarget = userTarget;
+        this.totalKcal = dailyNutritionSummary.getTotalKcal();
+        this.totalCarbo = dailyNutritionSummary.getTotalCarbo();
+        this.totalProtein = dailyNutritionSummary.getTotalProtein();
+        this.totalFat = dailyNutritionSummary.getTotalFat();
+        this.breakfastKcal = dailyNutritionSummary.getBreakfastKcal();
+        this.breakfastCarbo = dailyNutritionSummary.getBreakfastCarbo();
+        this.breakfastProtein = dailyNutritionSummary.getBreakfastProtein();
+        this.breakfastFat = dailyNutritionSummary.getBreakfastFat();
+        this.lunchKcal = dailyNutritionSummary.getLunchKcal();
+        this.lunchCarbo = dailyNutritionSummary.getLunchCarbo();
+        this.lunchProtein = dailyNutritionSummary.getLunchProtein();
+        this.lunchFat = dailyNutritionSummary.getLunchFat();
+        this.dinnerKcal = dailyNutritionSummary.getDinnerKcal();
+        this.dinnerCarbo = dailyNutritionSummary.getDinnerCarbo();
+        this.dinnerProtein = dailyNutritionSummary.getDinnerProtein();
+        this.dinnerFat = dailyNutritionSummary.getDinnerFat();
+        this.snackKcal = dailyNutritionSummary.getSnackKcal();
+        this.snackCarbo = dailyNutritionSummary.getSnackCarbo();
+        this.snackProtein = dailyNutritionSummary.getSnackProtein();
+        this.snackFat = dailyNutritionSummary.getSnackFat();
+    }
 }

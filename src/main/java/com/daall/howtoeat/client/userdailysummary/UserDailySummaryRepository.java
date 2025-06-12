@@ -12,5 +12,6 @@ import java.util.Optional;
 @Repository
 public interface UserDailySummaryRepository extends JpaRepository<UserDailySummary, Long> {
     List<UserDailySummary> findAllByUserAndCreatedAtBetween (User user, LocalDateTime start, LocalDateTime end);
-    UserDailySummary findByUserAndCreatedAtBetween(User user, LocalDateTime start, LocalDateTime end);
+    Optional<UserDailySummary> findByUserAndCreatedAtBetween(User user, LocalDateTime start, LocalDateTime end);
+
 }

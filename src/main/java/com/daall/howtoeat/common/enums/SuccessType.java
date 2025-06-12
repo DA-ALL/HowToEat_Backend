@@ -59,6 +59,9 @@ public enum SuccessType {
     GET_ALL_RECOMMEND_FOODS_SUCCESS(HttpStatus.OK, "추천 음식 전체 조회에 성공하였습니다."),
     GET_RECOMMEND_FOOD_DETAIL_SUCCESS(HttpStatus.OK, "추천 음식 단일 조회에 성공하였습니다."),
 
+    // ======================= CONSUMED_FOOD =======================
+    ADD_CONSUMED_FOOD_SUCCESS(HttpStatus.CREATED, "음식 등록에 성공하였습니다."),
+
     // ======================= STATS =======================
     GET_USER_STATISTICS_SUCCESS(HttpStatus.OK, "통계 조회에 성공하였습니다."),
     GET_USER_DIET_STATS_SUCCESS(HttpStatus.OK, "식단 등록 횟수 통계 조회에 성공하였습니다."),
