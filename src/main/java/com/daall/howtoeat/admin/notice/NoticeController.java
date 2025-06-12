@@ -1,8 +1,10 @@
 package com.daall.howtoeat.admin.notice;
 
+import com.daall.howtoeat.admin.notice.dto.NoticeRequestDto;
 import com.daall.howtoeat.admin.notice.dto.NoticeResponseDto;
 import com.daall.howtoeat.common.PageResponseDto;
 import com.daall.howtoeat.common.ResponseDataDto;
+import com.daall.howtoeat.common.ResponseMessageDto;
 import com.daall.howtoeat.common.enums.SuccessType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -28,7 +30,7 @@ public class NoticeController {
             @RequestParam(value = "size", defaultValue = "20") Integer size,
             @RequestParam(value = "title", required = false) String title
     ){
-        Page<NoticeResponseDto> notices = noticeService.getNotices(page, size, title);
+        Page<NoticeResponseDto> notices = noticeService.getNotices(page-1, size, title);
         SuccessType successType = SuccessType.GET_ALL_NOTICES_SUCCESS;
 
         return ResponseEntity.status(successType.getHttpStatus()).body(new PageResponseDto<>(successType, notices));
@@ -48,5 +50,27 @@ public class NoticeController {
         return ResponseEntity.status(successType.getHttpStatus()).body(new ResponseDataDto<>(successType, responseDto));
     }
 
+    /**
+     * 공지사항 추가
+     * @param noticeRequestDto 공지사항 데이터
+     * @return 성공 메시지
+     */
+    @PostMapping
+    public ResponseEntity<ResponseMessageDto> createNotice(@RequestBody NoticeRequestDto noticeRequestDto){
+        noticeService.createNotice(noticeRequestDto);
+        SuccessType successType = SuccessType.CREATE_NOTICE_SUCCESS;
+
+        return ResponseEntity.status(successType.getHttpStatus()).body(new ResponseMessageDto(successType));
+    }
+
+    @PutMapping("/{noticeId}")
+    public ResponseEntity<ResponseMessageDto> updateNotice(
+            @PathVariable Long noticeId,
+            @RequestBody NoticeRequestDto requestDto
+    ){
+        noticeService.updateNotice(noticeId, requestDto);
+        SuccessType successType = SuccessType.UPDATE_NOTICE_SUCCESS;
+        return ResponseEntity.status(successType.getHttpStatus()).body(new ResponseMessageDto(successType));
+    }
 
 }

@@ -1,9 +1,11 @@
 package com.daall.howtoeat.admin.notice;
 
+import com.daall.howtoeat.admin.notice.dto.NoticeRequestDto;
 import com.daall.howtoeat.admin.notice.dto.NoticeResponseDto;
 import com.daall.howtoeat.common.enums.ErrorType;
 import com.daall.howtoeat.common.exception.CustomException;
 import com.daall.howtoeat.domain.notice.Notice;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -38,5 +40,20 @@ public class NoticeService {
         );
 
         return new NoticeResponseDto(notice);
+    }
+
+    public void createNotice(NoticeRequestDto noticeRequestDto) {
+        Notice notice = new Notice(noticeRequestDto);
+
+        noticeRepository.save(notice);
+    }
+
+    @Transactional
+    public void updateNotice(Long noticeId, NoticeRequestDto requestDto) {
+        Notice notice = noticeRepository.findById(noticeId).orElseThrow(
+                () -> new CustomException(ErrorType.NOT_FOUND_NOTICE)
+        );
+
+        notice.update(requestDto);
     }
 }
