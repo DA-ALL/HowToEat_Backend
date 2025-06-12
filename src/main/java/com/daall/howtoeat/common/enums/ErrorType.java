@@ -32,7 +32,8 @@ public enum ErrorType {
 
     // GYM
     NOT_FOUND_GYM(HttpStatus.NOT_FOUND, "존재하지 않는 헬스장입니다."),
-    ALREADY_EXISTS_GYM_NAME(HttpStatus.BAD_REQUEST, "이미 존재하는 헬스장 이름입니다.");
+    ALREADY_EXISTS_GYM_NAME(HttpStatus.BAD_REQUEST, "이미 존재하는 헬스장 이름입니다."),
+    NOT_FOUND_TRAINER(HttpStatus.NOT_FOUND,"존재하지 않는 트레이너입니다.");
 
 
     private final HttpStatus httpStatus;

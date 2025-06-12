@@ -2,6 +2,7 @@ package com.daall.howtoeat.admin.gym;
 
 import com.daall.howtoeat.admin.gym.dto.GymRequestDto;
 import com.daall.howtoeat.admin.gym.dto.GymResponseDto;
+import com.daall.howtoeat.admin.gym.dto.GymWithTrainerCountResponseDto;
 import com.daall.howtoeat.common.enums.ErrorType;
 import com.daall.howtoeat.common.exception.CustomException;
 import com.daall.howtoeat.domain.pt.Gym;
@@ -13,23 +14,23 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 public class GymService {
     private final GymRepository gymRepository;
 
-    public Page<GymResponseDto> getGyms(int page, int size, String name) {
+    public Page<GymWithTrainerCountResponseDto> getGyms(int page, int size, String name) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("id").ascending());
-        Page<Gym> gyms;
 
-        System.out.println("name: " + name);
-        if (name == null || name.trim().isEmpty()) {
-            gyms = gymRepository.findAll(pageable);
-        } else {
-            gyms = gymRepository.findByNameContainingIgnoreCase(name.trim(), pageable);
-        }
+        return gymRepository.getGymsWithTrainerCount(pageable, name);
+    }
 
-        return gyms.map(GymResponseDto::new);
+    public List<GymWithTrainerCountResponseDto> getAllGyms() {
+        return gymRepository.getAllGyms();
     }
 
     public GymResponseDto getGym(Long gymId) {
@@ -38,6 +39,16 @@ public class GymService {
         );
 
         return new GymResponseDto(gym);
+    }
+
+    public Optional<Gym> getOptionalGymEntity(String name){
+        return gymRepository.findByName(name);
+    }
+
+    public Gym getGymEntity(Long gymId) {
+        return gymRepository.findById(gymId).orElseThrow(
+            () -> new CustomException(ErrorType.NOT_FOUND_GYM)
+        );
     }
 
     public void createGym(GymRequestDto requestDto) {
@@ -70,4 +81,5 @@ public class GymService {
 
         gymRepository.delete(gym);
     }
+
 }
