@@ -23,7 +23,7 @@ public class FavoriteFood extends Timestamped {
     private User user;
 
     @Column(nullable = false)
-    private String name;
+    private String foodName;
 
     @Column(nullable = false)
     private String foodCode;
@@ -32,9 +32,6 @@ public class FavoriteFood extends Timestamped {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private FoodType foodType;
-
-    @Column(nullable = false)
-    private String foodName;
 
     @Column(nullable = false)
     private Double kcal;

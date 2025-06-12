@@ -31,7 +31,7 @@ public class FoodResponseDto {
         this.carbo = food.getCarbo();
         this.protein = food.getProtein();
         this.fat = food.getFat();
-        this.providedBy = food.getProvided_by();
+        this.providedBy = food.getProvidedBy();
         this.isPerServing = food.getIsPerServing();
         this.unit = food.getUnit();
     }

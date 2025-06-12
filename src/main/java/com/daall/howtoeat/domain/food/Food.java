@@ -28,7 +28,7 @@ public class Food extends Timestamped {
 
     //대표음식명 : 소고기 입력시 한우볶음밥이 나올 수 있도록 하기 위한 컬럼
     @Column
-    private String representative_name;
+    private String representativeName;
 
     @Column(nullable = false)
     private Double kcal;
@@ -50,7 +50,7 @@ public class Food extends Timestamped {
 
     //음식 원산지 : 회사/미국산 등
     @Column(nullable = false)
-    private String provided_by;
+    private String providedBy;
 
     //음식 데이터 출처 : 식약처 / 어드민 / 유저
     @Column(nullable = false)
