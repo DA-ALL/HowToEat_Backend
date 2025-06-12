@@ -12,6 +12,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/admin/gyms")
@@ -36,6 +38,17 @@ public class GymController {
 
         return ResponseEntity.status(successType.getHttpStatus()).body(responseDto);
     }
+
+
+    @GetMapping("/all")
+    private ResponseEntity<ResponseDataDto<List<GymWithTrainerCountResponseDto>>> getAllGyms (){
+        List<GymWithTrainerCountResponseDto> gyms= gymService.getAllGyms();
+        SuccessType successType = SuccessType.GET_ALL_GYMS_SUCCESS;
+        ResponseDataDto<List<GymWithTrainerCountResponseDto>> responseDataDto = new ResponseDataDto<>(successType, gyms);
+
+        return ResponseEntity.status(successType.getHttpStatus()).body(responseDataDto);
+    }
+
 
     /**
      * 헬스장 단일 조회

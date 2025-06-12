@@ -74,7 +74,9 @@ public class TrainerController {
     /**
      * 트레이너 수정
      * @param trainerId 트레이너 아이디
-     * @param requestDto 수정 정보
+     * @param name 수정할 트레이너 이름
+     * @param gym 수정할 gymId
+     * @param image 이미지 파일
      * @return 성공 메시지
      */
     @PutMapping("/{trainerId}")

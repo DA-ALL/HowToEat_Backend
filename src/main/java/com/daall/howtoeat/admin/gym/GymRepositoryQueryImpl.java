@@ -52,4 +52,25 @@ public class GymRepositoryQueryImpl implements GymRepositoryQuery{
 
         return new PageImpl<>(content, pageable, total != null ? total : 0);
     }
+
+    @Override
+    public List<GymWithTrainerCountResponseDto> getAllGyms() {
+
+        QGym gym = QGym.gym;
+        QTrainer trainer = QTrainer.trainer;
+
+        return jpaQueryFactory
+                .select(
+                    Projections.constructor(
+                        GymWithTrainerCountResponseDto.class,
+                        gym.id,
+                        gym.name,
+                        trainer.count().intValue(),
+                        gym.createdAt
+                ))
+                .from(gym)
+                .leftJoin(trainer).on(trainer.gym.eq(gym))
+                .groupBy(gym.id, gym.name)
+                .fetch();
+    }
 }
