@@ -20,11 +20,11 @@ import java.util.Optional;
 public class NoticeService {
     private final NoticeRepository noticeRepository;
 
-    public Page<NoticeResponseDto> getNotices(Integer page, Integer size, String title) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by("id").ascending());
+    public Page<NoticeResponseDto> getNotices(Integer page, Integer size, String title, String orderBy) {
+        Pageable pageable = orderBy.equals("asc") ? PageRequest.of(page, size, Sort.by("createdAt").ascending()) : PageRequest.of(page, size, Sort.by("createdAt").descending());
         Page<Notice> notices;
 
-        if(title != null && title.trim().isEmpty()){
+        if(title != null && !title.trim().isEmpty()){
             notices = noticeRepository.findByTitleContaining(title, pageable);
         } else {
             notices = noticeRepository.findAll(pageable);
@@ -55,5 +55,14 @@ public class NoticeService {
         );
 
         notice.update(requestDto);
+    }
+
+    @Transactional
+    public void deleteNotice(Long noticeId) {
+        Notice notice = noticeRepository.findById(noticeId).orElseThrow(
+                () -> new CustomException(ErrorType.NOT_FOUND_NOTICE)
+        );
+
+        noticeRepository.delete(notice);
     }
 }

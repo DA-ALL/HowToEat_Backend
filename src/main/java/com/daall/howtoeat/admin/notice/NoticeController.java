@@ -28,9 +28,10 @@ public class NoticeController {
     public ResponseEntity<PageResponseDto<NoticeResponseDto>> getNotices (
             @RequestParam(value = "page", defaultValue = "1") Integer page,
             @RequestParam(value = "size", defaultValue = "20") Integer size,
-            @RequestParam(value = "title", required = false) String title
+            @RequestParam(value = "title", required = false) String title,
+            @RequestParam(value = "orderBy", required = false) String orderBy
     ){
-        Page<NoticeResponseDto> notices = noticeService.getNotices(page-1, size, title);
+        Page<NoticeResponseDto> notices = noticeService.getNotices(page-1, size, title, orderBy);
         SuccessType successType = SuccessType.GET_ALL_NOTICES_SUCCESS;
 
         return ResponseEntity.status(successType.getHttpStatus()).body(new PageResponseDto<>(successType, notices));
@@ -73,4 +74,11 @@ public class NoticeController {
         return ResponseEntity.status(successType.getHttpStatus()).body(new ResponseMessageDto(successType));
     }
 
+    @DeleteMapping("/{noticeId}")
+    public ResponseEntity<ResponseMessageDto> deleteNotice(@PathVariable Long noticeId){
+        noticeService.deleteNotice(noticeId);
+        SuccessType successType = SuccessType.DELETE_NOTICE_SUCCESS;
+
+        return ResponseEntity.status(successType.getHttpStatus()).body(new ResponseMessageDto(successType));
+    }
 }
