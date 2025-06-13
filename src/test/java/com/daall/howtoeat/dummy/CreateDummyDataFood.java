@@ -263,14 +263,14 @@ public class CreateDummyDataFood {
             setField(food, "foodCode", foodCode);
             setField(food, "foodType", FoodType.valueOf(foodType));
             setField(food, "foodName", foodName);
-            setField(food, "representative_name", representativeName);
+            setField(food, "representativeName", representativeName);
             setField(food, "kcal", Double.valueOf(kcal));
             setField(food, "carbo", Double.valueOf(carbo));
             setField(food, "protein", Double.valueOf(protein));
             setField(food, "fat", Double.valueOf(fat));
             setField(food, "foodWeight", Double.valueOf(foodWeight));
             setField(food, "unit", unit);
-            setField(food, "provided_by", providedBy);
+            setField(food, "providedBy", providedBy);
             setField(food, "source", source);
             setField(food, "isPerServing", isPerServing);
 
@@ -519,14 +519,14 @@ public class CreateDummyDataFood {
             setField(food, "foodCode", foodCode);
             setField(food, "foodType", FoodType.valueOf(foodType));
             setField(food, "foodName", foodName);
-            setField(food, "representative_name", representativeName);
+            setField(food, "representativeName", representativeName);
             setField(food, "kcal", kcal);
             setField(food, "carbo", carbo);
             setField(food, "protein", protein);
             setField(food, "fat", fat);
             setField(food, "foodWeight", foodWeight);
             setField(food, "unit", unit);
-            setField(food, "provided_by", providedBy);
+            setField(food, "providedBy", providedBy);
             setField(food, "source", source);
             setField(food, "isPerServing", isPerServing);
 
@@ -785,14 +785,14 @@ public class CreateDummyDataFood {
             setField(food, "foodCode", foodCode);
             setField(food, "foodType", FoodType.valueOf(foodType));
             setField(food, "foodName", foodName);
-            setField(food, "representative_name", representativeName);
+            setField(food, "representativeName", representativeName);
             setField(food, "kcal", kcal);
             setField(food, "carbo", carbo);
             setField(food, "protein", protein);
             setField(food, "fat", fat);
             setField(food, "foodWeight", foodWeight);
             setField(food, "unit", unit);
-            setField(food, "provided_by", providedBy);
+            setField(food, "providedBy", providedBy);
             setField(food, "source", source);
             setField(food, "isPerServing", isPerServing);
 
