@@ -25,8 +25,8 @@ public class UserController {
     private final AuthService authService;
 
     @PostMapping("/signup")
-    public ResponseEntity<ResponseMessageDto> signup(@RequestBody @Valid SignupRequestDto dto, HttpServletResponse response) {
-        User user = userService.signup(dto);
+    public ResponseEntity<ResponseMessageDto> signup(@RequestBody @Valid SignupRequestDto requestDto, HttpServletResponse response) {
+        User user = userService.signup(requestDto);
 
         authService.issueTokens(user, response);
         SuccessType successType = SuccessType.CREATE_USER_SUCCESS;

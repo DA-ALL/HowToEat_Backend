@@ -49,6 +49,10 @@ public class FavoriteFood extends Timestamped {
     @Column(nullable = false)
     private Double foodWeight;
 
+    //음식 원산지 : 회사/미국산 등
+    @Column(nullable = false)
+    private String providedBy;
+
     @Column(nullable = false)
     private String unit;
 
@@ -59,6 +63,9 @@ public class FavoriteFood extends Timestamped {
     //음식 데이터 출처가 유저인 경우, 음식 설명이 있을 수 있음
     @Column
     private String description;
+
+    @Column
+    private String foodImageUrl;
 
     @Column
     private LocalDateTime sharedAt;
@@ -73,6 +80,7 @@ public class FavoriteFood extends Timestamped {
         this.protein = requestDto.getProtein();
         this.fat = requestDto.getFat();
         this.foodWeight = requestDto.getFoodWeight();
+        this.providedBy = requestDto.getProvidedBy();
         this.unit = requestDto.getUnit();
         this.source = requestDto.getSource();
     }

@@ -23,6 +23,7 @@ public class UserService {
         User user = new User(requestDto);
 
         User savedUser = userRepository.save(user);
+        System.out.println(savedUser.getId() + " 유저 테스트입니다. ");
 
         userTargetService.createTarget(requestDto, savedUser);
 
