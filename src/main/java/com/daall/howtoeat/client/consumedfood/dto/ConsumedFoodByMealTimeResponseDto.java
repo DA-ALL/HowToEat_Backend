@@ -11,6 +11,9 @@ public class ConsumedFoodByMealTimeResponseDto {
     private Long consumedFoodId;
     private String foodName;
     private Double kcal;
+    private Double carbo;
+    private Double protein;
+    private Double fat;
     private Double weight;
     private String unit;
 
@@ -18,6 +21,9 @@ public class ConsumedFoodByMealTimeResponseDto {
         this.consumedFoodId = consumedFood.getId();
         this.foodName = consumedFood.getFoodName();
         this.kcal = consumedFood.getKcal();
+        this.carbo = consumedFood.getCarbo();
+        this.protein = consumedFood.getProtein();
+        this.fat = consumedFood.getFat();
         this.weight = consumedFood.getFoodWeight();
         this.unit = consumedFood.getUnit();
     }
