@@ -90,7 +90,8 @@ public enum SuccessType {
     UPDATE_NOTICE_SUCCESS(HttpStatus.OK, "공지사항 수정에 성공하였습니다."),
     DELETE_NOTICE_SUCCESS(HttpStatus.OK, "공지사항 삭제에 성공하였습니다."),
 
-    CREATE_PTMEMBER_SUCCESS(HttpStatus.CREATED, "PT 회원 추가에 성공하였습니다.");
+    CREATE_PTMEMBER_SUCCESS(HttpStatus.CREATED, "PT 회원 추가에 성공하였습니다."),
+    DELETE_PTMEMBER_SUCCESS(HttpStatus.OK, "PT 회원 삭제에 성공하였습니다.");
 
 
     private final HttpStatus httpStatus;
