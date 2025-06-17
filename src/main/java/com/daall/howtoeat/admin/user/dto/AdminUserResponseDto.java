@@ -20,9 +20,9 @@ public class AdminUserResponseDto {
     private final String profileImageUrl;
     private final UserRole userRole;
     private final UserStatus userStatus;
-    private final SignupProvider signup_provider;
-    private final String refreshToken;
+    private final Integer consumedFoodCount;
     private final LocalDate createdAt;
+    private final LocalDate modifiedAt;
 
     public AdminUserResponseDto(User user) {
         this.id = user.getId();
@@ -34,8 +34,8 @@ public class AdminUserResponseDto {
         this.profileImageUrl = user.getProfileImageUrl();
         this.userRole = user.getUserRole();
         this.userStatus = user.getUserStatus();
-        this.signup_provider = user.getSignup_provider();
-        this.refreshToken = user.getRefreshToken();
         this.createdAt = user.getCreatedAt().toLocalDate();
+        this.modifiedAt = user.getModifiedAt().toLocalDate();
+        this.consumedFoodCount = 0;
     }
 }
