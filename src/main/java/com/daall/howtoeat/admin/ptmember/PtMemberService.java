@@ -10,6 +10,7 @@ import com.daall.howtoeat.common.exception.CustomException;
 import com.daall.howtoeat.domain.pt.PtMember;
 import com.daall.howtoeat.domain.pt.Trainer;
 import com.daall.howtoeat.domain.user.User;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -28,7 +29,7 @@ public class PtMemberService {
         User user = adminUserService.getUserById(requestDto.getUserId());
 
         if(ptMemberRepository.existsByTrainerIdAndUserId(trainer.getId(), user.getId())){
-            throw new CustomException(ErrorType.ALREADY_EXISTS_PTMEMBER);
+            throw new CustomException(ErrorType.ALREADY_EXISTS_PT_MEMBER);
         };
 
         PtMember ptMember = new PtMember(trainer, user);
@@ -45,6 +46,12 @@ public class PtMemberService {
         return new TrainerWithPtMembersResponseDto(trainer, ptMemberUserResponseDtos);
     }
 
+    @Transactional
+    public void deletePtMember(Long ptMemberId) {
+        PtMember ptMember = ptMemberRepository.findById(ptMemberId).orElseThrow(
+                () -> new CustomException(ErrorType.NOT_FOUND_PT_MEMBER)
+        );
 
-
+        ptMemberRepository.delete(ptMember);
+    }
 }

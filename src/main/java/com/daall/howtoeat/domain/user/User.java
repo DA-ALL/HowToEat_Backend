@@ -77,11 +77,10 @@ public class User extends Timestamped {
     public User(AdminAccountRequestDto requestDto, String password){
         this.email = requestDto.getAccountId();
         this.password = password;
-
         this.name = "admin";
         this.gender = Gender.MALE;
         this.birth = LocalDate.now();
-        this.isNextGym = true;
+        this.isNextGym = false;
         this.userRole = UserRole.ADMIN;
         this.userStatus = UserStatus.ACTIVATE;
         this.signup_provider = SignupProvider.ADMIN;

@@ -3,9 +3,9 @@ package com.daall.howtoeat.admin.user;
 import com.daall.howtoeat.client.user.UserRepository;
 import com.daall.howtoeat.admin.user.dto.AdminUserResponseDto;
 import com.daall.howtoeat.common.enums.ErrorType;
+import com.daall.howtoeat.common.enums.UserRole;
 import com.daall.howtoeat.common.exception.CustomException;
 import com.daall.howtoeat.domain.user.User;
-import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
@@ -15,10 +15,17 @@ import org.springframework.stereotype.Service;
 public class AdminUserService {
     private final UserRepository userRepository;
 
-    public Page<AdminUserResponseDto> getUsersByName(int page, int size, String name) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by("id").ascending());
+    public Page<AdminUserResponseDto> getUsersByName(int page, int size, String name, String orderBy, Boolean isNextGym, UserRole userRole, Boolean isAddPtMember) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<User> users;
 
-        Page<User> users = userRepository.findByNameContaining(name, pageable);
+        System.out.println(", userRole: " + userRole + ", isNextGym: " + isNextGym + ", isAddPtMember: " + isAddPtMember);
+
+        if(isAddPtMember) {
+            users = userRepository.findByNameContaining(name, pageable);
+        } else {
+            users =  userRepository.findUsersByConditions(name, isNextGym, userRole, orderBy, pageable);
+        }
 
         return users.map(AdminUserResponseDto::new);
     }

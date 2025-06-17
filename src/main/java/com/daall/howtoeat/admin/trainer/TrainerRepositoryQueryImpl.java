@@ -1,16 +1,12 @@
 package com.daall.howtoeat.admin.trainer;
 
-import com.daall.howtoeat.domain.pt.QTrainer;
 import com.daall.howtoeat.domain.pt.Trainer;
-import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.core.types.dsl.Wildcard;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
-import org.springframework.util.StringUtils;
 
 import java.util.List;
 
@@ -47,6 +43,6 @@ public class TrainerRepositoryQueryImpl implements TrainerRepositoryQuery {
                 .fetchOne();
 
 
-        return new PageImpl<>(content, pageable, total);
+        return new PageImpl<>(content, pageable, total != null ? total : 0);
     }
 }
