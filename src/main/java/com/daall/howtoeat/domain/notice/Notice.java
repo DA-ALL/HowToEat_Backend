@@ -1,5 +1,6 @@
 package com.daall.howtoeat.domain.notice;
 
+import com.daall.howtoeat.admin.notice.dto.NoticeRequestDto;
 import com.daall.howtoeat.common.Timestamped;
 import com.daall.howtoeat.common.enums.NoticeType;
 import jakarta.persistence.*;
@@ -23,4 +24,16 @@ public class Notice extends Timestamped {
 
     @Column(nullable = false)
     private NoticeType noticeType;
+
+    public Notice(NoticeRequestDto requestDto) {
+        this.title = requestDto.getTitle();
+        this.content = requestDto.getContent();
+        this.noticeType = requestDto.getNoticeType();
+    }
+
+    public void update(NoticeRequestDto requestDto) {
+        this.title = requestDto.getTitle();
+        this.content = requestDto.getContent();
+        this.noticeType = requestDto.getNoticeType();
+    }
 }

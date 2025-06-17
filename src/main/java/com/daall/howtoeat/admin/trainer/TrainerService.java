@@ -4,11 +4,13 @@ import com.daall.howtoeat.admin.gym.GymService;
 import com.daall.howtoeat.admin.gym.dto.GymResponseDto;
 import com.daall.howtoeat.admin.trainer.dto.TrainerRequestDto;
 import com.daall.howtoeat.admin.trainer.dto.TrainerResponseDto;
+import com.daall.howtoeat.admin.trainer.dto.TrainerWithPtMembersResponseDto;
 import com.daall.howtoeat.common.enums.ErrorType;
 import com.daall.howtoeat.common.exception.CustomException;
 import com.daall.howtoeat.domain.pt.Gym;
 import com.daall.howtoeat.domain.pt.Trainer;
 import jakarta.transaction.Transactional;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -85,5 +87,11 @@ public class TrainerService {
         );
 
         trainerRepository.delete(trainer);
+    }
+
+    public Trainer getTrainerById(Long trainerId) {
+        return trainerRepository.findById(trainerId).orElseThrow(
+                () -> new CustomException(ErrorType.NOT_FOUND_TRAINER)
+        );
     }
 }

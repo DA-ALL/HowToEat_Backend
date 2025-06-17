@@ -1,7 +1,8 @@
 package com.daall.howtoeat.admin.trainer;
 
-import com.daall.howtoeat.admin.trainer.dto.TrainerRequestDto;
+import com.daall.howtoeat.admin.ptmember.PtMemberService;
 import com.daall.howtoeat.admin.trainer.dto.TrainerResponseDto;
+import com.daall.howtoeat.admin.trainer.dto.TrainerWithPtMembersResponseDto;
 import com.daall.howtoeat.common.PageResponseDto;
 import com.daall.howtoeat.common.ResponseDataDto;
 import com.daall.howtoeat.common.ResponseMessageDto;
@@ -17,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/admin/trainers")
 public class TrainerController {
     private final TrainerService trainerService;
+    private final PtMemberService ptMemberService;
     /**
      * 트레이너 전체 조회
      * @param page 페이지
@@ -26,7 +28,7 @@ public class TrainerController {
      * @return 트레이너 리스트
      */
     @GetMapping
-    private ResponseEntity<PageResponseDto<TrainerResponseDto>> getTrainers (
+    public ResponseEntity<PageResponseDto<TrainerResponseDto>> getTrainers (
             @RequestParam(value = "page", defaultValue = "1") Integer page,
             @RequestParam(value = "size", defaultValue = "20") Integer size,
             @RequestParam(value = "name", required = false) String name,
@@ -45,11 +47,23 @@ public class TrainerController {
      * @return 해당 트레이너 데이터
      */
     @GetMapping("/{trainerId}")
-    private ResponseEntity<ResponseDataDto<TrainerResponseDto>> getTrainer (@PathVariable Long trainerId){
+    public ResponseEntity<ResponseDataDto<TrainerResponseDto>> getTrainer (@PathVariable Long trainerId){
         TrainerResponseDto gym = trainerService.getTrainer(trainerId);
         SuccessType successType = SuccessType.GET_TRAINER_DETAIL_SUCCESS;
 
         return ResponseEntity.status(successType.getHttpStatus()).body(new ResponseDataDto<>(successType, gym));
+    }
+
+    @GetMapping("/{trainerId}/pt-members")
+    public ResponseEntity<ResponseDataDto<TrainerWithPtMembersResponseDto>> getTrainerWithPtMembers(
+            @PathVariable(value = "trainerId") Long trainerId,
+            @RequestParam(value = "page", defaultValue = "1") Integer page,
+            @RequestParam(value = "size", defaultValue = "20") Integer size
+    ){
+        TrainerWithPtMembersResponseDto responseDto = ptMemberService.getTrainerWithPtMembers(trainerId, page - 1, size);
+        SuccessType successType = SuccessType.GET_TRAINER_DETAIL_SUCCESS;
+
+        return ResponseEntity.status(successType.getHttpStatus()).body(new ResponseDataDto<>(successType, responseDto));
     }
 
     /**
@@ -60,7 +74,7 @@ public class TrainerController {
      * @return 성공 메시지
      */
     @PostMapping
-    private ResponseEntity<ResponseMessageDto> createTrainer(
+    public ResponseEntity<ResponseMessageDto> createTrainer(
             @RequestParam("name") String name,
             @RequestParam("gym") Long gym,
             @RequestParam(value = "image", required = false) MultipartFile image
@@ -80,7 +94,7 @@ public class TrainerController {
      * @return 성공 메시지
      */
     @PutMapping("/{trainerId}")
-    private ResponseEntity<ResponseMessageDto> updateTrainer(
+    public ResponseEntity<ResponseMessageDto> updateTrainer(
             @PathVariable Long trainerId ,
             @RequestParam("name") String name,
             @RequestParam("gym") Long gym,
@@ -98,7 +112,7 @@ public class TrainerController {
      * @return 성공 메시지
      */
     @DeleteMapping("/{trainerId}")
-    private ResponseEntity<ResponseMessageDto> deleteTrainer(@PathVariable Long trainerId){
+    public ResponseEntity<ResponseMessageDto> deleteTrainer(@PathVariable Long trainerId){
         trainerService.deleteTrainer(trainerId);
         SuccessType successType = SuccessType.DELETE_TRAINER_SUCCESS;
 
