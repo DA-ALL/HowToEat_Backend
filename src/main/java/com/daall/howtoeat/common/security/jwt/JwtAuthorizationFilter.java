@@ -35,7 +35,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         String path = request.getRequestURI();
 
         // 로그인 요청은 토큰 검증하지 않음
-        if ("/admin/login".equals(path)) {
+        if ("/admin/login".equals(path) || "/signup".equals(path)) {
             filterChain.doFilter(request, response);
             return;
         }
