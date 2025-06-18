@@ -33,4 +33,19 @@ public class SignupRequestDto {
     @NotNull(message = "signup provider를 입력해 주세요.")
     private SignupProvider signupProvider;
     private String profileImageUrl;
+
+    // admin 계정생성에
+    public SignupRequestDto(String name) {
+        this.email = "admin";
+        this.name = name;
+        this.birthday = LocalDate.of(1995,1,1);
+        this.gender = Gender.MALE;
+        this.height = 1.0;
+        this.weight = 1.0;
+        this.goal = UserGoal.LOSE_WEIGHT;
+        this.activityLevel = UserActivityLevel.LOW;
+        this.isNextGym = false;
+        this.signupProvider = SignupProvider.ADMIN;
+        this.profileImageUrl = "/administrate/images/icon_human_red.png";
+    }
 }

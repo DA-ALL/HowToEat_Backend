@@ -2,6 +2,8 @@ package com.daall.howtoeat.client.userdailysummary;
 
 import com.daall.howtoeat.domain.user.User;
 import com.daall.howtoeat.domain.user.UserDailySummary;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -30,4 +32,6 @@ public interface UserDailySummaryRepository extends JpaRepository<UserDailySumma
     WHERE diff = rn - 1
     """, nativeQuery = true)
     int findConsecutiveDays(@Param("userId") Long userId, @Param("baseDate") LocalDate baseDate);
+
+    Page<UserDailySummary> findAllByUserId(Long userId, Pageable pageable);
 }
