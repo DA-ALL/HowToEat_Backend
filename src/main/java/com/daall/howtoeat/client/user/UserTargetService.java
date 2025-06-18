@@ -42,11 +42,11 @@ public class UserTargetService {
             bmr = (10 * userBodyInfo.getWeight()) + (6.25 * userBodyInfo.getHeight()) - (5 * userBodyInfo.getAge()) - 161;
         }
 
-        double tdee = bmr * userBodyInfo.getActivity().getActivityFactor();
-        double targetKcal = tdee + userBodyInfo.getGoal().getKcalOffset();
-        double targetCarbo = (targetKcal * userBodyInfo.getGoal().getCarboRatio() / 100) / 4;
-        double targetProtein = (targetKcal * userBodyInfo.getGoal().getProteinRatio() / 100) / 4;
-        double targetFat = (targetKcal * userBodyInfo.getGoal().getFatRatio() / 100) / 9;
+        double tdee = round(bmr * userBodyInfo.getActivity().getActivityFactor());
+        double targetKcal = round(tdee + userBodyInfo.getGoal().getKcalOffset());
+        double targetCarbo = round((targetKcal * userBodyInfo.getGoal().getCarboRatio() / 100) / 4);
+        double targetProtein = round((targetKcal * userBodyInfo.getGoal().getProteinRatio() / 100) / 4);
+        double targetFat = round((targetKcal * userBodyInfo.getGoal().getFatRatio() / 100) / 9);
 
         return new UserTarget(user, targetKcal, targetCarbo, targetProtein, targetFat, userBodyInfo.getGoal(), userBodyInfo.getActivity());
     }
@@ -77,7 +77,6 @@ public class UserTargetService {
         }
     }
 
-
     /**
      * 회원의 특정 날짜 기준으로 가장 최근의 목표 정보를 조회
      *
@@ -92,4 +91,10 @@ public class UserTargetService {
         return userTargetRepository.findTopByUserAndCreatedAtLessThanEqualOrderByCreatedAtDesc(user, dateTime)
                 .orElseThrow(() -> new CustomException(ErrorType.NOT_FOUND_TARGET_ON_DATE));
     }
+
+    //소수점 둘째자리 반올림
+    private double round(double value) {
+        return Math.round(value * 10) / 10.0;
+    }
+
 }
