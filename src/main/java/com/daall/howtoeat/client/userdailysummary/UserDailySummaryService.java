@@ -112,4 +112,17 @@ public class UserDailySummaryService {
         userDailySummary.setData(loginUser, userTarget, dailyNutritionSummary);
         userDailySummaryRepository.save(userDailySummary);
     }
+
+    public int getStreakDays(User loginUser){
+        Optional<UserDailySummary> userDailySummary = this.findUserDailySummary(loginUser, LocalDate.now());
+        int result = 0;
+
+        if(userDailySummary.isPresent()){
+            result = userDailySummaryRepository.findConsecutiveDays(loginUser.getId(), LocalDate.now());
+        } else {
+            result = userDailySummaryRepository.findConsecutiveDays(loginUser.getId(), LocalDate.now().minusDays(1));
+        }
+
+        return result;
+    }
 }
