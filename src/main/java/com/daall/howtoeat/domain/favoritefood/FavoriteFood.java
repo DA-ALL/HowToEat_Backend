@@ -1,5 +1,6 @@
 package com.daall.howtoeat.domain.favoritefood;
 
+import com.daall.howtoeat.client.favoritefood.dto.FavoriteFoodAddBySearchRequestDto;
 import com.daall.howtoeat.common.Timestamped;
 import com.daall.howtoeat.common.enums.FoodType;
 import com.daall.howtoeat.domain.user.User;
@@ -23,7 +24,7 @@ public class FavoriteFood extends Timestamped {
     private User user;
 
     @Column(nullable = false)
-    private String name;
+    private String foodName;
 
     @Column(nullable = false)
     private String foodCode;
@@ -32,9 +33,6 @@ public class FavoriteFood extends Timestamped {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private FoodType foodType;
-
-    @Column(nullable = false)
-    private String foodName;
 
     @Column(nullable = false)
     private Double kcal;
@@ -51,6 +49,10 @@ public class FavoriteFood extends Timestamped {
     @Column(nullable = false)
     private Double foodWeight;
 
+    //음식 원산지 : 회사/미국산 등
+    @Column(nullable = false)
+    private String providedBy;
+
     @Column(nullable = false)
     private String unit;
 
@@ -63,5 +65,23 @@ public class FavoriteFood extends Timestamped {
     private String description;
 
     @Column
+    private String foodImageUrl;
+
+    @Column
     private LocalDateTime sharedAt;
+
+    public FavoriteFood(User loginUser, FavoriteFoodAddBySearchRequestDto requestDto) {
+        this.user = loginUser;
+        this.foodName = requestDto.getFoodName();
+        this.foodType = requestDto.getFoodType();
+        this.foodCode = requestDto.getFoodCode();
+        this.kcal = requestDto.getKcal();
+        this.carbo = requestDto.getCarbo();
+        this.protein = requestDto.getProtein();
+        this.fat = requestDto.getFat();
+        this.foodWeight = requestDto.getFoodWeight();
+        this.providedBy = requestDto.getProvidedBy();
+        this.unit = requestDto.getUnit();
+        this.source = requestDto.getSource();
+    }
 }
