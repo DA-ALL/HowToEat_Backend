@@ -1,6 +1,8 @@
 package com.daall.howtoeat.admin.user;
 
 import com.daall.howtoeat.admin.user.dto.AdminUserDetailResponseDto;
+import com.daall.howtoeat.admin.user.dto.UpdateNextGymStatusRequestDto;
+import com.daall.howtoeat.admin.user.dto.UpdateUserRoleRequestDto;
 import com.daall.howtoeat.client.user.UserRepository;
 import com.daall.howtoeat.admin.user.dto.AdminUserResponseDto;
 import com.daall.howtoeat.client.user.UserTargetService;
@@ -10,6 +12,7 @@ import com.daall.howtoeat.common.enums.UserRole;
 import com.daall.howtoeat.common.exception.CustomException;
 import com.daall.howtoeat.domain.user.User;
 import com.daall.howtoeat.domain.user.UserTarget;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
@@ -44,23 +47,35 @@ public class AdminUserService {
         return users.map(AdminUserResponseDto::new);
     }
 
-    public User getUserById(Long userId) {
+    public User findUserById(Long userId) {
         return userRepository.findById(userId).orElseThrow(
                 () -> new CustomException(ErrorType.NOT_FOUND_USER)
         );
     }
 
     public AdminUserResponseDto getUser(Long userId) {
-        User user = getUserById(userId);
+        User user = this.findUserById(userId);
 
         return new AdminUserResponseDto(user);
     }
 
     public AdminUserDetailResponseDto getUserDetail(Long userId) {
-        User user = this.getUserById(userId);
+        User user = this.findUserById(userId);
         UserTarget userTarget = userTargetService.getLatestTargetBeforeOrOn(user, LocalDate.now());
         int streakDays = userDailySummaryService.getStreakDays(user);
 
         return new AdminUserDetailResponseDto(user,userTarget, streakDays);
+    }
+
+    @Transactional
+    public void updateUserNextGymStatus(Long userId, UpdateNextGymStatusRequestDto requestDto) {
+        User user = this.findUserById(userId);
+        user.updateNextGymStatus(requestDto);
+    }
+
+    @Transactional
+    public void updateUserRole(Long userId, UpdateUserRoleRequestDto requestDto) {
+        User user = this.findUserById(userId);
+        user.updateUserRole(requestDto);
     }
 }

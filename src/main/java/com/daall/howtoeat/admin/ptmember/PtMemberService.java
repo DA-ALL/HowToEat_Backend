@@ -3,7 +3,6 @@ package com.daall.howtoeat.admin.ptmember;
 import com.daall.howtoeat.admin.ptmember.dto.PtMemberRequestDto;
 import com.daall.howtoeat.admin.ptmember.dto.PtMemberUserResponseDto;
 import com.daall.howtoeat.admin.trainer.TrainerRepository;
-import com.daall.howtoeat.admin.trainer.TrainerService;
 import com.daall.howtoeat.admin.trainer.dto.TrainerWithPtMembersResponseDto;
 import com.daall.howtoeat.admin.user.AdminUserService;
 import com.daall.howtoeat.common.enums.ErrorType;
@@ -32,7 +31,7 @@ public class PtMemberService {
         Trainer trainer = trainerRepository.findById(requestDto.getTrainerId()).orElseThrow(
                 () -> new CustomException(ErrorType.NOT_FOUND_TRAINER)
         );
-        User user = adminUserService.getUserById(requestDto.getUserId());
+        User user = adminUserService.findUserById(requestDto.getUserId());
 
         if(ptMemberRepository.existsByTrainerIdAndUserId(trainer.getId(), user.getId())){
             throw new CustomException(ErrorType.ALREADY_EXISTS_PT_MEMBER);

@@ -19,7 +19,7 @@ public enum SuccessType {
     ADMIN_LOGIN_SUCCESS(HttpStatus.OK, "관리자 로그인에 성공하였습니다."),
     GET_ALL_USERS_SUCCESS(HttpStatus.OK, "전체 유저 조회에 성공하였습니다."),
     UPDATE_USER_ROLE_SUCCESS(HttpStatus.OK, "유저 권한 변경에 성공하였습니다."),
-    UPDATE_PT_MEMBER_SUCCESS(HttpStatus.OK, "넥스트짐 회원 변경에 성공하였습니다."),
+    UPDATE_USER_NEXT_GYM_STATUS_SUCCESS(HttpStatus.OK, "넥스트짐 회원 여부 변경에 성공하였습니다."),
 
     // ======================= USER DETAILS =======================
     GET_USER_BASIC_INFO_SUCCESS(HttpStatus.OK, "기본 유저정보 조회에 성공하였습니다."),
@@ -93,8 +93,8 @@ public enum SuccessType {
     DELETE_NOTICE_SUCCESS(HttpStatus.OK, "공지사항 삭제에 성공하였습니다."),
 
     CREATE_PTMEMBER_SUCCESS(HttpStatus.CREATED, "PT 회원 추가에 성공하였습니다."),
-    DELETE_PTMEMBER_SUCCESS(HttpStatus.OK, "PT 회원 삭제에 성공하였습니다.");
-
+    DELETE_PTMEMBER_SUCCESS(HttpStatus.OK, "PT 회원 삭제에 성공하였습니다."),
+    ;
 
     private final HttpStatus httpStatus;
     private final String message;
