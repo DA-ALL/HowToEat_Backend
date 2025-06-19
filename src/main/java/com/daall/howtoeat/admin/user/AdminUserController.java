@@ -26,10 +26,9 @@ public class AdminUserController {
             @RequestParam(value = "name", required = false) String name,
             @RequestParam(value = "orderBy", required = false) String orderBy,
             @RequestParam(value = "isNextGym", required = false) Boolean isNextGym,
-            @RequestParam(value = "userRole", required = false) UserRole userRole,
             @RequestParam(value = "isAddPtMember", required = false) Boolean isAddPtMember
     ){
-        Page<AdminUserResponseDto> users = adminUserService.getUsers(page - 1, size, name, orderBy, isNextGym, userRole, isAddPtMember);
+        Page<AdminUserResponseDto> users = adminUserService.getUsers(page - 1, size, name, orderBy, isNextGym, isAddPtMember);
         SuccessType successType = SuccessType.GET_ALL_USERS_SUCCESS;
 
         return ResponseEntity.status(successType.getHttpStatus()).body(new PageResponseDto<>(successType, users));

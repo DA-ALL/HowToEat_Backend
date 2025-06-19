@@ -15,6 +15,8 @@ import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -23,16 +25,20 @@ public class AdminUserService {
     private final UserTargetService userTargetService;
     private final UserDailySummaryService userDailySummaryService;
 
-    public Page<AdminUserResponseDto> getUsers(int page, int size, String name, String orderBy, Boolean isNextGym, UserRole userRole, Boolean isAddPtMember) {
+    public Page<AdminUserResponseDto> getUsers(int page, int size, String name, String orderBy, Boolean isNextGym, Boolean isAddPtMember) {
         Pageable pageable = PageRequest.of(page, size);
         Page<User> users;
 
-        System.out.println(", userRole: " + userRole + ", isNextGym: " + isNextGym + ", isAddPtMember: " + isAddPtMember);
+//        System.out.println(", userRole: " + userRole + ", isNextGym: " + isNextGym + ", isAddPtMember: " + isAddPtMember);
+
+        List<UserRole> userRoles = new ArrayList<>();
+        userRoles.add(UserRole.USER);
+        userRoles.add(UserRole.SUPERUSER);
 
         if(isAddPtMember) {
-            users = userRepository.findByNameContaining(name, pageable);
+            users = userRepository.findByNameContainingAndUserRoleIn(name, userRoles ,pageable);
         } else {
-            users =  userRepository.findUsersByConditions(name, isNextGym, userRole, orderBy, pageable);
+            users = userRepository.findUsersByConditions(name, isNextGym, orderBy, pageable);
         }
 
         return users.map(AdminUserResponseDto::new);
