@@ -12,7 +12,9 @@ import lombok.Setter;
 // * 직접 음식을 생성하는 경우에는 description과 foodCode가 없기 때문에 분리
 @Setter
 @Getter
-public class FavoriteFoodAddBySearchRequestDto {
+public class FavoriteFoodAddByConsumedFoodRequestDto {
+    @NotNull(message = "섭취 음식 ID가 비어있습니다. 다시 시도해주세요.")
+    private Long consumedFoodId;
 
     @NotBlank(message = "음식 이름이 비어있습니다. 다시 시도해주세요.")
     private String foodName;

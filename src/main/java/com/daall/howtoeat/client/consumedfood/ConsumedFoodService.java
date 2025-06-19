@@ -3,7 +3,6 @@ package com.daall.howtoeat.client.consumedfood;
 import com.daall.howtoeat.client.consumedfood.dto.ConsumedFoodByMealTimeResponseDto;
 import com.daall.howtoeat.client.consumedfood.dto.ConsumedFoodDetailResponseDto;
 import com.daall.howtoeat.client.consumedfood.dto.ConsumedFoodsRequestDto;
-import com.daall.howtoeat.client.food.dto.FoodResponseDto;
 import com.daall.howtoeat.client.user.UserTargetService;
 import com.daall.howtoeat.client.userdailysummary.UserDailySummaryService;
 import com.daall.howtoeat.client.userdailysummary.dto.DailyNutritionSummary;
@@ -11,6 +10,7 @@ import com.daall.howtoeat.common.enums.ErrorType;
 import com.daall.howtoeat.common.enums.MealTime;
 import com.daall.howtoeat.common.exception.CustomException;
 import com.daall.howtoeat.domain.consumedfood.ConsumedFood;
+import com.daall.howtoeat.domain.favoritefood.FavoriteFood;
 import com.daall.howtoeat.domain.user.User;
 import com.daall.howtoeat.domain.user.UserDailySummary;
 import com.daall.howtoeat.domain.user.UserTarget;
@@ -18,7 +18,6 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.sql.Array;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -87,6 +86,20 @@ public class ConsumedFoodService {
             summary.setData(loginUser, latestTarget, nutritionSummary);
         }
     }
+
+
+    /**
+     * 즐겨찾기 음식 id 를 consumedFood에 등록
+     *
+     * @param consumedFoodId 섭취 음식 ID
+     * @param favoriteFood 새로 생성된 즐겨찾기 음식 ID
+     */
+    @Transactional
+    public void linkFavoriteFoodToConsumedFood(Long consumedFoodId, FavoriteFood favoriteFood) {
+        ConsumedFood consumedFood = consumedFoodRepository.findById(consumedFoodId).orElseThrow(() -> new CustomException(ErrorType.NOT_FOUND_CONSUMED_FOOD));
+        consumedFood.updateFavoriteFood(favoriteFood);
+    }
+
 
     public ConsumedFoodDetailResponseDto getConsumedFoodDetailInfo(Long consumedFoodId) {
         ConsumedFood consumedFood = consumedFoodRepository.findById(consumedFoodId).orElseThrow(() -> new CustomException(ErrorType.NOT_FOUND_CONSUMED_FOOD));

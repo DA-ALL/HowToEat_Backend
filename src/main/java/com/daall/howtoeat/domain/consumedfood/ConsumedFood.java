@@ -4,6 +4,7 @@ import com.daall.howtoeat.client.consumedfood.dto.ConsumedFoodsRequestDto;
 import com.daall.howtoeat.common.Timestamped;
 import com.daall.howtoeat.common.enums.FoodType;
 import com.daall.howtoeat.common.enums.MealTime;
+import com.daall.howtoeat.domain.favoritefood.FavoriteFood;
 import com.daall.howtoeat.domain.user.User;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -21,6 +22,10 @@ public class ConsumedFood extends Timestamped {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "favorite_food_id")
+    private FavoriteFood favoriteFood;
 
     @Column(nullable = false)
     private String foodCode;
@@ -78,5 +83,9 @@ public class ConsumedFood extends Timestamped {
         this.mealTime = requestDto.getMealTime();
         this.providedBy = requestDto.getProvidedBy();
         this.foodImageUrl = requestDto.getFoodCode();
+    }
+
+    public void updateFavoriteFood(FavoriteFood favoriteFood) {
+        this.favoriteFood = favoriteFood;
     }
 }

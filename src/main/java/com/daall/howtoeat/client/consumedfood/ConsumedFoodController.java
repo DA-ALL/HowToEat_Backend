@@ -56,7 +56,7 @@ public class ConsumedFoodController {
 
     /**
      * 섭취 음식 세부 조회
-     * @pathVaria requestDtoList - 섭취 음식에 필요한 데이터
+     * @pathVariable requestDtoList - 섭취 음식에 필요한 데이터
      */
     @GetMapping("/consumed-foods/{consumedFoodId}")
     public ResponseEntity<ResponseDataDto<ConsumedFoodDetailResponseDto>> getConsumedFoodDetailInfo(

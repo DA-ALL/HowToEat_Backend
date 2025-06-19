@@ -1,6 +1,6 @@
 package com.daall.howtoeat.domain.favoritefood;
 
-import com.daall.howtoeat.client.favoritefood.dto.FavoriteFoodAddBySearchRequestDto;
+import com.daall.howtoeat.client.favoritefood.dto.FavoriteFoodAddByConsumedFoodRequestDto;
 import com.daall.howtoeat.common.Timestamped;
 import com.daall.howtoeat.common.enums.FoodType;
 import com.daall.howtoeat.domain.user.User;
@@ -70,7 +70,7 @@ public class FavoriteFood extends Timestamped {
     @Column
     private LocalDateTime sharedAt;
 
-    public FavoriteFood(User loginUser, FavoriteFoodAddBySearchRequestDto requestDto) {
+    public FavoriteFood(User loginUser, FavoriteFoodAddByConsumedFoodRequestDto requestDto) {
         this.user = loginUser;
         this.foodName = requestDto.getFoodName();
         this.foodType = requestDto.getFoodType();
