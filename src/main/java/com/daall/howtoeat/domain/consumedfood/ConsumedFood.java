@@ -58,7 +58,7 @@ public class ConsumedFood extends Timestamped {
 
     //음식 원산지 : 회사/미국산 등
     @Column(nullable = false)
-    private String provided_by;
+    private String providedBy;
 
     @Column
     private String foodImageUrl;
@@ -76,7 +76,7 @@ public class ConsumedFood extends Timestamped {
         this.foodWeight = requestDto.getFoodWeight();
         this.unit = requestDto.getUnit();
         this.mealTime = requestDto.getMealTime();
-        this.provided_by = requestDto.getProvidedBy();
+        this.providedBy = requestDto.getProvidedBy();
         this.foodImageUrl = requestDto.getFoodCode();
     }
 }

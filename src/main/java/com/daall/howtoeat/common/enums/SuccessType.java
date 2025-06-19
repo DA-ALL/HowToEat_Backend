@@ -34,6 +34,7 @@ public enum SuccessType {
     CREATE_CONSUMED_FOOD_SUCCESS(HttpStatus.CREATED, "섭취음식 추가에 성공하였습니다."),
     DELETE_CONSUMED_FOOD_SUCCESS(HttpStatus.OK, "섭취 음식 삭제에 성공하였습니다."),
     GET_CONSUMED_FOOD_BY_MEAL_SUCCESS(HttpStatus.OK, "끼니별 섭취 음식 조회에 성공하였습니다."),
+    GET_CONSUMED_FOOD_DETAIL_INFO(HttpStatus.OK, "섭취 음식 세부정보 조회에 성공하였습니다."),
     GET_CONSUMED_FOOD_BY_DATE_SUCCESS(HttpStatus.OK, "날짜별 섭취 음식 리스트 조회에 성공하였습니다."),
 
     // ======================= DAILY_SUMMARIES =======================

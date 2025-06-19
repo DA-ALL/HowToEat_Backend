@@ -1,6 +1,7 @@
 package com.daall.howtoeat.client.consumedfood;
 
 import com.daall.howtoeat.client.consumedfood.dto.ConsumedFoodByMealTimeResponseDto;
+import com.daall.howtoeat.client.consumedfood.dto.ConsumedFoodDetailResponseDto;
 import com.daall.howtoeat.client.consumedfood.dto.ConsumedFoodsRequestDto;
 import com.daall.howtoeat.common.ResponseDataDto;
 import com.daall.howtoeat.common.ResponseMessageDto;
@@ -51,5 +52,18 @@ public class ConsumedFoodController {
         consumedFoodService.addConsumedFoods(loginUser, requestDtoList);
         SuccessType successType = SuccessType.ADD_CONSUMED_FOOD_SUCCESS;
         return ResponseEntity.status(successType.getHttpStatus()).body(new ResponseMessageDto(successType));
+    }
+
+    /**
+     * 섭취 음식 세부 조회
+     * @pathVaria requestDtoList - 섭취 음식에 필요한 데이터
+     */
+    @GetMapping("/consumed-foods/{consumedFoodId}")
+    public ResponseEntity<ResponseDataDto<ConsumedFoodDetailResponseDto>> getConsumedFoodDetailInfo(
+            @PathVariable(value = "consumedFoodId") Long consumedFoodId
+    ) {
+        SuccessType successType = SuccessType.GET_CONSUMED_FOOD_DETAIL_INFO;
+        ConsumedFoodDetailResponseDto responseDto = consumedFoodService.getConsumedFoodDetailInfo(consumedFoodId);
+        return ResponseEntity.status(successType.getHttpStatus()).body(new ResponseDataDto<>(successType, responseDto));
     }
 }

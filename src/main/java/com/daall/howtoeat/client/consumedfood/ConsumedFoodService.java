@@ -1,6 +1,7 @@
 package com.daall.howtoeat.client.consumedfood;
 
 import com.daall.howtoeat.client.consumedfood.dto.ConsumedFoodByMealTimeResponseDto;
+import com.daall.howtoeat.client.consumedfood.dto.ConsumedFoodDetailResponseDto;
 import com.daall.howtoeat.client.consumedfood.dto.ConsumedFoodsRequestDto;
 import com.daall.howtoeat.client.food.dto.FoodResponseDto;
 import com.daall.howtoeat.client.user.UserTargetService;
@@ -85,5 +86,11 @@ public class ConsumedFoodService {
         } else {
             summary.setData(loginUser, latestTarget, nutritionSummary);
         }
+    }
+
+    public ConsumedFoodDetailResponseDto getConsumedFoodDetailInfo(Long consumedFoodId) {
+        ConsumedFood consumedFood = consumedFoodRepository.findById(consumedFoodId).orElseThrow(() -> new CustomException(ErrorType.NOT_FOUND_CONSUMED_FOOD));
+
+        return new ConsumedFoodDetailResponseDto(consumedFood);
     }
 }
