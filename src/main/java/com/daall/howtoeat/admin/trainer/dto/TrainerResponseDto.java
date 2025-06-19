@@ -15,10 +15,10 @@ public class TrainerResponseDto {
     private final String name;
     private final String imageUrl;
     private final GymResponseDto gym;
-    private final Integer memberCount;
+    private final Long memberCount;
     private final LocalDate createdAt;
 
-    public TrainerResponseDto(Trainer trainer, GymResponseDto gymResponseDto, Integer memberCount){
+    public TrainerResponseDto(Trainer trainer, GymResponseDto gymResponseDto, Long memberCount){
         this.id = trainer.getId();
         this.name = trainer.getName();
         this.imageUrl = trainer.getImageUrl();

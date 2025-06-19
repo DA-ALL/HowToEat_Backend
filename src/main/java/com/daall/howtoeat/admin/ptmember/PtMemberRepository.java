@@ -7,4 +7,6 @@ import java.util.Optional;
 
 public interface PtMemberRepository extends JpaRepository<PtMember, Long>, PtMemberRepositoryQuery {
     boolean existsByTrainerIdAndUserId(Long trainerId, Long userId);
+
+    Long countByTrainerId(Long trainerId);
 }
