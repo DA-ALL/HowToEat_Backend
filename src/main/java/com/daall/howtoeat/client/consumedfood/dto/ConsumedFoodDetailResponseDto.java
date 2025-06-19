@@ -7,6 +7,7 @@ import lombok.Getter;
 public class ConsumedFoodDetailResponseDto {
     private Long consumedFoodId;
     private Long favoriteFoodId;
+    private String foodCode;
     private String foodName;
     private Double kcal;
     private Double carbo;
@@ -20,6 +21,7 @@ public class ConsumedFoodDetailResponseDto {
     public ConsumedFoodDetailResponseDto(ConsumedFood consumedFood) {
         this.consumedFoodId = consumedFood.getId();
         this.favoriteFoodId = consumedFood.getFavoriteFood() != null ? consumedFood.getFavoriteFood().getId() : null;
+        this.foodCode = consumedFood.getFoodCode();
         this.foodName = consumedFood.getFoodName();
         this.kcal = consumedFood.getKcal();
         this.carbo = consumedFood.getCarbo();

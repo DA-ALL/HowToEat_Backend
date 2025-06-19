@@ -101,9 +101,33 @@ public class ConsumedFoodService {
     }
 
 
+    /**
+     * favoriteFood 정보를 통해 ConsumedFood 조회
+     *
+     * @param favoriteFood 삭제할 즐겨찾기 정보
+     */
+    public List<ConsumedFood> getConsumedFoodByFavoriteFoodId(FavoriteFood favoriteFood) {
+        return consumedFoodRepository.findAllByFavoriteFood(favoriteFood);
+    }
+
+    /**
+     * ConsumedFood 디테일 정보 조회
+     *
+     * @param consumedFoodId consumedFoodId 값
+     */
     public ConsumedFoodDetailResponseDto getConsumedFoodDetailInfo(Long consumedFoodId) {
         ConsumedFood consumedFood = consumedFoodRepository.findById(consumedFoodId).orElseThrow(() -> new CustomException(ErrorType.NOT_FOUND_CONSUMED_FOOD));
 
         return new ConsumedFoodDetailResponseDto(consumedFood);
+    }
+
+
+    /**
+     * ConsumedFood 단일 객체 조회
+     *
+     * @param consumedFoodId consumedFoodId 값
+     */
+    public ConsumedFood getConsumedFood(Long consumedFoodId) {
+        return consumedFoodRepository.findById(consumedFoodId).orElseThrow(() -> new CustomException(ErrorType.NOT_FOUND_CONSUMED_FOOD));
     }
 }

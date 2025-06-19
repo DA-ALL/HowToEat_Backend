@@ -25,16 +25,28 @@ public class FavoriteFoodController {
     @PostMapping("/favorite-foods")
     public ResponseEntity<ResponseMessageDto> createFavoriteFoodByConsumedFood(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
-            @ModelAttribute FavoriteFoodAddByConsumedFoodRequestDto requestDto,
-            @RequestParam(value = "foodImageFile", required = false) MultipartFile foodImageFile
+            @RequestBody FavoriteFoodAddByConsumedFoodRequestDto requestDto
     ) {
         User loginUser = userDetails.getUser();
         SuccessType successType = SuccessType.CREATE_FAVORITE_SUCCESS;
 
-        favoriteFoodService.createFavoriteFoodByConsumedFood(loginUser, requestDto, foodImageFile);
+        favoriteFoodService.createFavoriteFoodByConsumedFood(loginUser, requestDto);
         return ResponseEntity.status(successType.getHttpStatus()).body(new ResponseMessageDto(successType));
     }
 
+//    [추후 정리]
+//    @PostMapping("/favorite-foods")
+//    public ResponseEntity<ResponseMessageDto> createFavoriteFoodByConsumedFood(
+//            @AuthenticationPrincipal UserDetailsImpl userDetails,
+//            @ModelAttribute FavoriteFoodAddByConsumedFoodRequestDto requestDto,
+//            @RequestParam(value = "foodImageFile", required = false) MultipartFile foodImageFile
+//    ) {
+//        User loginUser = userDetails.getUser();
+//        SuccessType successType = SuccessType.CREATE_FAVORITE_SUCCESS;
+//
+//        favoriteFoodService.createFavoriteFoodByConsumedFood(loginUser, requestDto, foodImageFile);
+//        return ResponseEntity.status(successType.getHttpStatus()).body(new ResponseMessageDto(successType));
+//    }
 
 
     @GetMapping("/favorite-foods")
@@ -46,5 +58,14 @@ public class FavoriteFoodController {
         SuccessType successType = SuccessType.GET_FAVORITE_FOOD_SUCCESS;
 
         return ResponseEntity.status(successType.getHttpStatus()).body(new ResponseDataDto<>(successType, responseDtoList));
+    }
+
+    @DeleteMapping("/favorite-foods/{favoriteFoodId}")
+    public ResponseEntity<ResponseMessageDto> deleteFavoriteFood(
+            @PathVariable (value = "favoriteFoodId") Long favoriteFoodId
+    ) {
+        favoriteFoodService.deleteFavoriteFood(favoriteFoodId);
+        SuccessType successType = SuccessType.DELETE_FAVORITE_SUCCESS;
+        return ResponseEntity.status(successType.getHttpStatus()).body(new ResponseMessageDto(successType));
     }
 }

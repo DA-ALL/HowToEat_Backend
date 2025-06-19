@@ -65,6 +65,9 @@ public class ConsumedFood extends Timestamped {
     @Column(nullable = false)
     private String providedBy;
 
+    @Column(nullable = false)
+    private String source;
+
     @Column
     private String foodImageUrl;
 
@@ -82,7 +85,8 @@ public class ConsumedFood extends Timestamped {
         this.unit = requestDto.getUnit();
         this.mealTime = requestDto.getMealTime();
         this.providedBy = requestDto.getProvidedBy();
-        this.foodImageUrl = requestDto.getFoodCode();
+        this.source = requestDto.getSource();
+        this.foodImageUrl = requestDto.getFoodImageUrl();
     }
 
     public void updateFavoriteFood(FavoriteFood favoriteFood) {
