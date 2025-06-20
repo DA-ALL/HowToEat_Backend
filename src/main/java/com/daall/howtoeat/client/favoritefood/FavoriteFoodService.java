@@ -2,6 +2,7 @@ package com.daall.howtoeat.client.favoritefood;
 
 import com.daall.howtoeat.client.consumedfood.ConsumedFoodService;
 import com.daall.howtoeat.client.favoritefood.dto.FavoriteFoodAddByConsumedFoodRequestDto;
+import com.daall.howtoeat.client.favoritefood.dto.FavoriteFoodIdResponseDto;
 import com.daall.howtoeat.client.favoritefood.dto.FavoriteFoodResponseDto;
 import com.daall.howtoeat.common.enums.ErrorType;
 import com.daall.howtoeat.common.exception.CustomException;
@@ -29,7 +30,7 @@ public class FavoriteFoodService {
      * @param requestDto 즐겨찾기 음식 정보
      */
     @Transactional
-    public void createFavoriteFoodByConsumedFood(User loginUser, FavoriteFoodAddByConsumedFoodRequestDto requestDto) {
+    public FavoriteFoodIdResponseDto createFavoriteFoodByConsumedFood(User loginUser, FavoriteFoodAddByConsumedFoodRequestDto requestDto) {
         ConsumedFood consumedFood = consumedFoodService.getConsumedFood(requestDto.getConsumedFoodId());
 
         FavoriteFood favoriteFood = new FavoriteFood(loginUser, consumedFood);
@@ -38,7 +39,8 @@ public class FavoriteFoodService {
 
         // consumed_food에 새로 생성된 favoriteFoodId 값 추가하기
         consumedFoodService.linkFavoriteFoodToConsumedFood(requestDto.getConsumedFoodId(), favoriteFood);
-        System.out.println("들어왔어유~");
+
+        return new FavoriteFoodIdResponseDto(favoriteFood);
     }
 
 

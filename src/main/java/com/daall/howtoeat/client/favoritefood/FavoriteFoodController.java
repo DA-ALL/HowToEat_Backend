@@ -1,6 +1,7 @@
 package com.daall.howtoeat.client.favoritefood;
 
 import com.daall.howtoeat.client.favoritefood.dto.FavoriteFoodAddByConsumedFoodRequestDto;
+import com.daall.howtoeat.client.favoritefood.dto.FavoriteFoodIdResponseDto;
 import com.daall.howtoeat.client.favoritefood.dto.FavoriteFoodResponseDto;
 import com.daall.howtoeat.common.ResponseDataDto;
 import com.daall.howtoeat.common.ResponseMessageDto;
@@ -23,15 +24,16 @@ public class FavoriteFoodController {
     private final FavoriteFoodService favoriteFoodService;
 
     @PostMapping("/favorite-foods")
-    public ResponseEntity<ResponseMessageDto> createFavoriteFoodByConsumedFood(
+    public ResponseEntity<ResponseDataDto<FavoriteFoodIdResponseDto>> createFavoriteFoodByConsumedFood(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
             @RequestBody FavoriteFoodAddByConsumedFoodRequestDto requestDto
     ) {
         User loginUser = userDetails.getUser();
         SuccessType successType = SuccessType.CREATE_FAVORITE_SUCCESS;
 
-        favoriteFoodService.createFavoriteFoodByConsumedFood(loginUser, requestDto);
-        return ResponseEntity.status(successType.getHttpStatus()).body(new ResponseMessageDto(successType));
+        FavoriteFoodIdResponseDto responseDto = favoriteFoodService.createFavoriteFoodByConsumedFood(loginUser, requestDto);
+
+        return ResponseEntity.status(successType.getHttpStatus()).body(new ResponseDataDto<>(successType, responseDto));
     }
 
 //    [추후 정리]
