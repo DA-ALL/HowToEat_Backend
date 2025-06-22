@@ -19,6 +19,7 @@ import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
@@ -66,6 +67,7 @@ public class FoodRepositoryQueryImpl implements FoodRepositoryQuery {
                         food.fat,
                         food.foodWeight,
                         food.unit,
+                        food.isPerServing,
                         recommendFood.id.isNotNull()
                 ))
                 .from(food)
@@ -87,4 +89,33 @@ public class FoodRepositoryQueryImpl implements FoodRepositoryQuery {
         return new PageImpl<>(content, PageRequest.of(page, size), total != null ? total : 0);
     }
 
+    @Override
+    public Optional<AdminFoodResponseDto> findFoodAndRecommendationById(Long foodId){
+        QFood food = QFood.food;
+        QRecommendFood recommendFood = QRecommendFood.recommendFood;
+
+        AdminFoodResponseDto result = jpaQueryFactory
+                .select(Projections.constructor(
+                        AdminFoodResponseDto.class,
+                        food.id,
+                        food.foodName,
+                        food.foodCode,
+                        food.foodType,
+                        food.representativeName,
+                        food.kcal,
+                        food.carbo,
+                        food.protein,
+                        food.fat,
+                        food.foodWeight,
+                        food.unit,
+                        food.isPerServing,
+                        recommendFood.id.isNotNull()
+                ))
+                .from(food)
+                .leftJoin(recommendFood).on(recommendFood.food.eq(food))
+                .where(food.id.eq(foodId))
+                .fetchOne();
+
+        return Optional.ofNullable(result);
+    }
 }

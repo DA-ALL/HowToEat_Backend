@@ -1,5 +1,6 @@
 package com.daall.howtoeat.domain.food;
 
+import com.daall.howtoeat.admin.food.dto.CreateFoodRequestDto;
 import com.daall.howtoeat.common.Timestamped;
 import com.daall.howtoeat.common.enums.FoodType;
 import jakarta.persistence.*;
@@ -63,4 +64,25 @@ public class Food extends Timestamped {
     //음식이 몇번 선택됐는지 -> 추후 인기있는 음식들을 추천 음식에 활용
     @Column
     private Long selectedCount;
+
+    public Food(CreateFoodRequestDto requestDto) {
+        this.foodCode = "TEMP";
+        this.foodType = requestDto.getFoodType();
+        this.foodName = requestDto.getFoodName();
+        this.representativeName = "";
+        this.kcal = requestDto.getKcal();
+        this.carbo = requestDto.getCarbo();
+        this.protein = requestDto.getProtein();
+        this.fat = requestDto.getFat();
+        this.foodWeight = requestDto.getFoodWeight();
+        this.unit = requestDto.getUnit();
+        this.providedBy = requestDto.getProvidedBy();
+        this.source = "Admin";
+        this.isPerServing = requestDto.getIsPerServing();
+        this.selectedCount = 0L;
+    }
+
+    public void setFoodCode(String foodCode){
+        this.foodCode = foodCode;
+    }
 }

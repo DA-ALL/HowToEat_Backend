@@ -1,6 +1,7 @@
 package com.daall.howtoeat.admin.food.dto;
 
 import com.daall.howtoeat.common.enums.FoodType;
+import com.daall.howtoeat.domain.food.Food;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -18,5 +19,6 @@ public class AdminFoodResponseDto {
     private final Double fat;
     private final Double foodWeight;
     private final String unit;
+    private final Boolean isPerServing;
     private final Boolean isRecommended;
 }
