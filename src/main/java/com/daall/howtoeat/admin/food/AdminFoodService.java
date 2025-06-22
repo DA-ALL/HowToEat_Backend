@@ -1,7 +1,7 @@
 package com.daall.howtoeat.admin.food;
 
 import com.daall.howtoeat.admin.food.dto.AdminFoodResponseDto;
-import com.daall.howtoeat.admin.food.dto.CreateFoodRequestDto;
+import com.daall.howtoeat.admin.food.dto.AdminFoodRequestDto;
 import com.daall.howtoeat.client.food.FoodRepository;
 import com.daall.howtoeat.common.enums.ErrorType;
 import com.daall.howtoeat.common.exception.CustomException;
@@ -10,8 +10,6 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -30,7 +28,7 @@ public class AdminFoodService {
     }
 
     @Transactional
-    public void createFood(CreateFoodRequestDto requestDto) {
+    public void createFood(AdminFoodRequestDto requestDto) {
         Food newFood = new Food(requestDto);
         foodRepository.save(newFood);
 
@@ -41,5 +39,34 @@ public class AdminFoodService {
         if(requestDto.getIsRecommended()){
             recommendFoodService.createRecommendFood(newFood);
         }
+    }
+
+    @Transactional
+    public void updateFood(Long foodId, AdminFoodRequestDto requestDto) {
+        Food food = this.findById(foodId);
+
+        food.updateFood(requestDto);
+
+        // 추천음식 처리
+        if(requestDto.getIsRecommended()){
+            recommendFoodService.createRecommendFood(food);
+        } else {
+            recommendFoodService.deleteRecommendFood(food);
+        }
+    }
+
+    @Transactional
+    public void deleteFood(Long foodId) {
+        Food food = this.findById(foodId);
+
+        //추천음식 처리
+        recommendFoodService.deleteRecommendFood(food);
+        foodRepository.delete(food);
+    }
+
+    public Food findById(Long foodId){
+        return foodRepository.findById(foodId).orElseThrow(
+                () -> new CustomException(ErrorType.NOT_FOUND_FOOD)
+        );
     }
 }

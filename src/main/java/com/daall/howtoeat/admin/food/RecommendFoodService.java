@@ -23,4 +23,15 @@ public class RecommendFoodService {
         RecommendFood newRecommendFood = new RecommendFood(food);
         recommendFoodRepository.save(newRecommendFood);
     }
+
+    public void deleteRecommendFood(Food food){
+        Optional<RecommendFood> recommendFood = recommendFoodRepository.findByFood(food);
+
+        // 없어도 throw 하지않고 진행
+        if(!recommendFood.isPresent()){
+            return;
+        }
+
+        recommendFoodRepository.delete(recommendFood.get());
+    }
 }

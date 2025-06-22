@@ -1,7 +1,7 @@
 package com.daall.howtoeat.admin.food;
 
 import com.daall.howtoeat.admin.food.dto.AdminFoodResponseDto;
-import com.daall.howtoeat.admin.food.dto.CreateFoodRequestDto;
+import com.daall.howtoeat.admin.food.dto.AdminFoodRequestDto;
 import com.daall.howtoeat.common.PageResponseDto;
 import com.daall.howtoeat.common.ResponseDataDto;
 import com.daall.howtoeat.common.ResponseMessageDto;
@@ -40,9 +40,28 @@ public class AdminFoodController {
     }
 
     @PostMapping("/admin/foods")
-    public ResponseEntity<ResponseMessageDto> createFood(@RequestBody CreateFoodRequestDto requestDto){
+    public ResponseEntity<ResponseMessageDto> createFood(@RequestBody AdminFoodRequestDto requestDto){
         adminFoodService.createFood(requestDto);
         SuccessType successType = SuccessType.CREATE_FOOD_SUCCESS;
+
+        return ResponseEntity.status(successType.getHttpStatus()).body(new ResponseMessageDto(successType));
+    }
+
+    @PutMapping("/admin/foods/{foodId}")
+    public ResponseEntity<ResponseMessageDto> updateFood(
+            @PathVariable Long foodId,
+            @RequestBody AdminFoodRequestDto requestDto
+    ) {
+        adminFoodService.updateFood(foodId, requestDto);
+        SuccessType successType = SuccessType.UPDATE_FOOD_SUCCESS;
+
+        return ResponseEntity.status(successType.getHttpStatus()).body(new ResponseMessageDto(successType));
+    }
+
+    @DeleteMapping("/admin/foods/{foodId}")
+    public ResponseEntity<ResponseMessageDto> deleteFood(@PathVariable Long foodId) {
+        adminFoodService.deleteFood(foodId);
+        SuccessType successType = SuccessType.DELETE_FOOD_SUCCESS;
 
         return ResponseEntity.status(successType.getHttpStatus()).body(new ResponseMessageDto(successType));
     }

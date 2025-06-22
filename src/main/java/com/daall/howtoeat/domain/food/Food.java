@@ -1,6 +1,6 @@
 package com.daall.howtoeat.domain.food;
 
-import com.daall.howtoeat.admin.food.dto.CreateFoodRequestDto;
+import com.daall.howtoeat.admin.food.dto.AdminFoodRequestDto;
 import com.daall.howtoeat.common.Timestamped;
 import com.daall.howtoeat.common.enums.FoodType;
 import jakarta.persistence.*;
@@ -65,7 +65,7 @@ public class Food extends Timestamped {
     @Column
     private Long selectedCount;
 
-    public Food(CreateFoodRequestDto requestDto) {
+    public Food(AdminFoodRequestDto requestDto) {
         this.foodCode = "TEMP";
         this.foodType = requestDto.getFoodType();
         this.foodName = requestDto.getFoodName();
@@ -84,5 +84,18 @@ public class Food extends Timestamped {
 
     public void setFoodCode(String foodCode){
         this.foodCode = foodCode;
+    }
+
+    public void updateFood(AdminFoodRequestDto requestDto) {
+        this.foodType = requestDto.getFoodType();
+        this.foodName = requestDto.getFoodName();
+        this.kcal = requestDto.getKcal();
+        this.carbo = requestDto.getCarbo();
+        this.protein = requestDto.getProtein();
+        this.fat = requestDto.getFat();
+        this.foodWeight = requestDto.getFoodWeight();
+        this.unit = requestDto.getUnit();
+        this.providedBy = requestDto.getProvidedBy();
+        this.isPerServing = requestDto.getIsPerServing();
     }
 }

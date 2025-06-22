@@ -4,7 +4,7 @@ import com.daall.howtoeat.common.enums.FoodType;
 import lombok.Getter;
 
 @Getter
-public class CreateFoodRequestDto {
+public class AdminFoodRequestDto {
     private FoodType foodType;
     private String foodName;
     private String providedBy;
