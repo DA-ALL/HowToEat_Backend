@@ -53,6 +53,7 @@ public class ConsumedFoodService {
 
     /**
      * 섭취 음식 등록
+     *
      * @param loginUser 현재 로그인한 유저
      * @param requestDtoList 등록할 음식 정보 리스트 (다중 등록 가능)
      */
@@ -89,6 +90,18 @@ public class ConsumedFoodService {
 
 
     /**
+     * 섭취 음식 삭제
+     *
+     * @param consumedFoodId 섭취 음식 ID
+     */
+    @Transactional
+    public void deleteConsumedFood(Long consumedFoodId) {
+        ConsumedFood consumedFood = consumedFoodRepository.findById(consumedFoodId).orElseThrow(() -> new CustomException(ErrorType.NOT_FOUND_CONSUMED_FOOD));
+        consumedFoodRepository.delete(consumedFood);
+    }
+
+
+    /**
      * 즐겨찾기 음식 id 를 consumedFood에 등록
      *
      * @param consumedFoodId 섭취 음식 ID
@@ -99,6 +112,7 @@ public class ConsumedFoodService {
         ConsumedFood consumedFood = consumedFoodRepository.findById(consumedFoodId).orElseThrow(() -> new CustomException(ErrorType.NOT_FOUND_CONSUMED_FOOD));
         consumedFood.updateFavoriteFood(favoriteFood);
     }
+
 
 
     /**
