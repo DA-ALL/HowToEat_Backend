@@ -7,6 +7,7 @@ import lombok.Getter;
 public class AdminFoodRequestDto {
     private FoodType foodType;
     private String foodName;
+    private String representativeName;
     private String providedBy;
     private Double kcal;
     private Double carbo;

@@ -69,7 +69,7 @@ public class Food extends Timestamped {
         this.foodCode = "TEMP";
         this.foodType = requestDto.getFoodType();
         this.foodName = requestDto.getFoodName();
-        this.representativeName = "";
+        this.representativeName = requestDto.getRepresentativeName();
         this.kcal = requestDto.getKcal();
         this.carbo = requestDto.getCarbo();
         this.protein = requestDto.getProtein();
@@ -89,6 +89,7 @@ public class Food extends Timestamped {
     public void updateFood(AdminFoodRequestDto requestDto) {
         this.foodType = requestDto.getFoodType();
         this.foodName = requestDto.getFoodName();
+        this.representativeName = requestDto.getRepresentativeName();
         this.kcal = requestDto.getKcal();
         this.carbo = requestDto.getCarbo();
         this.protein = requestDto.getProtein();
