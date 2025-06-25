@@ -1,10 +1,13 @@
 package com.daall.howtoeat.admin.food;
 
+import com.daall.howtoeat.admin.food.dto.AdminFoodResponseDto;
 import com.daall.howtoeat.domain.food.Food;
 import com.daall.howtoeat.domain.food.RecommendFood;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -33,5 +36,9 @@ public class RecommendFoodService {
         }
 
         recommendFoodRepository.delete(recommendFood.get());
+    }
+
+    public List<AdminFoodResponseDto> getRecommendFoods(String sortBy) {
+        return recommendFoodRepository.searchRecommendFoodsAndFoods(sortBy);
     }
 }
