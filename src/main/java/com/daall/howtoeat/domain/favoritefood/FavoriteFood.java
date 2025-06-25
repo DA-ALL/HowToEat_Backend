@@ -84,4 +84,9 @@ public class FavoriteFood extends Timestamped {
         this.unit = requestDto.getUnit();
         this.source = requestDto.getSource();
     }
+
+    public void updateShared() {
+        this.foodType = FoodType.CUSTOM_SHARED;
+        this.sharedAt = LocalDateTime.now();
+    }
 }

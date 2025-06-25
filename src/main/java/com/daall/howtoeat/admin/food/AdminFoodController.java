@@ -2,6 +2,7 @@ package com.daall.howtoeat.admin.food;
 
 import com.daall.howtoeat.admin.food.dto.AdminFoodResponseDto;
 import com.daall.howtoeat.admin.food.dto.AdminFoodRequestDto;
+import com.daall.howtoeat.admin.food.dto.FoodShareRequestDto;
 import com.daall.howtoeat.common.PageResponseDto;
 import com.daall.howtoeat.common.ResponseDataDto;
 import com.daall.howtoeat.common.ResponseMessageDto;
@@ -63,6 +64,14 @@ public class AdminFoodController {
         adminFoodService.deleteFood(foodId);
         SuccessType successType = SuccessType.DELETE_FOOD_SUCCESS;
 
+        return ResponseEntity.status(successType.getHttpStatus()).body(new ResponseMessageDto(successType));
+    }
+
+    @PostMapping("/admin/foods/share")
+    public ResponseEntity<ResponseMessageDto> shareFood(@RequestBody FoodShareRequestDto requestDto){
+        adminFoodService.shareFood(requestDto);
+
+        SuccessType successType = SuccessType.CREATE_FOOD_SHARE_SUCCESS;
         return ResponseEntity.status(successType.getHttpStatus()).body(new ResponseMessageDto(successType));
     }
 }

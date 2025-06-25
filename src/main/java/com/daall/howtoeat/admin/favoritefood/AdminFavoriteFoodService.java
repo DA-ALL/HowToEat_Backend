@@ -3,6 +3,8 @@ package com.daall.howtoeat.admin.favoritefood;
 import com.daall.howtoeat.admin.favoritefood.dto.AdminFavoriteFoodResponseDto;
 import com.daall.howtoeat.admin.favoritefood.dto.AdminFavoriteFoodWithUserResponseDto;
 import com.daall.howtoeat.client.favoritefood.FavoriteFoodRepository;
+import com.daall.howtoeat.common.enums.ErrorType;
+import com.daall.howtoeat.common.exception.CustomException;
 import com.daall.howtoeat.domain.favoritefood.FavoriteFood;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -28,5 +30,11 @@ public class AdminFavoriteFoodService {
         }
 
         return responseDto;
+    }
+
+    public FavoriteFood findById(Long favoriteFoodId){
+        return favoriteFoodRepository.findById(favoriteFoodId).orElseThrow(
+                () -> new CustomException(ErrorType.NOT_FOUND_FAVORITE_FOOD)
+        );
     }
 }

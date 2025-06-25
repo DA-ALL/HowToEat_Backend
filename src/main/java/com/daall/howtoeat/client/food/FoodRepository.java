@@ -17,4 +17,6 @@ public interface FoodRepository extends JpaRepository<Food, Long>, FoodRepositor
     @Query("SELECT MAX(CAST(SUBSTRING(f.foodCode, 6) AS int)) " +
             "FROM Food f WHERE f.foodCode LIKE 'Admin%'")
     Integer findMaxAdminFoodCodeNumber();
+
+    Optional<Food> findByFoodCode(String foodCode);
 }

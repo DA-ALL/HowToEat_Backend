@@ -1,6 +1,7 @@
 package com.daall.howtoeat.domain.food;
 
 import com.daall.howtoeat.admin.food.dto.AdminFoodRequestDto;
+import com.daall.howtoeat.admin.food.dto.FoodShareRequestDto;
 import com.daall.howtoeat.common.Timestamped;
 import com.daall.howtoeat.common.enums.FoodType;
 import jakarta.persistence.*;
@@ -98,5 +99,22 @@ public class Food extends Timestamped {
         this.unit = requestDto.getUnit();
         this.providedBy = requestDto.getProvidedBy();
         this.isPerServing = requestDto.getIsPerServing();
+    }
+
+    public Food(FoodShareRequestDto requestDto) {
+        this.foodCode = requestDto.getFoodCode();
+        // 유저 등록 음식으로 FoodType 고정
+        this.foodType = FoodType.CUSTOM;
+        this.foodName = requestDto.getFoodName();
+        this.representativeName = requestDto.getRepresentativeName();
+        this.kcal = requestDto.getKcal();
+        this.carbo = requestDto.getCarbo();
+        this.protein = requestDto.getProtein();
+        this.fat = requestDto.getFat();
+        this.foodWeight = requestDto.getFoodWeight();
+        this.unit = requestDto.getUnit();
+        this.providedBy = requestDto.getProvidedBy();
+        this.isPerServing = requestDto.getIsPerServing();
+        this.source = "User";
     }
 }
