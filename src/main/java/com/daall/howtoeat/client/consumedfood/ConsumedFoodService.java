@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -95,8 +96,16 @@ public class ConsumedFoodService {
      * @param consumedFoodId 섭취 음식 ID
      */
     @Transactional
-    public void deleteConsumedFood(Long consumedFoodId) {
+    public void deleteConsumedFood(User loginUser, Long consumedFoodId) {
+        //섭취한 음식
         ConsumedFood consumedFood = consumedFoodRepository.findById(consumedFoodId).orElseThrow(() -> new CustomException(ErrorType.NOT_FOUND_CONSUMED_FOOD));
+
+        //섭취한 날짜
+        LocalDate consumedFoodCreatedAt = consumedFood.getCreatedAt().toLocalDate();
+
+        //섭취한 음식 + 섭취한 날짜 정보를 보내주기 (UserDailySummaryService)에서 삭제
+        userDailySummaryService.decreaseUserDailySummary(loginUser, consumedFood, consumedFoodCreatedAt);
+
         consumedFoodRepository.delete(consumedFood);
     }
 

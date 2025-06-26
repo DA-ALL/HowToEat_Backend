@@ -69,13 +69,16 @@ public class ConsumedFoodController {
 
     /**
      * 섭취 음식 삭제
+     *
      * @pathVariable requestDtoList - 섭취 음식에 필요한 데이터
      */
     @DeleteMapping("/consumed-foods/{consumedFoodId}")
     public ResponseEntity<ResponseMessageDto> deleteConsumedFood(
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
             @PathVariable(value = "consumedFoodId") Long consumedFoodId
     ) {
-        consumedFoodService.deleteConsumedFood(consumedFoodId);
+        User loginUser = userDetails.getUser();
+        consumedFoodService.deleteConsumedFood(loginUser, consumedFoodId);
         SuccessType successType = SuccessType.DELETE_CONSUMED_FOOD_SUCCESS;
         return ResponseEntity.status(successType.getHttpStatus()).body(new ResponseMessageDto(successType));
     }

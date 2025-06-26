@@ -29,6 +29,9 @@ public enum ErrorType {
     //CONSUMED_FOOD
     NOT_FOUND_CONSUMED_FOOD(HttpStatus.BAD_REQUEST, "등록되어있는 음식이 존재하지 않습니다."),
 
+    //USER_DAILY_SUMMARY
+    NOT_FOUND_USER_DAILY_SUMMARY(HttpStatus.BAD_REQUEST, "등록되어있는 음식이 존재하지 않습니다."),
+
     //FAVORITE_FOOD
     NOT_FOUND_FAVORITE_FOOD(HttpStatus.BAD_REQUEST, "즐겨찾기에 음식이 존재하지 않습니다."),
 
