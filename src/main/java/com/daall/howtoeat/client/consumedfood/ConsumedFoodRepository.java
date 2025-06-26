@@ -14,4 +14,6 @@ import java.util.Optional;
 public interface ConsumedFoodRepository extends JpaRepository<ConsumedFood, Long> {
     List<ConsumedFood> findAllByUserAndCreatedAtBetweenAndMealTime(User user, LocalDateTime start, LocalDateTime end, MealTime mealTime);
     Optional<List<ConsumedFood>> findAllByUserAndCreatedAtBetween(User user, LocalDateTime start, LocalDateTime end);
+
+    long countByCreatedAtBetween(LocalDateTime startOfDay, LocalDateTime endOfDay);
 }

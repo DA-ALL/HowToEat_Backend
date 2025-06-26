@@ -1,11 +1,13 @@
 package com.daall.howtoeat.admin.food;
 
+import com.daall.howtoeat.admin.dailyreport.dto.FoodStatisticsDto;
 import com.daall.howtoeat.admin.favoritefood.AdminFavoriteFoodService;
 import com.daall.howtoeat.admin.food.dto.AdminFoodResponseDto;
 import com.daall.howtoeat.admin.food.dto.AdminFoodRequestDto;
 import com.daall.howtoeat.admin.food.dto.FoodShareRequestDto;
 import com.daall.howtoeat.client.food.FoodRepository;
 import com.daall.howtoeat.common.enums.ErrorType;
+import com.daall.howtoeat.common.enums.FoodType;
 import com.daall.howtoeat.common.exception.CustomException;
 import com.daall.howtoeat.domain.favoritefood.FavoriteFood;
 import com.daall.howtoeat.domain.food.Food;
@@ -14,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -95,5 +98,13 @@ public class AdminFoodService {
         // 유저가 등록한 음식에 공유됨 처리
         FavoriteFood favoriteFood = adminFavoriteFoodService.findById(requestDto.getFavoriteFoodId());
         favoriteFood.updateShared();
+    }
+
+    public FoodStatisticsDto getFoodStatistics() {
+        return new FoodStatisticsDto(
+            foodRepository.count(),
+            foodRepository.countByFoodTypeIn(List.of(FoodType.INGREDIENT, FoodType.COOKED, FoodType.PROCESSED)),
+            foodRepository.countByFoodTypeIn(List.of(FoodType.CUSTOM, FoodType.CUSTOM_SHARED))
+        );
     }
 }

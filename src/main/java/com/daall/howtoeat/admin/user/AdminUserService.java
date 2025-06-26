@@ -1,5 +1,6 @@
 package com.daall.howtoeat.admin.user;
 
+import com.daall.howtoeat.admin.dailyreport.dto.UserStatisticsDto;
 import com.daall.howtoeat.admin.user.dto.AdminUserDetailResponseDto;
 import com.daall.howtoeat.admin.user.dto.UpdateNextGymStatusRequestDto;
 import com.daall.howtoeat.admin.user.dto.UpdateUserRoleRequestDto;
@@ -8,6 +9,7 @@ import com.daall.howtoeat.admin.user.dto.AdminUserResponseDto;
 import com.daall.howtoeat.client.user.UserTargetService;
 import com.daall.howtoeat.client.userdailysummary.UserDailySummaryService;
 import com.daall.howtoeat.common.enums.ErrorType;
+import com.daall.howtoeat.common.enums.Gender;
 import com.daall.howtoeat.common.enums.UserRole;
 import com.daall.howtoeat.common.exception.CustomException;
 import com.daall.howtoeat.domain.user.User;
@@ -18,6 +20,8 @@ import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -77,5 +81,19 @@ public class AdminUserService {
     public void updateUserRole(Long userId, UpdateUserRoleRequestDto requestDto) {
         User user = this.findUserById(userId);
         user.updateUserRole(requestDto);
+    }
+
+    public UserStatisticsDto getUserStatistics(LocalDate today) {
+        List<UserRole> userRoles = List.of(UserRole.USER, UserRole.SUPERUSER);
+        LocalDateTime startOfDay = today.atStartOfDay();
+        LocalDateTime endOfDay = today.atTime(LocalTime.MAX);
+
+        return new UserStatisticsDto(
+            userRepository.countByUserRoleIn(userRoles),
+            userRepository.countByUserRoleInAndCreatedAtBetween(userRoles, startOfDay, endOfDay),
+            userRepository.countByUserRoleInAndGender(userRoles, Gender.MALE),
+            userRepository.countByUserRoleInAndGender(userRoles, Gender.FEMALE),
+            userRepository.countByUserRoleInAndIsNextGymTrue(userRoles)
+        );
     }
 }

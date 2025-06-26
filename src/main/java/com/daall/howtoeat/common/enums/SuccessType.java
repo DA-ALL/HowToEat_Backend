@@ -97,7 +97,8 @@ public enum SuccessType {
 
     CREATE_PTMEMBER_SUCCESS(HttpStatus.CREATED, "PT 회원 추가에 성공하였습니다."),
     DELETE_PTMEMBER_SUCCESS(HttpStatus.OK, "PT 회원 삭제에 성공하였습니다."),
-    ;
+
+    GET_DAILY_REPORT_SUCCESS(HttpStatus.OK, "데일리 리포트 조회에 성공하였습니다.");
 
     private final HttpStatus httpStatus;
     private final String message;
