@@ -16,4 +16,5 @@ public interface ConsumedFoodRepository extends JpaRepository<ConsumedFood, Long
     List<ConsumedFood> findAllByUserAndCreatedAtBetweenAndMealTime(User user, LocalDateTime start, LocalDateTime end, MealTime mealTime);
     Optional<List<ConsumedFood>> findAllByUserAndCreatedAtBetween(User user, LocalDateTime start, LocalDateTime end);
     List<ConsumedFood> findAllByFavoriteFood(FavoriteFood favoriteFood);
+    List<ConsumedFood> findByFavoriteFoodIn(List<FavoriteFood> favoriteFoods);
 }

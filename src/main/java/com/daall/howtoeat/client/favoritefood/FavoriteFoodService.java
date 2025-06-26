@@ -2,6 +2,7 @@ package com.daall.howtoeat.client.favoritefood;
 
 import com.daall.howtoeat.client.consumedfood.ConsumedFoodService;
 import com.daall.howtoeat.client.favoritefood.dto.FavoriteFoodAddByConsumedFoodRequestDto;
+import com.daall.howtoeat.client.favoritefood.dto.FavoriteFoodDeleteRequestDto;
 import com.daall.howtoeat.client.favoritefood.dto.FavoriteFoodIdResponseDto;
 import com.daall.howtoeat.client.favoritefood.dto.FavoriteFoodResponseDto;
 import com.daall.howtoeat.common.enums.ErrorType;
@@ -64,7 +65,7 @@ public class FavoriteFoodService {
 
 
     /**
-     * 즐겨찾기 음식 삭제
+     * 즐겨찾기 음식 단일 삭제
      *
      * @param favoriteFoodId 삭제할 favoriteFoodId
      */
@@ -80,6 +81,40 @@ public class FavoriteFoodService {
         }
 
         favoriteFoodRepository.delete(favoriteFood);
+    }
+
+    /**
+     * 즐겨찾기 음식 다중 삭제
+     *
+     * @param requestDtoList 삭제할 favoriteFoodId를 담은 dto 리스트
+     */
+    @Transactional
+    public void deleteFavoriteFoods(List<FavoriteFoodDeleteRequestDto> requestDtoList) {
+        List<Long> favoriteFoodIds = new ArrayList<>();
+
+        for (FavoriteFoodDeleteRequestDto requestDto : requestDtoList) {
+            favoriteFoodIds.add(requestDto.getFavoriteFoodId());
+            System.out.println("id = " + requestDto.getFavoriteFoodId());
+        }
+
+        // 1. 한 번에 모든 즐겨찾기 조회
+        List<FavoriteFood> favoriteFoods = favoriteFoodRepository.findAllById(favoriteFoodIds);
+        for(int i = 0; i < favoriteFoods.size(); i++) {
+            System.out.println(favoriteFoods);
+        }
+
+        // 2. 한 번에 해당 즐겨찾기에 연결된 consumedFood 전부 조회
+        List<ConsumedFood> consumedFoods = consumedFoodService.getConsumedFoodByFavoriteFoodId(favoriteFoods);
+
+        // 3. consumedFood들의 연관관계 끊기
+        for (ConsumedFood consumedFood : consumedFoods) {
+            consumedFood.updateFavoriteFood(null);
+        }
+
+        // 4. 즐겨찾기 삭제
+        for (FavoriteFood favoriteFood : favoriteFoods) {
+            favoriteFoodRepository.delete(favoriteFood);
+        }
     }
 
 }

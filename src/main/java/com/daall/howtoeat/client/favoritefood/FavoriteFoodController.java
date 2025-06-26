@@ -1,6 +1,8 @@
 package com.daall.howtoeat.client.favoritefood;
 
+import com.daall.howtoeat.client.consumedfood.dto.ConsumedFoodsRequestDto;
 import com.daall.howtoeat.client.favoritefood.dto.FavoriteFoodAddByConsumedFoodRequestDto;
+import com.daall.howtoeat.client.favoritefood.dto.FavoriteFoodDeleteRequestDto;
 import com.daall.howtoeat.client.favoritefood.dto.FavoriteFoodIdResponseDto;
 import com.daall.howtoeat.client.favoritefood.dto.FavoriteFoodResponseDto;
 import com.daall.howtoeat.common.ResponseDataDto;
@@ -8,6 +10,7 @@ import com.daall.howtoeat.common.ResponseMessageDto;
 import com.daall.howtoeat.common.enums.SuccessType;
 import com.daall.howtoeat.common.security.UserDetailsImpl;
 import com.daall.howtoeat.domain.user.User;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -62,11 +65,32 @@ public class FavoriteFoodController {
         return ResponseEntity.status(successType.getHttpStatus()).body(new ResponseDataDto<>(successType, responseDtoList));
     }
 
+
+    /**
+     * 즐겨찾기 음식 단일 삭제
+     *
+     * @pathVariable favoriteFoodId - 즐겨찾기 음식 ID
+     */
     @DeleteMapping("/favorite-foods/{favoriteFoodId}")
     public ResponseEntity<ResponseMessageDto> deleteFavoriteFood(
             @PathVariable (value = "favoriteFoodId") Long favoriteFoodId
     ) {
         favoriteFoodService.deleteFavoriteFood(favoriteFoodId);
+        SuccessType successType = SuccessType.DELETE_FAVORITE_SUCCESS;
+        return ResponseEntity.status(successType.getHttpStatus()).body(new ResponseMessageDto(successType));
+    }
+
+
+    /**
+     * 즐겨찾기 음식 다중 삭제
+     *
+     * @pathVariable favoriteFoodId - 즐겨찾기 음식 ID
+     */
+    @DeleteMapping("/favorite-foods")
+    public ResponseEntity<ResponseMessageDto> deleteFavoriteFoods(
+            @RequestBody @Valid List<FavoriteFoodDeleteRequestDto> requestDtoList
+    ) {
+        favoriteFoodService.deleteFavoriteFoods(requestDtoList);
         SuccessType successType = SuccessType.DELETE_FAVORITE_SUCCESS;
         return ResponseEntity.status(successType.getHttpStatus()).body(new ResponseMessageDto(successType));
     }

@@ -134,6 +134,15 @@ public class ConsumedFoodService {
     }
 
     /**
+     * 다중 favoriteFood 정보를 통해 ConsumedFood 조회
+     *
+     * @param favoriteFoods 삭제할 즐겨찾기 정보
+     */
+    public List<ConsumedFood> getConsumedFoodByFavoriteFoodId(List<FavoriteFood> favoriteFoods) {
+        return consumedFoodRepository.findByFavoriteFoodIn(favoriteFoods);
+    }
+
+    /**
      * ConsumedFood 디테일 정보 조회
      *
      * @param consumedFoodId consumedFoodId 값
