@@ -1,9 +1,6 @@
 package com.daall.howtoeat.admin.dailyreport;
 
-import com.daall.howtoeat.admin.dailyreport.dto.ConsumedFoodStatisticsDto;
-import com.daall.howtoeat.admin.dailyreport.dto.DailyReportResponseDto;
-import com.daall.howtoeat.admin.dailyreport.dto.FoodStatisticsDto;
-import com.daall.howtoeat.admin.dailyreport.dto.UserStatisticsDto;
+import com.daall.howtoeat.admin.dailyreport.dto.*;
 import com.daall.howtoeat.admin.food.AdminConsumedFoodService;
 import com.daall.howtoeat.admin.food.AdminFoodService;
 import com.daall.howtoeat.admin.user.AdminUserService;
@@ -13,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -71,5 +70,18 @@ public class DailyReportService {
         report.update(userStatisticsDto, foodStatisticsDto, consumedFoodStatisticsDto);
 
         dailyReportRepository.save(report); // 새 객체일 수도 있고, 기존 객체일 수도 있음
+    }
+
+    public List<DailyConsumedFoodCountResponseDto> getRecent30DaysTodayConsumedFoodCounts() {
+        LocalDate endDate = LocalDate.now();
+        LocalDate startDate = endDate.minusDays(29);
+
+        List<DailyReport> reports = dailyReportRepository.findAllByCreatedAtBetweenOrderByCreatedAtAsc(
+                startDate.atStartOfDay(), endDate.plusDays(1).atStartOfDay()
+        );
+
+        return reports.stream()
+                .map(DailyConsumedFoodCountResponseDto::new)
+                .toList();
     }
 }
