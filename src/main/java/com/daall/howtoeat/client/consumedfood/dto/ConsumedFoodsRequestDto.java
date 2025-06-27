@@ -12,6 +12,8 @@ public class ConsumedFoodsRequestDto {
     @NotBlank(message = "음식 코드가 비어있습니다. 다시 시도해주세요.")
     private String foodCode;
 
+    private Long favoriteFoodId;
+
     @NotBlank(message = "음식 이름이 비어있습니다. 다시 시도해주세요.")
     private String foodName;
 

@@ -53,7 +53,6 @@ public class FavoriteFood extends Timestamped {
     private Double foodWeight;
 
     //음식 원산지 : 회사/미국산 등
-    @Column(nullable = false)
     private String providedBy;
 
     @Column(nullable = false)

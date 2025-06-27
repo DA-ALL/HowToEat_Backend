@@ -89,6 +89,11 @@ public class ConsumedFood extends Timestamped {
         this.foodImageUrl = requestDto.getFoodImageUrl();
     }
 
+    public void setFavoriteFood(FavoriteFood favoriteFood) {
+        this.favoriteFood = favoriteFood;
+    }
+
+
     public void updateFavoriteFood(FavoriteFood favoriteFood) {
         this.favoriteFood = favoriteFood;
     }

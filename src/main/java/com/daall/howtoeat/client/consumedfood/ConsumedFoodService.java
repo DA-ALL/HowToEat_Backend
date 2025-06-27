@@ -3,6 +3,8 @@ package com.daall.howtoeat.client.consumedfood;
 import com.daall.howtoeat.client.consumedfood.dto.ConsumedFoodByMealTimeResponseDto;
 import com.daall.howtoeat.client.consumedfood.dto.ConsumedFoodDetailResponseDto;
 import com.daall.howtoeat.client.consumedfood.dto.ConsumedFoodsRequestDto;
+import com.daall.howtoeat.client.favoritefood.FavoriteFoodRepository;
+import com.daall.howtoeat.client.favoritefood.FavoriteFoodService;
 import com.daall.howtoeat.client.user.UserTargetService;
 import com.daall.howtoeat.client.userdailysummary.UserDailySummaryService;
 import com.daall.howtoeat.client.userdailysummary.dto.DailyNutritionSummary;
@@ -28,6 +30,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ConsumedFoodService {
     private final ConsumedFoodRepository consumedFoodRepository;
+    private final FavoriteFoodRepository favoriteFoodRepository;
     private final UserDailySummaryService userDailySummaryService;
     private final UserTargetService userTargetService;
 
@@ -66,9 +69,19 @@ public class ConsumedFoodService {
 
         // 1. 전달받은 음식 리스트를 엔티티로 변환 후 저장
         List<ConsumedFood> consumedFoods = new ArrayList<>();
+
+
         for (ConsumedFoodsRequestDto requestDto : requestDtoList) {
-            consumedFoods.add(new ConsumedFood(loginUser, requestDto));
+            if(requestDto.getFavoriteFoodId() == null) {
+                consumedFoods.add(new ConsumedFood(loginUser, requestDto));
+            } else {
+                FavoriteFood favoriteFood = favoriteFoodRepository.findById(requestDto.getFavoriteFoodId()).orElseThrow(() -> new CustomException(ErrorType.NOT_FOUND_FAVORITE_FOOD));
+                ConsumedFood consumedFood = new ConsumedFood(loginUser, requestDto);
+                consumedFood.setFavoriteFood(favoriteFood);
+                consumedFoods.add(consumedFood);
+            }
         }
+
         consumedFoodRepository.saveAll(consumedFoods);
 
         // 2. 오늘 날짜 기준 유저의 요약 정보 조회 (존재하지 않을 수 있음)

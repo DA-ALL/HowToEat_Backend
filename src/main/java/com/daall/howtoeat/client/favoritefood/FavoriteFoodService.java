@@ -94,14 +94,10 @@ public class FavoriteFoodService {
 
         for (FavoriteFoodDeleteRequestDto requestDto : requestDtoList) {
             favoriteFoodIds.add(requestDto.getFavoriteFoodId());
-            System.out.println("id = " + requestDto.getFavoriteFoodId());
         }
 
         // 1. 한 번에 모든 즐겨찾기 조회
         List<FavoriteFood> favoriteFoods = favoriteFoodRepository.findAllById(favoriteFoodIds);
-        for(int i = 0; i < favoriteFoods.size(); i++) {
-            System.out.println(favoriteFoods);
-        }
 
         // 2. 한 번에 해당 즐겨찾기에 연결된 consumedFood 전부 조회
         List<ConsumedFood> consumedFoods = consumedFoodService.getConsumedFoodByFavoriteFoodId(favoriteFoods);
@@ -116,5 +112,4 @@ public class FavoriteFoodService {
             favoriteFoodRepository.delete(favoriteFood);
         }
     }
-
 }
