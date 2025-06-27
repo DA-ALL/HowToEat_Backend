@@ -9,8 +9,7 @@ import org.springframework.stereotype.Component;
 public class DailyReportScheduler {
     private final DailyReportService dailyReportService;
 
-//    @Scheduled(cron = "0 0 * * * *") // 매시 정각
-    @Scheduled(cron = "0 * * * * *") // 1분마다
+    @Scheduled(cron = "0 0 * * * *") // 매시 정각
     public void updateDailyReport() {
         dailyReportService.updateReport();
     }
