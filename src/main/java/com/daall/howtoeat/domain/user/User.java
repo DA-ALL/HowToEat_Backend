@@ -1,6 +1,8 @@
 package com.daall.howtoeat.domain.user;
 
 import com.daall.howtoeat.admin.account.dto.AdminAccountRequestDto;
+import com.daall.howtoeat.admin.user.dto.UpdateNextGymStatusRequestDto;
+import com.daall.howtoeat.admin.user.dto.UpdateUserRoleRequestDto;
 import com.daall.howtoeat.client.user.dto.SignupRequestDto;
 import com.daall.howtoeat.common.Timestamped;
 import com.daall.howtoeat.common.enums.Gender;
@@ -93,5 +95,13 @@ public class User extends Timestamped {
 
     public void saveRefreshToken(String refreshToken) {
         this.refreshToken = refreshToken.substring(7);
+    }
+
+    public void updateNextGymStatus(UpdateNextGymStatusRequestDto requestDto) {
+        this.isNextGym = requestDto.getIsNextGym();
+    }
+
+    public void updateUserRole(UpdateUserRoleRequestDto requestDto) {
+        this.userRole = requestDto.getUserRole();
     }
 }

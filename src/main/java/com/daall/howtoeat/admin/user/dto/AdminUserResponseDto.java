@@ -34,8 +34,8 @@ public class AdminUserResponseDto {
         this.profileImageUrl = user.getProfileImageUrl();
         this.userRole = user.getUserRole();
         this.userStatus = user.getUserStatus();
+        this.consumedFoodCount = 0;
         this.createdAt = user.getCreatedAt().toLocalDate();
         this.modifiedAt = user.getModifiedAt().toLocalDate();
-        this.consumedFoodCount = 0;
     }
 }

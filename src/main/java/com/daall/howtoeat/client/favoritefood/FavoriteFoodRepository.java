@@ -9,6 +9,6 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface FavoriteFoodRepository extends JpaRepository<FavoriteFood, Long> {
+public interface FavoriteFoodRepository extends JpaRepository<FavoriteFood, Long>, FavoriteFoodRepositoryQuery {
     List<FavoriteFood> findAllByUser(User user);
 }

@@ -1,5 +1,7 @@
 package com.daall.howtoeat.domain.food;
 
+import com.daall.howtoeat.admin.food.dto.AdminFoodRequestDto;
+import com.daall.howtoeat.admin.food.dto.FoodShareRequestDto;
 import com.daall.howtoeat.common.Timestamped;
 import com.daall.howtoeat.common.enums.FoodType;
 import jakarta.persistence.*;
@@ -49,7 +51,7 @@ public class Food extends Timestamped {
     private String unit;
 
     //음식 원산지 : 회사/미국산 등
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String providedBy;
 
     //음식 데이터 출처 : 식약처 / 어드민 / 유저
@@ -63,4 +65,56 @@ public class Food extends Timestamped {
     //음식이 몇번 선택됐는지 -> 추후 인기있는 음식들을 추천 음식에 활용
     @Column
     private Long selectedCount;
+
+    public Food(AdminFoodRequestDto requestDto) {
+        this.foodCode = "TEMP";
+        this.foodType = requestDto.getFoodType();
+        this.foodName = requestDto.getFoodName();
+        this.representativeName = requestDto.getRepresentativeName();
+        this.kcal = requestDto.getKcal();
+        this.carbo = requestDto.getCarbo();
+        this.protein = requestDto.getProtein();
+        this.fat = requestDto.getFat();
+        this.foodWeight = requestDto.getFoodWeight();
+        this.unit = requestDto.getUnit();
+        this.providedBy = requestDto.getProvidedBy();
+        this.source = "Admin";
+        this.isPerServing = requestDto.getIsPerServing();
+        this.selectedCount = 0L;
+    }
+
+    public void setFoodCode(String foodCode){
+        this.foodCode = foodCode;
+    }
+
+    public void updateFood(AdminFoodRequestDto requestDto) {
+        this.foodType = requestDto.getFoodType();
+        this.foodName = requestDto.getFoodName();
+        this.representativeName = requestDto.getRepresentativeName();
+        this.kcal = requestDto.getKcal();
+        this.carbo = requestDto.getCarbo();
+        this.protein = requestDto.getProtein();
+        this.fat = requestDto.getFat();
+        this.foodWeight = requestDto.getFoodWeight();
+        this.unit = requestDto.getUnit();
+        this.providedBy = requestDto.getProvidedBy();
+        this.isPerServing = requestDto.getIsPerServing();
+    }
+
+    public Food(FoodShareRequestDto requestDto) {
+        this.foodCode = requestDto.getFoodCode();
+        // 유저 등록 음식으로 FoodType 고정
+        this.foodType = FoodType.CUSTOM;
+        this.foodName = requestDto.getFoodName();
+        this.representativeName = requestDto.getRepresentativeName();
+        this.kcal = requestDto.getKcal();
+        this.carbo = requestDto.getCarbo();
+        this.protein = requestDto.getProtein();
+        this.fat = requestDto.getFat();
+        this.foodWeight = requestDto.getFoodWeight();
+        this.unit = requestDto.getUnit();
+        this.providedBy = requestDto.getProvidedBy();
+        this.isPerServing = requestDto.getIsPerServing();
+        this.source = "User";
+    }
 }

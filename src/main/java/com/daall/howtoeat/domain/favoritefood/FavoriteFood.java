@@ -9,7 +9,6 @@ import com.daall.howtoeat.domain.user.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 import java.time.LocalDateTime;
 
@@ -17,7 +16,6 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor
 @Table(name = "favorite_foods")
-@ToString
 public class FavoriteFood extends Timestamped {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -108,4 +106,9 @@ public class FavoriteFood extends Timestamped {
 
     }
 
+
+    public void updateShared() {
+        this.foodType = FoodType.CUSTOM_SHARED;
+        this.sharedAt = LocalDateTime.now();
+    }
 }

@@ -17,4 +17,8 @@ public class RecommendFood extends Timestamped {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "food_id", nullable = false)
     private Food food;
+
+    public RecommendFood(Food food) {
+        this.food = food;
+    }
 }

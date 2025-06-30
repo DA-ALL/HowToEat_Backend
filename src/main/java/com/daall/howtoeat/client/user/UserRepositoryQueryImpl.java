@@ -21,12 +21,15 @@ public class UserRepositoryQueryImpl implements UserRepositoryQuery {
     private final JPAQueryFactory jpaQueryFactory;
 
     @Override
-    public Page<User> findUsersByConditions(String name, Boolean isNextGym, UserRole userRole, String orderBy, Pageable pageable) {
+    public Page<User> findUsersByConditions(String name, Boolean isNextGym, String orderBy, Pageable pageable) {
         QUser user = QUser.user;
 
         BooleanBuilder builder = new BooleanBuilder();
 
         OrderSpecifier<LocalDateTime> orderSpecifier = user.createdAt.desc();
+
+        // USER, SUPERUSER 만 조회하도록
+        builder.and(user.userRole.eq(UserRole.USER)).or(user.userRole.eq(UserRole.SUPERUSER));
 
         if (name != null && !name.isEmpty()) {
             builder.and(user.name.containsIgnoreCase(name));
@@ -34,10 +37,6 @@ public class UserRepositoryQueryImpl implements UserRepositoryQuery {
 
         if (isNextGym != null) {
             builder.and(user.isNextGym.eq(isNextGym));
-        }
-
-        if (userRole != null) {
-            builder.and(user.userRole.eq(userRole));
         }
 
         if (orderBy != null && !orderBy.equals("desc")) {

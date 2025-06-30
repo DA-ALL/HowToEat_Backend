@@ -25,6 +25,8 @@ public enum ErrorType {
 
     //FOOD
     NOT_FOUND_FOOD(HttpStatus.BAD_REQUEST, "존재하지 않은 음식입니다."),
+    ALREADY_EXISTS_FOOD_CODE(HttpStatus.BAD_REQUEST, "이미 등록되어있는 음식 코드입니다."),
+    NOT_FOUND_FAVORITE_FOOD(HttpStatus.NOT_FOUND,"존재하지 않은 즐겨찾기 음식입니다." ),
 
     //CONSUMED_FOOD
     NOT_FOUND_CONSUMED_FOOD(HttpStatus.BAD_REQUEST, "등록되어있는 음식이 존재하지 않습니다."),
@@ -44,7 +46,7 @@ public enum ErrorType {
 
     //PT_MEMBER
     ALREADY_EXISTS_PT_MEMBER(HttpStatus.BAD_REQUEST, "이미 존재하는 PT 회원입니다."),
-    NOT_FOUND_PT_MEMBER(HttpStatus.NOT_FOUND, "존재하지 않는 PT 회원입니다.");
+    NOT_FOUND_PT_MEMBER(HttpStatus.NOT_FOUND, "존재하지 않는 PT 회원입니다."), ;
 
 
     private final HttpStatus httpStatus;
