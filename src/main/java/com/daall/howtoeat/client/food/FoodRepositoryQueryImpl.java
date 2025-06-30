@@ -50,8 +50,8 @@ public class FoodRepositoryQueryImpl implements FoodRepositoryQuery {
 
 
         // 정렬
-        OrderSpecifier<LocalDateTime> orderSpecifier =
-                "asc".equalsIgnoreCase(orderBy) ? food.createdAt.asc() : food.createdAt.desc();
+        OrderSpecifier<Long> orderSpecifier =
+                "asc".equalsIgnoreCase(orderBy) ? food.id.asc() : food.id.desc();
 
         List<AdminFoodResponseDto> content = jpaQueryFactory
                 .select(Projections.constructor(

@@ -42,6 +42,9 @@ public class AdminFoodService {
         foodRepository.save(newFood);
 
         Integer codeNumber = foodRepository.findMaxAdminFoodCodeNumber();
+        if(codeNumber == null){
+            codeNumber = 0;
+        }
         newFood.setFoodCode("Admin" + (codeNumber + 1));
 
         // 추천음식이면

@@ -51,7 +51,7 @@ public class Food extends Timestamped {
     private String unit;
 
     //음식 원산지 : 회사/미국산 등
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String providedBy;
 
     //음식 데이터 출처 : 식약처 / 어드민 / 유저
