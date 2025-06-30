@@ -82,6 +82,7 @@ public class SecurityConfig {
                     .requestMatchers("/admin/login").permitAll()
                     .requestMatchers("/oauth2/**").permitAll()
                     .requestMatchers("/admin/accounts/**").hasAuthority(UserRole.MASTER.getAuthority())
+                    .requestMatchers(HttpMethod.PATCH,"/admin/users/**").hasAuthority(UserRole.MASTER.getAuthority())
                     .anyRequest().authenticated()
         );
         http

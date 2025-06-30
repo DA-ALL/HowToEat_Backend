@@ -8,6 +8,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface FavoriteFoodRepository extends JpaRepository<FavoriteFood, Long> {
+public interface FavoriteFoodRepository extends JpaRepository<FavoriteFood, Long>, FavoriteFoodRepositoryQuery {
     List<FavoriteFood> findAllByUser(User user);
 }

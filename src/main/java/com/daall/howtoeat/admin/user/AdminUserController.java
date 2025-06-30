@@ -2,17 +2,16 @@ package com.daall.howtoeat.admin.user;
 
 import com.daall.howtoeat.admin.user.dto.AdminUserDetailResponseDto;
 import com.daall.howtoeat.admin.user.dto.AdminUserResponseDto;
+import com.daall.howtoeat.admin.user.dto.UpdateNextGymStatusRequestDto;
+import com.daall.howtoeat.admin.user.dto.UpdateUserRoleRequestDto;
 import com.daall.howtoeat.common.PageResponseDto;
 import com.daall.howtoeat.common.ResponseDataDto;
+import com.daall.howtoeat.common.ResponseMessageDto;
 import com.daall.howtoeat.common.enums.SuccessType;
-import com.daall.howtoeat.common.enums.UserRole;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -26,10 +25,9 @@ public class AdminUserController {
             @RequestParam(value = "name", required = false) String name,
             @RequestParam(value = "orderBy", required = false) String orderBy,
             @RequestParam(value = "isNextGym", required = false) Boolean isNextGym,
-            @RequestParam(value = "userRole", required = false) UserRole userRole,
             @RequestParam(value = "isAddPtMember", required = false) Boolean isAddPtMember
     ){
-        Page<AdminUserResponseDto> users = adminUserService.getUsers(page - 1, size, name, orderBy, isNextGym, userRole, isAddPtMember);
+        Page<AdminUserResponseDto> users = adminUserService.getUsers(page - 1, size, name, orderBy, isNextGym, isAddPtMember);
         SuccessType successType = SuccessType.GET_ALL_USERS_SUCCESS;
 
         return ResponseEntity.status(successType.getHttpStatus()).body(new PageResponseDto<>(successType, users));
@@ -49,5 +47,27 @@ public class AdminUserController {
         SuccessType successType = SuccessType.GET_USER_DETAIL_INFO_SUCCESS;
 
         return ResponseEntity.status(successType.getHttpStatus()).body(new ResponseDataDto<>(successType, responseDto));
+    }
+
+    @PatchMapping("/admin/users/{userId}/is-next-gym")
+    public ResponseEntity<ResponseMessageDto> updateUserNextGymStatus(
+            @PathVariable Long userId,
+            @RequestBody UpdateNextGymStatusRequestDto requestDto
+    ){
+        adminUserService.updateUserNextGymStatus(userId, requestDto);
+        SuccessType successType = SuccessType.UPDATE_USER_NEXT_GYM_STATUS_SUCCESS;
+
+        return ResponseEntity.status(successType.getHttpStatus()).body(new ResponseMessageDto(successType));
+    }
+
+    @PatchMapping("/admin/users/{userId}/user-role")
+    public ResponseEntity<ResponseMessageDto> updateUserRole(
+            @PathVariable Long userId,
+            @RequestBody UpdateUserRoleRequestDto requestDto
+    ){
+        adminUserService.updateUserRole(userId, requestDto);
+        SuccessType successType = SuccessType.UPDATE_USER_ROLE_SUCCESS;
+
+        return ResponseEntity.status(successType.getHttpStatus()).body(new ResponseMessageDto(successType));
     }
 }

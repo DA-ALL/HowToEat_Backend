@@ -2,6 +2,7 @@ package com.daall.howtoeat.admin.trainer;
 
 import com.daall.howtoeat.admin.gym.GymService;
 import com.daall.howtoeat.admin.gym.dto.GymResponseDto;
+import com.daall.howtoeat.admin.ptmember.PtMemberService;
 import com.daall.howtoeat.admin.trainer.dto.TrainerRequestDto;
 import com.daall.howtoeat.admin.trainer.dto.TrainerResponseDto;
 import com.daall.howtoeat.admin.trainer.dto.TrainerWithPtMembersResponseDto;
@@ -12,6 +13,7 @@ import com.daall.howtoeat.domain.pt.Trainer;
 import jakarta.transaction.Transactional;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.type.SpecialOneToOneType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -19,33 +21,47 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class TrainerService {
     private final TrainerRepository trainerRepository;
     private final GymService gymService;
+    private final PtMemberService ptMemberService;
 
     public Page<TrainerResponseDto> getTrainers(int page, int size, String name, String gymName) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("id").ascending());
 
-        if (gymName != null && !gymName.trim().isEmpty() && !gymName.equals("all")) {
+        Optional<Long> optionalGymId = Optional.empty();
+
+        if (gymName != null && !gymName.trim().isEmpty() && !gymName.equalsIgnoreCase("all")) {
             Optional<Gym> gym = gymService.getOptionalGymEntity(gymName);
             if (gym.isEmpty()) {
-                // Gym 이름으로 검색했는데 존재하지 않는 경우 → 빈 결과 리턴
-                return Page.empty(pageable);
+                return Page.empty(pageable); // 존재하지 않는 gymName인 경우
             }
-
-            Long gymId = gym.get().getId();
-
-            Page<Trainer> trainers = trainerRepository.searchTrainers(name, gymId, pageable);
-            return trainers.map(trainer -> new TrainerResponseDto(trainer, new GymResponseDto(trainer.getGym()), 0));
+            optionalGymId = Optional.of(gym.get().getId());
         }
 
-        // gymName 조건이 없으면 전체 대상에서 검색
-        Page<Trainer> trainers = trainerRepository.searchTrainers(name, null, pageable);
-        return trainers.map(trainer -> new TrainerResponseDto(trainer, new GymResponseDto(trainer.getGym()), 0));
+        Page<Trainer> trainers = trainerRepository.searchTrainers(name, optionalGymId.orElse(null), pageable);
+
+        List<Long> trainerIds = trainers.getContent().stream()
+                .map(Trainer::getId)
+                .toList();
+
+        Map<Long, Long> ptMemberCountsByTrainerIds = ptMemberService.getPtMemberCountsByTrainerIds(trainerIds);
+
+        return trainers.map(trainer -> {
+            long memberCount = ptMemberCountsByTrainerIds.getOrDefault(trainer.getId(), 0L);
+            return new TrainerResponseDto(
+                    trainer,
+                    new GymResponseDto(trainer.getGym()),
+                    memberCount
+            );
+        });
     }
 
     public TrainerResponseDto getTrainer(Long trainerId) {
@@ -53,7 +69,8 @@ public class TrainerService {
                 () -> new CustomException(ErrorType.NOT_FOUND_TRAINER)
         );
 
-        return new TrainerResponseDto(trainer, new GymResponseDto(trainer.getGym()), 0);
+
+        return new TrainerResponseDto(trainer, new GymResponseDto(trainer.getGym()), ptMemberService.getPtMemberCountByTrainerId(trainer.getId()));
     }
 
     public void createTrainer(String name, Long gymId, MultipartFile image) {

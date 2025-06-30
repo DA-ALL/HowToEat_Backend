@@ -4,5 +4,6 @@ public enum FoodType {
     COOKED,
     INGREDIENT,
     PROCESSED,
-    CUSTOM
+    CUSTOM,
+    CUSTOM_SHARED
 }

@@ -3,6 +3,8 @@ package com.daall.howtoeat.admin.account;
 import com.daall.howtoeat.admin.account.dto.AdminAccountRequestDto;
 import com.daall.howtoeat.admin.account.dto.AdminAccountResponseDto;
 import com.daall.howtoeat.client.user.UserRepository;
+import com.daall.howtoeat.client.user.UserTargetService;
+import com.daall.howtoeat.client.user.dto.SignupRequestDto;
 import com.daall.howtoeat.common.enums.ErrorType;
 import com.daall.howtoeat.common.enums.SignupProvider;
 import com.daall.howtoeat.common.enums.UserRole;
@@ -22,7 +24,9 @@ import org.springframework.stereotype.Service;
 public class AdminAccountService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final UserTargetService userTargetService;
 
+    @Transactional
     public void createAdminAccount(AdminAccountRequestDto requestDto) {
         // 이미 존재하는 아이디인지
         if(userRepository.existsByEmail(requestDto.getAccountId())){
@@ -32,7 +36,9 @@ public class AdminAccountService {
         String encodedPassword = passwordEncoder.encode(requestDto.getPassword());
         User newUser = new User(requestDto, encodedPassword);
 
-        userRepository.save(newUser);
+        User savedUser = userRepository.save(newUser);
+
+        userTargetService.createTarget(new SignupRequestDto("admin"), savedUser);
     }
 
     public Page<AdminAccountResponseDto> getAdminAccounts(int page, int size) {
