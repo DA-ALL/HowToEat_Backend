@@ -1,10 +1,7 @@
 package com.daall.howtoeat.client.favoritefood;
 
 import com.daall.howtoeat.client.consumedfood.dto.ConsumedFoodsRequestDto;
-import com.daall.howtoeat.client.favoritefood.dto.FavoriteFoodAddByConsumedFoodRequestDto;
-import com.daall.howtoeat.client.favoritefood.dto.FavoriteFoodDeleteRequestDto;
-import com.daall.howtoeat.client.favoritefood.dto.FavoriteFoodIdResponseDto;
-import com.daall.howtoeat.client.favoritefood.dto.FavoriteFoodResponseDto;
+import com.daall.howtoeat.client.favoritefood.dto.*;
 import com.daall.howtoeat.common.ResponseDataDto;
 import com.daall.howtoeat.common.ResponseMessageDto;
 import com.daall.howtoeat.common.enums.SuccessType;
@@ -12,6 +9,7 @@ import com.daall.howtoeat.common.security.UserDetailsImpl;
 import com.daall.howtoeat.domain.user.User;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -37,6 +35,24 @@ public class FavoriteFoodController {
         FavoriteFoodIdResponseDto responseDto = favoriteFoodService.createFavoriteFoodByConsumedFood(loginUser, requestDto);
 
         return ResponseEntity.status(successType.getHttpStatus()).body(new ResponseDataDto<>(successType, responseDto));
+    }
+
+    /**
+     * 즐겨찾기 음식 새로 추가
+     *
+     * @pathVariable userDetails 현재 로그인한 유저
+     * @pathVariable requestDto 즐겨찾기 음식 정보
+     */
+    @PostMapping("/favorite-foods/new")
+    public ResponseEntity<ResponseMessageDto> createFavoriteFood(
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
+            @RequestBody FavoriteFoodAddByNewRequestDto requestDto
+    ) {
+        User loginUser = userDetails.getUser();
+        SuccessType successType = SuccessType.CREATE_FAVORITE_SUCCESS;
+
+        favoriteFoodService.createFavoriteFoodByNew(loginUser, requestDto);
+        return ResponseEntity.status(successType.getHttpStatus()).body(new ResponseMessageDto(successType));
     }
 
 //    [추후 정리]

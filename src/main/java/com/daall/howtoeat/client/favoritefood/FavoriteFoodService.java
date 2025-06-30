@@ -1,10 +1,7 @@
 package com.daall.howtoeat.client.favoritefood;
 
 import com.daall.howtoeat.client.consumedfood.ConsumedFoodService;
-import com.daall.howtoeat.client.favoritefood.dto.FavoriteFoodAddByConsumedFoodRequestDto;
-import com.daall.howtoeat.client.favoritefood.dto.FavoriteFoodDeleteRequestDto;
-import com.daall.howtoeat.client.favoritefood.dto.FavoriteFoodIdResponseDto;
-import com.daall.howtoeat.client.favoritefood.dto.FavoriteFoodResponseDto;
+import com.daall.howtoeat.client.favoritefood.dto.*;
 import com.daall.howtoeat.common.enums.ErrorType;
 import com.daall.howtoeat.common.exception.CustomException;
 import com.daall.howtoeat.domain.consumedfood.ConsumedFood;
@@ -25,7 +22,7 @@ public class FavoriteFoodService {
     private final ConsumedFoodService consumedFoodService;
 
     /**
-     * 즐겨찾기 음식 추가
+     * 즐겨찾기 음식 섭취음식을 통해 추가
      *
      * @param loginUser 현재 로그인한 유저
      * @param requestDto 즐겨찾기 음식 정보
@@ -42,6 +39,21 @@ public class FavoriteFoodService {
         consumedFoodService.linkFavoriteFoodToConsumedFood(requestDto.getConsumedFoodId(), favoriteFood);
 
         return new FavoriteFoodIdResponseDto(favoriteFood);
+    }
+
+    /**
+     * 즐겨찾기 음식 새로 추가
+     *
+     * @param loginUser 현재 로그인한 유저
+     * @param requestDto 즐겨찾기 음식 정보
+     */
+    @Transactional
+    public void createFavoriteFoodByNew(User loginUser, FavoriteFoodAddByNewRequestDto requestDto) {
+        FavoriteFood favoriteFood = new FavoriteFood(loginUser, requestDto);
+
+        favoriteFoodRepository.save(favoriteFood);
+
+        favoriteFood.setFoodCode();
     }
 
 
