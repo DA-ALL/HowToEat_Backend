@@ -19,6 +19,7 @@ public enum ErrorType {
     NOT_ADMIN_ACCOUNT(HttpStatus.FORBIDDEN, "관리자 계정이 아니므로 변경할 수 없습니다."),
     NOT_FOUND_USER(HttpStatus.BAD_REQUEST, "존재하지 않는 회원입니다."),
     ALREADY_EXISTS_EMAIL(HttpStatus.BAD_REQUEST, "이미 존재하는 이메일입니다."),
+    ALREADY_LOGGED_OUT(HttpStatus.BAD_REQUEST, "이미 로그아웃 되었습니다."),
 
     //TARGET
     NOT_FOUND_TARGET_ON_DATE(HttpStatus.BAD_REQUEST, "해당 날짜에 대한 목표 정보가 없습니다."),

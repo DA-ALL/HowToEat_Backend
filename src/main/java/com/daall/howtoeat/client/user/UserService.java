@@ -12,6 +12,7 @@ import com.daall.howtoeat.domain.user.UserStat;
 import com.daall.howtoeat.domain.user.UserTarget;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -75,6 +76,23 @@ public class UserService {
 
         return new UserInfoBasicResponseDto(loginUser, userTarget, streakDay);
     }
+
+    /**
+     * 유저 로그아웃
+     *
+     * @param loginUser 유저 정보
+     */
+    @Transactional
+    public void logout(User loginUser) {
+        User user = userRepository.findByEmail(loginUser.getEmail()).orElseThrow(() -> new CustomException(ErrorType.NOT_FOUND_USER));
+
+        if (user.getRefreshToken() == null || user.getRefreshToken().isEmpty()) {
+            throw new CustomException(ErrorType.ALREADY_LOGGED_OUT);
+        }
+        user.deleteRefreshToken();
+    }
+
+
 
     public void updateRefreshToken(User user, String refreshToken) {
         user.saveRefreshToken(refreshToken);
