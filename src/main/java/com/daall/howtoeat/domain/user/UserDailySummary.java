@@ -5,6 +5,7 @@ import com.daall.howtoeat.client.user.UserTargetService;
 import com.daall.howtoeat.client.userdailysummary.dto.DailyNutritionSummary;
 import com.daall.howtoeat.common.Timestamped;
 import com.daall.howtoeat.common.enums.MealTime;
+import com.daall.howtoeat.domain.consumedfood.ConsumedFood;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -119,5 +120,46 @@ public class UserDailySummary extends Timestamped {
         this.snackCarbo = dailyNutritionSummary.getSnackCarbo();
         this.snackProtein = dailyNutritionSummary.getSnackProtein();
         this.snackFat = dailyNutritionSummary.getSnackFat();
+    }
+
+    //섭취음식 삭제 시, 해당 음식값 감소
+    public void decreaseMacros(ConsumedFood consumedFood) {
+        MealTime mealTime = consumedFood.getMealTime();
+        this.totalKcal = this.totalKcal - consumedFood.getKcal();
+        this.totalCarbo = this.totalCarbo - consumedFood.getCarbo();
+        this.totalProtein = this.totalProtein - consumedFood.getProtein();
+        this.totalFat = this.totalFat - consumedFood.getFat();
+
+        switch (mealTime) {
+            case BREAKFAST -> {
+                this.breakfastKcal = round(this.getBreakfastKcal() - consumedFood.getKcal());
+                this.breakfastCarbo = round(this.getBreakfastCarbo() - consumedFood.getCarbo());
+                this.breakfastProtein = round(this.getBreakfastProtein() - consumedFood.getProtein());
+                this.breakfastFat = round(this.getBreakfastFat() - consumedFood.getFat());
+            }
+            case LUNCH -> {
+                this.lunchKcal = round(this.getLunchKcal() - consumedFood.getKcal());
+                this.lunchCarbo = round(this.getLunchCarbo() - consumedFood.getCarbo());
+                this.lunchProtein = round(this.getLunchProtein() - consumedFood.getProtein());
+                this.lunchFat = round(this.getLunchFat() - consumedFood.getFat());
+            }
+            case DINNER -> {
+                this.dinnerKcal = round(this.getDinnerKcal() - consumedFood.getKcal());
+                this.dinnerCarbo = round(this.getDinnerCarbo() - consumedFood.getCarbo());
+                this.dinnerProtein = round(this.getDinnerProtein() - consumedFood.getProtein());
+                this.dinnerFat = round(this.getDinnerFat() - consumedFood.getFat());
+            }
+            case SNACK -> {
+                this.snackKcal = round(this.getSnackKcal() - consumedFood.getKcal());
+                this.snackCarbo = round(this.getSnackCarbo() - consumedFood.getCarbo());
+                this.snackProtein = round(this.getSnackProtein() - consumedFood.getProtein());
+                this.snackFat = round(this.getSnackFat() - consumedFood.getFat());
+            }
+        }
+    }
+
+    //부동소수점 방지 - 소수점 둘째 자리에서 반올림
+    private double round(double value) {
+        return Math.round(value * 10) / 10.0;
     }
 }

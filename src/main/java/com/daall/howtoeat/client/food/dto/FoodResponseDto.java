@@ -18,6 +18,7 @@ public class FoodResponseDto {
     private Double protein;
     private Double fat;
     private String providedBy;
+    private String source;
     private Boolean isPerServing;
     private String unit;
 
@@ -32,6 +33,7 @@ public class FoodResponseDto {
         this.protein = food.getProtein();
         this.fat = food.getFat();
         this.providedBy = food.getProvidedBy();
+        this.source = food.getSource();
         this.isPerServing = food.getIsPerServing();
         this.unit = food.getUnit();
     }
