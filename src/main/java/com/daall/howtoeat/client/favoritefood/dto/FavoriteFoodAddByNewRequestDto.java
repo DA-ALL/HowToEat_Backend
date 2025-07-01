@@ -12,13 +12,11 @@ public class FavoriteFoodAddByNewRequestDto {
     @NotBlank(message = "음식 이름이 비어있습니다. 다시 시도해주세요.")
     private String foodName;
 
-    private String description;
-
-    @NotNull(message = "음식 중량이 비어있습니다. 다시 시도해주세요.")
-    private String foodWeight;
-
     @NotNull(message = "칼로리 정보가 비어있습니다. 다시 시도해주세요.")
     private Double kcal;
+
+    @NotNull(message = "음식 종류가 비어있습니다. 다시 시도해주세요.")
+    private FoodType foodType;
 
     @NotNull(message = "탄수화물 정보가 비어있습니다. 다시 시도해주세요.")
     private Double carbo;
@@ -29,6 +27,17 @@ public class FavoriteFoodAddByNewRequestDto {
     @NotNull(message = "지방 정보가 비어있습니다. 다시 시도해주세요.")
     private Double fat;
 
+    @NotNull(message = "음식 중량이 비어있습니다. 다시 시도해주세요.")
+    private Double foodWeight;
+
+    @NotBlank(message = "음식 중량이 비어있습니다. 다시 시도해주세요.")
+    private String providedBy;
+
     @NotBlank(message = "단위 정보가 비어있습니다. 다시 시도해주세요.")
     private String unit;
+
+    @NotBlank(message = "데이터 출처가 비어있습니다. 다시 시도해주세요.")
+    private String source;
+
+    private String description;
 }

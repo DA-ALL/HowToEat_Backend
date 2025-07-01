@@ -5,10 +5,14 @@ import com.daall.howtoeat.client.userdailysummary.dto.DailyConsumedMacrosByMealT
 import com.daall.howtoeat.client.userdailysummary.dto.DailyConsumedMacrosResponseDto;
 import com.daall.howtoeat.client.userdailysummary.dto.DailyKcalResponseDto;
 import com.daall.howtoeat.client.userdailysummary.dto.DailyNutritionSummary;
+import com.daall.howtoeat.common.enums.ErrorType;
 import com.daall.howtoeat.common.enums.MealTime;
+import com.daall.howtoeat.common.exception.CustomException;
+import com.daall.howtoeat.domain.consumedfood.ConsumedFood;
 import com.daall.howtoeat.domain.user.User;
 import com.daall.howtoeat.domain.user.UserDailySummary;
 import com.daall.howtoeat.domain.user.UserTarget;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -100,7 +104,6 @@ public class UserDailySummaryService {
         return userDailySummaryRepository.findByUserAndCreatedAtBetween(loginUser, start, end);
     }
 
-
     /**
      * 처음 음식을 등록했을 때, userDailySummary 생성
      * @param loginUser                 대상 사용자
@@ -111,6 +114,23 @@ public class UserDailySummaryService {
         UserDailySummary userDailySummary = new UserDailySummary();
         userDailySummary.setData(loginUser, userTarget, dailyNutritionSummary);
         userDailySummaryRepository.save(userDailySummary);
+    }
+
+    /**
+     * 섭취 음식 삭제 시, userDailySummary에서 해당 음식 칼로리 / 탄 / 단 / 지 빼주기
+     *
+     * @param loginUser                 대상 사용자
+     * @param consumedFood              섭취한 음식 정보
+     * @param consumedFoodDate          섭취한 음식 날짜
+     */
+    @Transactional
+    public void decreaseUserDailySummary(User loginUser, ConsumedFood consumedFood, LocalDate consumedFoodDate) {
+        LocalDateTime startOfDay = consumedFoodDate.atStartOfDay();
+        LocalDateTime endOfDay = consumedFoodDate.atTime(LocalTime.MAX);
+
+        UserDailySummary userDailySummary = userDailySummaryRepository.findByUserAndCreatedAtBetween(loginUser, startOfDay, endOfDay).orElseThrow(() -> new CustomException(ErrorType.NOT_FOUND_USER_DAILY_SUMMARY));
+
+        userDailySummary.decreaseMacros(consumedFood);
     }
 
     public int getStreakDays(User loginUser){
