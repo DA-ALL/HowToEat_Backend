@@ -34,9 +34,6 @@ public enum ErrorType {
     //USER_DAILY_SUMMARY
     NOT_FOUND_USER_DAILY_SUMMARY(HttpStatus.BAD_REQUEST, "등록되어있는 음식이 존재하지 않습니다."),
 
-    //FAVORITE_FOOD
-    NOT_FOUND_FAVORITE_FOOD(HttpStatus.BAD_REQUEST, "즐겨찾기에 음식이 존재하지 않습니다."),
-
     // GYM
     NOT_FOUND_GYM(HttpStatus.NOT_FOUND, "존재하지 않는 헬스장입니다."),
     ALREADY_EXISTS_GYM_NAME(HttpStatus.BAD_REQUEST, "이미 존재하는 헬스장 이름입니다."),
