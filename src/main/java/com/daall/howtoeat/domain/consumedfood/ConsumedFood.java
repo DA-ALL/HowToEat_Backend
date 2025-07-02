@@ -4,6 +4,7 @@ import com.daall.howtoeat.client.consumedfood.dto.ConsumedFoodsRequestDto;
 import com.daall.howtoeat.common.Timestamped;
 import com.daall.howtoeat.common.enums.FoodType;
 import com.daall.howtoeat.common.enums.MealTime;
+import com.daall.howtoeat.domain.favoritefood.FavoriteFood;
 import com.daall.howtoeat.domain.user.User;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -21,6 +22,10 @@ public class ConsumedFood extends Timestamped {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "favorite_food_id")
+    private FavoriteFood favoriteFood;
 
     @Column(nullable = false)
     private String foodCode;
@@ -58,7 +63,10 @@ public class ConsumedFood extends Timestamped {
 
     //음식 원산지 : 회사/미국산 등
     @Column(nullable = false)
-    private String provided_by;
+    private String providedBy;
+
+    @Column(nullable = false)
+    private String source;
 
     @Column
     private String foodImageUrl;
@@ -76,7 +84,17 @@ public class ConsumedFood extends Timestamped {
         this.foodWeight = requestDto.getFoodWeight();
         this.unit = requestDto.getUnit();
         this.mealTime = requestDto.getMealTime();
-        this.provided_by = requestDto.getProvidedBy();
-        this.foodImageUrl = requestDto.getFoodCode();
+        this.providedBy = requestDto.getProvidedBy();
+        this.source = requestDto.getSource();
+        this.foodImageUrl = requestDto.getFoodImageUrl();
+    }
+
+    public void setFavoriteFood(FavoriteFood favoriteFood) {
+        this.favoriteFood = favoriteFood;
+    }
+
+
+    public void updateFavoriteFood(FavoriteFood favoriteFood) {
+        this.favoriteFood = favoriteFood;
     }
 }

@@ -1,8 +1,10 @@
 package com.daall.howtoeat.domain.favoritefood;
 
-import com.daall.howtoeat.client.favoritefood.dto.FavoriteFoodAddBySearchRequestDto;
+import com.daall.howtoeat.client.favoritefood.dto.FavoriteFoodAddByConsumedFoodRequestDto;
+import com.daall.howtoeat.client.favoritefood.dto.FavoriteFoodAddByNewRequestDto;
 import com.daall.howtoeat.common.Timestamped;
 import com.daall.howtoeat.common.enums.FoodType;
+import com.daall.howtoeat.domain.consumedfood.ConsumedFood;
 import com.daall.howtoeat.domain.user.User;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -50,7 +52,6 @@ public class FavoriteFood extends Timestamped {
     private Double foodWeight;
 
     //음식 원산지 : 회사/미국산 등
-    @Column(nullable = false)
     private String providedBy;
 
     @Column(nullable = false)
@@ -70,7 +71,7 @@ public class FavoriteFood extends Timestamped {
     @Column
     private LocalDateTime sharedAt;
 
-    public FavoriteFood(User loginUser, FavoriteFoodAddBySearchRequestDto requestDto) {
+    public FavoriteFood(User loginUser, ConsumedFood requestDto) {
         this.user = loginUser;
         this.foodName = requestDto.getFoodName();
         this.foodType = requestDto.getFoodType();
@@ -84,6 +85,27 @@ public class FavoriteFood extends Timestamped {
         this.unit = requestDto.getUnit();
         this.source = requestDto.getSource();
     }
+
+    public FavoriteFood(User loginUser, FavoriteFoodAddByNewRequestDto requestDto) {
+        this.user = loginUser;
+        this.foodCode = "temp";
+        this.foodName = requestDto.getFoodName();
+        this.foodType = FoodType.CUSTOM;
+        this.kcal = requestDto.getKcal();
+        this.carbo = requestDto.getCarbo();
+        this.protein = requestDto.getProtein();
+        this.fat = requestDto.getFat();
+        this.foodWeight = requestDto.getFoodWeight();
+        this.providedBy = "-";
+        this.unit = requestDto.getUnit();
+        this.source = "User";
+    }
+
+    public void setFoodCode() {
+        this.foodCode = "User" + this.user.getId() + "-" + this.getId();
+
+    }
+
 
     public void updateShared() {
         this.foodType = FoodType.CUSTOM_SHARED;

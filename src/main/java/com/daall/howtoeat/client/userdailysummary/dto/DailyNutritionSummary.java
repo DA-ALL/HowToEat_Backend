@@ -51,7 +51,7 @@ public class DailyNutritionSummary {
 
             switch (mealTime) {
                 case BREAKFAST -> {
-                    this.breakfastKcal = round(this.totalKcal + consumedFood.getKcal());
+                    this.breakfastKcal = round(this.breakfastKcal + consumedFood.getKcal());
                     this.breakfastCarbo = round(this.breakfastCarbo + consumedFood.getCarbo());
                     this.breakfastProtein = round(this.breakfastProtein + consumedFood.getProtein());
                     this.breakfastFat = round(this.breakfastFat + consumedFood.getFat());

@@ -16,6 +16,7 @@ public class FavoriteFoodResponseDto {
     private Double protein;
     private Double fat;
     private String providedBy;
+    private String source;
     private String unit;
     private String foodImageUrl;
 
@@ -30,6 +31,7 @@ public class FavoriteFoodResponseDto {
         this.protein = favoriteFood.getProtein();
         this.fat = favoriteFood.getFat();
         this.providedBy = favoriteFood.getProvidedBy();
+        this.source = favoriteFood.getSource();
         this.unit = favoriteFood.getUnit();
         this.foodImageUrl = favoriteFood.getFoodImageUrl();
 
