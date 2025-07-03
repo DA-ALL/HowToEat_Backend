@@ -19,6 +19,9 @@ public interface UserDailySummaryRepository extends JpaRepository<UserDailySumma
     List<UserDailySummary> findAllByUserAndCreatedAtBetween (User user, LocalDateTime start, LocalDateTime end);
     Optional<UserDailySummary> findByUserAndCreatedAtBetween(User user, LocalDateTime start, LocalDateTime end);
 
+    //회원탈퇴 시 연관관계 끊기
+    void deleteAllByUser(User user);
+
     @Query(value = """
     SELECT COUNT(*) AS consecutive_days
     FROM (

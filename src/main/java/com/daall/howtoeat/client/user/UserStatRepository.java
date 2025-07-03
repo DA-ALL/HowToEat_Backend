@@ -7,4 +7,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface UserStatRepository extends JpaRepository<UserStat, Long>  {
+    //회원탈퇴 시 연관관계 끊기
+    void deleteAllByUser(User user);
 }
