@@ -1,6 +1,7 @@
 package com.daall.howtoeat.domain.user;
 
 import com.daall.howtoeat.client.user.dto.SignupRequestDto;
+import com.daall.howtoeat.client.userstat.dto.UserHeightRequestDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -39,5 +40,10 @@ public class UserStat {
         LocalDate date = LocalDate.now();
         this.weightRecordedAt = date;
         this.heightRecordedAt = date;
+    }
+
+    public void updateHeight(UserHeightRequestDto requestDto) {
+        this.height = requestDto.getHeight();
+        this.heightRecordedAt = LocalDate.now();
     }
 }

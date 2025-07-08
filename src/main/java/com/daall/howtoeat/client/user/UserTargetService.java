@@ -1,13 +1,16 @@
 package com.daall.howtoeat.client.user;
 
 import com.daall.howtoeat.client.user.dto.SignupRequestDto;
+import com.daall.howtoeat.client.userstat.dto.UserHeightRequestDto;
 import com.daall.howtoeat.common.enums.ErrorType;
 import com.daall.howtoeat.common.enums.Gender;
 import com.daall.howtoeat.common.enums.UserActivityLevel;
 import com.daall.howtoeat.common.enums.UserGoal;
 import com.daall.howtoeat.common.exception.CustomException;
 import com.daall.howtoeat.domain.user.User;
+import com.daall.howtoeat.domain.user.UserStat;
 import com.daall.howtoeat.domain.user.UserTarget;
+import jakarta.transaction.Transactional;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,12 +25,14 @@ import java.time.Period;
 public class UserTargetService {
     private final UserTargetRepository userTargetRepository;
 
+    /**
+     * 첫 회원가입 시, 유저 타겟 macros 생성
+     */
     public void createTarget(SignupRequestDto requestDto, User user) {
         UserBodyInfo userBodyInfo = new UserBodyInfo(requestDto.getGender(), requestDto.getHeight(), requestDto.getWeight(), requestDto.getBirthday(), requestDto.getActivityLevel(), requestDto.getGoal());
         generateUserTarget(userBodyInfo, user);
         userTargetRepository.save(generateUserTarget(userBodyInfo, user));
     }
-
 
     /**
      * 첫 회원가입 시, 유저 타겟 macros 생성
@@ -49,6 +54,26 @@ public class UserTargetService {
         double targetFat = round((targetKcal * userBodyInfo.getGoal().getFatRatio() / 100) / 9);
 
         return new UserTarget(user, targetKcal, targetCarbo, targetProtein, targetFat, userBodyInfo.getGoal(), userBodyInfo.getActivity());
+    }
+
+
+    /**
+     * 키 업데이트로 인한 새로운 타겟 생성
+     */
+    @Transactional
+    public void updateTargetByHeight(User loginUser, UserStat userStat, UserTarget userTarget, UserHeightRequestDto requestDto) {
+        LocalDate today = LocalDate.now();
+
+        UserBodyInfo userBodyInfo = new UserBodyInfo(loginUser.getGender(), requestDto.getHeight(), userStat.getWeight(), loginUser.getBirth(), userTarget.getActivityLevel(), userTarget.getGoal());
+
+        UserTarget generatedTarget = generateUserTarget(userBodyInfo, loginUser);
+
+        if(userTarget.getCreatedAt().toLocalDate().equals(today)) {
+            userTarget.updateTargetByHeight(generatedTarget);
+        } else {
+            userTargetRepository.save(generatedTarget);
+        }
+
     }
 
 
