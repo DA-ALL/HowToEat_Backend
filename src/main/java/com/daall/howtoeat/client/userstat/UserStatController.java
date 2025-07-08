@@ -1,6 +1,7 @@
 package com.daall.howtoeat.client.userstat;
 
 import com.daall.howtoeat.client.userstat.dto.UserHeightRequestDto;
+import com.daall.howtoeat.client.userstat.dto.UserWeightRequestDto;
 import com.daall.howtoeat.common.ResponseMessageDto;
 import com.daall.howtoeat.common.enums.SuccessType;
 import com.daall.howtoeat.common.security.UserDetailsImpl;
@@ -23,6 +24,19 @@ public class UserStatController {
         User loginUser = userDetails.getUser();
 
         userStatService.updateHeight(loginUser, requestDto);
+        SuccessType successType = SuccessType.UPDATE_USER_HEIGHT_SUCCESS;
+        return ResponseEntity.status(successType.getHttpStatus()).body(new ResponseMessageDto(successType));
+    }
+
+
+    @PatchMapping("/user-info/weight")
+    public ResponseEntity<ResponseMessageDto> updateWeight(
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
+            @RequestBody UserWeightRequestDto requestDto
+    ) {
+        User loginUser = userDetails.getUser();
+
+        userStatService.updateWeight(loginUser, requestDto);
         SuccessType successType = SuccessType.UPDATE_USER_HEIGHT_SUCCESS;
         return ResponseEntity.status(successType.getHttpStatus()).body(new ResponseMessageDto(successType));
     }

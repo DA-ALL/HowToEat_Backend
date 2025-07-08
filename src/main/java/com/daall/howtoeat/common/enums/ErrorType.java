@@ -23,6 +23,7 @@ public enum ErrorType {
 
     //USER_STAT
     SAME_AS_CURRENT_HEIGHT(HttpStatus.BAD_REQUEST, "변경할 키가 현재와 동일합니다."),
+    SAME_AS_CURRENT_WEIGHT(HttpStatus.BAD_REQUEST, "변경할 몸무게가 현재와 동일합니다."),
     NOT_FOUND_USER_STAT(HttpStatus.BAD_REQUEST, "유저 스탯이 존재하지 않습니다."),
 
     //TARGET

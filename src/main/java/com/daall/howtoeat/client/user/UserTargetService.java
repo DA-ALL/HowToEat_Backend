@@ -2,6 +2,7 @@ package com.daall.howtoeat.client.user;
 
 import com.daall.howtoeat.client.user.dto.SignupRequestDto;
 import com.daall.howtoeat.client.userstat.dto.UserHeightRequestDto;
+import com.daall.howtoeat.client.userstat.dto.UserWeightRequestDto;
 import com.daall.howtoeat.common.enums.ErrorType;
 import com.daall.howtoeat.common.enums.Gender;
 import com.daall.howtoeat.common.enums.UserActivityLevel;
@@ -65,6 +66,25 @@ public class UserTargetService {
         LocalDate today = LocalDate.now();
 
         UserBodyInfo userBodyInfo = new UserBodyInfo(loginUser.getGender(), requestDto.getHeight(), userStat.getWeight(), loginUser.getBirth(), userTarget.getActivityLevel(), userTarget.getGoal());
+
+        UserTarget generatedTarget = generateUserTarget(userBodyInfo, loginUser);
+
+        if(userTarget.getCreatedAt().toLocalDate().equals(today)) {
+            userTarget.updateTargetByHeight(generatedTarget);
+        } else {
+            userTargetRepository.save(generatedTarget);
+        }
+    }
+
+
+    /**
+     * 키 업데이트로 인한 새로운 타겟 생성
+     */
+    @Transactional
+    public void updateTargetByWeight(User loginUser, UserStat userStat, UserTarget userTarget, UserWeightRequestDto requestDto) {
+        LocalDate today = LocalDate.now();
+
+        UserBodyInfo userBodyInfo = new UserBodyInfo(loginUser.getGender(), userStat.getHeight(), requestDto.getWeight(), loginUser.getBirth(), userTarget.getActivityLevel(), userTarget.getGoal());
 
         UserTarget generatedTarget = generateUserTarget(userBodyInfo, loginUser);
 
