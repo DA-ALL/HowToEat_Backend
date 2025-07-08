@@ -35,8 +35,8 @@ public class UserStat {
 
     public UserStat(User user, SignupRequestDto requestDto) {
         this.user = user;
-        this.weight = requestDto.getWeight();
-        this.height = requestDto.getHeight();
+        this.height = Math.round(requestDto.getHeight() * 10) / 10.0;
+        this.weight = Math.round(requestDto.getWeight() * 10) / 10.0;
         LocalDate date = LocalDate.now();
         this.weightRecordedAt = date;
         this.heightRecordedAt = date;

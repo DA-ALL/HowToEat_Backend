@@ -8,6 +8,7 @@ import com.daall.howtoeat.client.user.dto.UserInfoBasicResponseDto;
 import com.daall.howtoeat.client.user.dto.UserSignupDateResponseDto;
 import com.daall.howtoeat.client.userdailysummary.UserDailySummaryRepository;
 import com.daall.howtoeat.client.userdailysummary.UserDailySummaryService;
+import com.daall.howtoeat.client.userstat.UserStatService;
 import com.daall.howtoeat.common.enums.ErrorType;
 import com.daall.howtoeat.common.exception.CustomException;
 import com.daall.howtoeat.domain.user.User;
@@ -29,6 +30,7 @@ import java.time.LocalTime;
 public class UserService {
     private final UserRepository userRepository;
     private final UserTargetService userTargetService;
+    private final UserStatService userStatService;
     private final UserDailySummaryService userDailySummaryService;
     private final ConsumedFoodRepository consumedFoodRepository;
     private final FavoriteFoodRepository favoriteFoodRepository;
@@ -52,11 +54,10 @@ public class UserService {
         User user = new User(requestDto);
 
         User savedUser = userRepository.save(user);
-        System.out.println(savedUser.getId() + " 유저 테스트입니다. ");
 
         userTargetService.createTarget(requestDto, savedUser);
 
-        UserStat userStats = new UserStat(savedUser, requestDto);
+        userStatService.createStat(requestDto, savedUser);
         return user;
     }
 

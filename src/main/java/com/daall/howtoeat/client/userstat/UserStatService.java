@@ -2,6 +2,7 @@ package com.daall.howtoeat.client.userstat;
 
 import com.daall.howtoeat.client.user.UserStatRepository;
 import com.daall.howtoeat.client.user.UserTargetService;
+import com.daall.howtoeat.client.user.dto.SignupRequestDto;
 import com.daall.howtoeat.client.userstat.dto.UserHeightRequestDto;
 import com.daall.howtoeat.common.enums.ErrorType;
 import com.daall.howtoeat.common.exception.CustomException;
@@ -13,8 +14,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 
 @Service
 @RequiredArgsConstructor
@@ -22,7 +21,23 @@ public class UserStatService {
     private final UserStatRepository userStatRepository;
     private final UserTargetService userTargetService;
 
+    /**
+     * 첫 회원가입 시, 유저 스탯 생성
+     *
+     * @param requestDto 회원가입 폼으로 제출 정보
+     * @param user 현재 유저 정보
+     */
+    public void createStat(SignupRequestDto requestDto, User user) {
+        UserStat userStats = new UserStat(user, requestDto);
+        userStatRepository.save(userStats);
+    }
 
+
+    /**
+     * 키 업데이트
+     * @param loginUser 회원가입 폼으로 제출 정보
+     * @param requestDto 현재 유저 정보
+     */
     @Transactional
     public void updateHeight(User loginUser, UserHeightRequestDto requestDto) {
         LocalDate today = LocalDate.now();
