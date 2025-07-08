@@ -97,6 +97,10 @@ public class User extends Timestamped {
         this.refreshToken = refreshToken.substring(7);
     }
 
+    public void deleteRefreshToken() {
+        this.refreshToken = "";
+    }
+
     public void updateNextGymStatus(UpdateNextGymStatusRequestDto requestDto) {
         this.isNextGym = requestDto.getIsNextGym();
     }
