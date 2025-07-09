@@ -95,5 +95,10 @@ public class UserStatService {
         }
     }
 
+    //최신 유저 스탯 가져오기
+    public UserStat getRecentUserStat(User loginUser) {
+        return userStatRepository.findTopByUserOrderByIdDesc(loginUser).orElseThrow(() -> new CustomException(ErrorType.NOT_FOUND_USER_STAT));
+    }
+
 
 }

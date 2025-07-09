@@ -2,6 +2,7 @@ package com.daall.howtoeat.client.user;
 
 import com.daall.howtoeat.client.user.dto.SignupRequestDto;
 import com.daall.howtoeat.client.user.dto.UserInfoBasicResponseDto;
+import com.daall.howtoeat.client.user.dto.UserInfoDetailResponseDto;
 import com.daall.howtoeat.client.user.dto.UserSignupDateResponseDto;
 import com.daall.howtoeat.common.ResponseDataDto;
 import com.daall.howtoeat.common.ResponseMessageDto;
@@ -84,10 +85,10 @@ public class UserController {
     }
 
     /**
-     * 현재 로그인한 유저의 회원가입 날짜를 조회합니다.
+     * 유저의 기본 정보 조회
      *
      * @param userDetails 현재 로그인한 유저의 인증 정보
-     * @return ResponseEntity<ResponseDataDto<UserSignupDateResponseDto>> - 회원가입 날짜와 성공 응답을 포함한 ResponseEntity
+     * @return ResponseEntity<ResponseDataDto<UserInfoBasicResponseDto>> - 유저 기본 정보
      *
      */
     @GetMapping("/users/basic-info")
@@ -96,6 +97,24 @@ public class UserController {
     ) {
         User loginUser = userDetails.getUser();
         UserInfoBasicResponseDto responseDto = userService.getUserBasicInfo(loginUser);
+        SuccessType successType = SuccessType.GET_USER_BASIC_INFO_SUCCESS;
+        return ResponseEntity.status(successType.getHttpStatus()).body(new ResponseDataDto<>(successType, responseDto));
+    }
+
+
+    /**
+     * 유저의 세부 정보 조회
+     *
+     * @param userDetails 현재 로그인한 유저의 인증 정보
+     * @return ResponseEntity<ResponseDataDto<UserInfoBasicResponseDto>> - 유저 기본 정보
+     *
+     */
+    @GetMapping("/users/detail-info")
+    public ResponseEntity<ResponseDataDto<UserInfoDetailResponseDto>> getUserDetailInfo(
+            @AuthenticationPrincipal UserDetailsImpl userDetails
+    ) {
+        User loginUser = userDetails.getUser();
+        UserInfoDetailResponseDto responseDto = userService.getUserDetailInfo(loginUser);
         SuccessType successType = SuccessType.GET_USER_BASIC_INFO_SUCCESS;
         return ResponseEntity.status(successType.getHttpStatus()).body(new ResponseDataDto<>(successType, responseDto));
     }

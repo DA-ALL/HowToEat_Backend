@@ -5,6 +5,7 @@ import com.daall.howtoeat.client.consumedfood.ConsumedFoodRepository;
 import com.daall.howtoeat.client.favoritefood.FavoriteFoodRepository;
 import com.daall.howtoeat.client.user.dto.SignupRequestDto;
 import com.daall.howtoeat.client.user.dto.UserInfoBasicResponseDto;
+import com.daall.howtoeat.client.user.dto.UserInfoDetailResponseDto;
 import com.daall.howtoeat.client.user.dto.UserSignupDateResponseDto;
 import com.daall.howtoeat.client.userdailysummary.UserDailySummaryRepository;
 import com.daall.howtoeat.client.userdailysummary.UserDailySummaryService;
@@ -80,13 +81,28 @@ public class UserService {
      * @return UserInfoBasicResponseDto 유저 기본 정보 값
      */
     public UserInfoBasicResponseDto getUserBasicInfo(User loginUser) {
-        LocalDate dateTime = loginUser.getCreatedAt().toLocalDate();
+        LocalDate dateTime = LocalDate.now();
         UserTarget userTarget = userTargetService.getLatestTargetBeforeOrOn(loginUser, dateTime);
         //연속 기록 날짜
         int streakDay = userDailySummaryService.getStreakDays(loginUser);
 
         return new UserInfoBasicResponseDto(loginUser, userTarget, streakDay);
     }
+
+
+    /**
+     * 유저 세부정보 조회
+     *
+     * @param loginUser 현재 로그인한 유저
+     * @return UserInfoBasicResponseDto 유저 세부 정보 값
+     */
+    public UserInfoDetailResponseDto getUserDetailInfo(User loginUser) {
+        UserTarget userTarget = userTargetService.getLatestTargetBeforeOrOn(loginUser, LocalDate.now());
+        UserStat userStat = userStatService.getRecentUserStat(loginUser);
+
+        return new UserInfoDetailResponseDto(loginUser, userTarget, userStat);
+    }
+
 
     /**
      * 유저 로그아웃
