@@ -61,7 +61,7 @@ public class UserStat {
 
 
     public void updateWeight(UserWeightRequestDto requestDto) {
-        this.height = requestDto.getWeight();
+        this.weight = requestDto.getWeight();
         this.weightRecordedAt = LocalDate.now();
     }
 }

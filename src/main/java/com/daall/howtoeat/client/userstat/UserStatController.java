@@ -40,4 +40,5 @@ public class UserStatController {
         SuccessType successType = SuccessType.UPDATE_USER_HEIGHT_SUCCESS;
         return ResponseEntity.status(successType.getHttpStatus()).body(new ResponseMessageDto(successType));
     }
+
 }

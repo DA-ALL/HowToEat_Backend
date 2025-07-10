@@ -1,7 +1,5 @@
 package com.daall.howtoeat.domain.user;
 
-import com.daall.howtoeat.client.consumedfood.dto.ConsumedFoodsRequestDto;
-import com.daall.howtoeat.client.user.UserTargetService;
 import com.daall.howtoeat.client.userdailysummary.dto.DailyNutritionSummary;
 import com.daall.howtoeat.common.Timestamped;
 import com.daall.howtoeat.common.enums.MealTime;

@@ -1,7 +1,7 @@
 package com.daall.howtoeat.client.userstat;
 
 import com.daall.howtoeat.client.user.UserStatRepository;
-import com.daall.howtoeat.client.user.UserTargetService;
+import com.daall.howtoeat.client.usertarget.UserTargetService;
 import com.daall.howtoeat.client.user.dto.SignupRequestDto;
 import com.daall.howtoeat.client.userstat.dto.UserHeightRequestDto;
 import com.daall.howtoeat.client.userstat.dto.UserWeightRequestDto;

@@ -1,6 +1,6 @@
 package com.daall.howtoeat.client.userdailysummary;
 
-import com.daall.howtoeat.client.user.UserTargetService;
+import com.daall.howtoeat.client.usertarget.UserTargetService;
 import com.daall.howtoeat.client.userdailysummary.dto.DailyConsumedMacrosByMealTimeResponseDto;
 import com.daall.howtoeat.client.userdailysummary.dto.DailyConsumedMacrosResponseDto;
 import com.daall.howtoeat.client.userdailysummary.dto.DailyKcalResponseDto;

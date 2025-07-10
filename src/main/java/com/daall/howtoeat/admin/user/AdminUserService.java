@@ -6,7 +6,7 @@ import com.daall.howtoeat.admin.user.dto.UpdateNextGymStatusRequestDto;
 import com.daall.howtoeat.admin.user.dto.UpdateUserRoleRequestDto;
 import com.daall.howtoeat.client.user.UserRepository;
 import com.daall.howtoeat.admin.user.dto.AdminUserResponseDto;
-import com.daall.howtoeat.client.user.UserTargetService;
+import com.daall.howtoeat.client.usertarget.UserTargetService;
 import com.daall.howtoeat.client.userdailysummary.UserDailySummaryService;
 import com.daall.howtoeat.common.enums.ErrorType;
 import com.daall.howtoeat.common.enums.Gender;

@@ -1,8 +1,10 @@
-package com.daall.howtoeat.client.user;
+package com.daall.howtoeat.client.usertarget;
 
+import com.daall.howtoeat.client.user.UserStatRepository;
 import com.daall.howtoeat.client.user.dto.SignupRequestDto;
 import com.daall.howtoeat.client.userstat.dto.UserHeightRequestDto;
 import com.daall.howtoeat.client.userstat.dto.UserWeightRequestDto;
+import com.daall.howtoeat.client.usertarget.dto.UserInfoDetailRequestDto;
 import com.daall.howtoeat.common.enums.ErrorType;
 import com.daall.howtoeat.common.enums.Gender;
 import com.daall.howtoeat.common.enums.UserActivityLevel;
@@ -15,6 +17,7 @@ import jakarta.transaction.Transactional;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -25,6 +28,7 @@ import java.time.Period;
 @RequiredArgsConstructor
 public class UserTargetService {
     private final UserTargetRepository userTargetRepository;
+    private final UserStatRepository userStatRepository;
 
     /**
      * 첫 회원가입 시, 유저 타겟 macros 생성
@@ -70,7 +74,7 @@ public class UserTargetService {
         UserTarget generatedTarget = generateUserTarget(userBodyInfo, loginUser);
 
         if(userTarget.getCreatedAt().toLocalDate().equals(today)) {
-            userTarget.updateTargetByHeight(generatedTarget);
+            userTarget.updateTargetByHeightOrWeight(generatedTarget);
         } else {
             userTargetRepository.save(generatedTarget);
         }
@@ -89,11 +93,30 @@ public class UserTargetService {
         UserTarget generatedTarget = generateUserTarget(userBodyInfo, loginUser);
 
         if(userTarget.getCreatedAt().toLocalDate().equals(today)) {
-            userTarget.updateTargetByHeight(generatedTarget);
+            userTarget.updateTargetByHeightOrWeight(generatedTarget);
         } else {
             userTargetRepository.save(generatedTarget);
         }
 
+    }
+
+    @Transactional
+    public void updateTarget(User loginUser, UserInfoDetailRequestDto requestDto, MultipartFile profileImageFile) {
+        LocalDate today = LocalDate.now();
+
+        System.out.println(profileImageFile);
+        UserTarget userTarget = getLatestTargetBeforeOrOn(loginUser, LocalDate.now());
+        UserStat userStat = userStatRepository.findTopByUserOrderByIdDesc(loginUser).orElseThrow(() -> new CustomException(ErrorType.NOT_FOUND_USER_STAT));
+
+        UserBodyInfo userBodyInfo = new UserBodyInfo(loginUser.getGender(), userStat.getHeight(), userStat.getWeight(), loginUser.getBirth(), requestDto.getUserActivityLevel(), requestDto.getUserGoal());
+
+        UserTarget generatedTarget = generateUserTarget(userBodyInfo, loginUser);
+
+        if(userTarget.getCreatedAt().toLocalDate().equals(today)) {
+            userTarget.updateTarget(requestDto);
+        } else {
+            userTargetRepository.save(generatedTarget);
+        }
     }
 
 

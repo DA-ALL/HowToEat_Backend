@@ -10,21 +10,18 @@ import com.daall.howtoeat.client.user.dto.UserSignupDateResponseDto;
 import com.daall.howtoeat.client.userdailysummary.UserDailySummaryRepository;
 import com.daall.howtoeat.client.userdailysummary.UserDailySummaryService;
 import com.daall.howtoeat.client.userstat.UserStatService;
+import com.daall.howtoeat.client.usertarget.UserTargetRepository;
+import com.daall.howtoeat.client.usertarget.UserTargetService;
 import com.daall.howtoeat.common.enums.ErrorType;
 import com.daall.howtoeat.common.exception.CustomException;
 import com.daall.howtoeat.domain.user.User;
-import com.daall.howtoeat.domain.user.UserDailySummary;
 import com.daall.howtoeat.domain.user.UserStat;
 import com.daall.howtoeat.domain.user.UserTarget;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseCookie;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 
 @Service
 @RequiredArgsConstructor
