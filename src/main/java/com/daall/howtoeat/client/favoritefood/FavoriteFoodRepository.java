@@ -11,4 +11,7 @@ import java.util.Optional;
 @Repository
 public interface FavoriteFoodRepository extends JpaRepository<FavoriteFood, Long>, FavoriteFoodRepositoryQuery {
     List<FavoriteFood> findAllByUser(User user);
+
+    //회원탈퇴 시 연관관계 끊기
+    void deleteAllByUser(User user);
 }

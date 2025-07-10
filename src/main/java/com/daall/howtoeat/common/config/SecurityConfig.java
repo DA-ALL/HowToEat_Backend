@@ -73,6 +73,8 @@ public class SecurityConfig {
                 sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         );
 
+        http.logout(logout -> logout.disable());
+
         http
             .authorizeHttpRequests((authorizeHttpRequests) ->
                 authorizeHttpRequests
