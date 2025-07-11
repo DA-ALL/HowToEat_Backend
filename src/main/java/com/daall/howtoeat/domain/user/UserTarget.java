@@ -72,8 +72,12 @@ public class UserTarget extends Timestamped {
         this.fat = generatedTarget.getFat();
     }
 
-    public void updateTarget(UserInfoDetailRequestDto requestDto) {
-        this.goal = requestDto.getUserGoal();
-        this.activityLevel = requestDto.getUserActivityLevel();
+    public void updateTarget(UserTarget generatedTarget) {
+        this.kcal = generatedTarget.getKcal();
+        this.carbo = generatedTarget.getCarbo();
+        this.protein = generatedTarget.getProtein();
+        this.fat = generatedTarget.getFat();
+        this.goal = generatedTarget.getGoal();
+        this.activityLevel = generatedTarget.getActivityLevel();
     }
 }

@@ -19,11 +19,10 @@ public class UserTargetController {
     @PatchMapping("/users/detail-info")
     public ResponseEntity<ResponseMessageDto> updateWeight(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
-            @ModelAttribute UserInfoDetailRequestDto requestDto,
-            @RequestParam(value = "profileImageFile", required = false) MultipartFile foodImageFile
+            @RequestBody UserInfoDetailRequestDto requestDto
     ) {
         User loginUser = userDetails.getUser();
-        userTargetService.updateTarget(loginUser, requestDto, foodImageFile);
+        userTargetService.updateTarget(loginUser, requestDto);
 
         SuccessType successType = SuccessType.UPDATE_USER_DETAIL_INFO_SUCCESS;
         return ResponseEntity.status(successType.getHttpStatus()).body(new ResponseMessageDto(successType));
