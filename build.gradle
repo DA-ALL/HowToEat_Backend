@@ -24,6 +24,13 @@ repositories {
 }
 
 dependencies {
+	//S3
+	implementation platform('software.amazon.awssdk:bom:2.25.32') // 최신 BOM을 먼저 지정 (버전 맞춰줌)
+	implementation 'software.amazon.awssdk:s3'
+	implementation 'software.amazon.awssdk:auth'
+	implementation 'software.amazon.awssdk:regions'
+
+
 	// QueryDSL
 	implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
 	annotationProcessor "com.querydsl:querydsl-apt:${dependencyManagement.importedProperties['querydsl.version']}:jakarta"
