@@ -13,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/admin/trainers")
@@ -78,7 +80,7 @@ public class TrainerController {
             @RequestParam("name") String name,
             @RequestParam("gym") Long gym,
             @RequestParam(value = "image", required = false) MultipartFile image
-    ){
+    ) throws IOException {
         trainerService.createTrainer(name, gym, image);
         SuccessType successType = SuccessType.CREATE_TRAINER_SUCCESS;
 
@@ -99,7 +101,7 @@ public class TrainerController {
             @RequestParam("name") String name,
             @RequestParam("gym") Long gym,
             @RequestParam(value = "image", required = false) MultipartFile image
-    ){
+    ) throws IOException {
         trainerService.updateTrainer(trainerId, name, gym, image);
         SuccessType successType = SuccessType.UPDATE_TRAINER_SUCCESS;
 
