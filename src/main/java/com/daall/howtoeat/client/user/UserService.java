@@ -20,6 +20,7 @@ import com.daall.howtoeat.domain.user.UserTarget;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 
@@ -98,6 +99,19 @@ public class UserService {
         UserStat userStat = userStatService.getRecentUserStat(loginUser);
 
         return new UserInfoDetailResponseDto(loginUser, userTarget, userStat);
+    }
+
+
+
+    /**
+     * 유저 프로필 이미지 변경
+     *
+     * @param loginUser 현재 로그인한 유저
+     * @param profileImageFile 이미지 파일
+     *
+     */
+    public void updateProfileImage(User loginUser, MultipartFile profileImageFile) {
+        System.out.println("파일 : " + profileImageFile);
     }
 
 

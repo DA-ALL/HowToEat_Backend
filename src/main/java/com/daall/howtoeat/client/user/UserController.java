@@ -18,6 +18,7 @@ import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 
@@ -117,6 +118,25 @@ public class UserController {
         UserInfoDetailResponseDto responseDto = userService.getUserDetailInfo(loginUser);
         SuccessType successType = SuccessType.GET_USER_BASIC_INFO_SUCCESS;
         return ResponseEntity.status(successType.getHttpStatus()).body(new ResponseDataDto<>(successType, responseDto));
+    }
+
+
+    /**
+     * 유저 프로필 이미지 변경
+     *
+     * @param userDetails 현재 로그인한 유저의 인증 정보
+     * @return ResponseEntity<ResponseDataDto<UserInfoBasicResponseDto>> - 유저 기본 정보
+     *
+     */
+    @PatchMapping("/users/profile-image")
+    public ResponseEntity<ResponseMessageDto> updateProfileImage (
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
+            @RequestParam(value = "profileImageFile", required = false) MultipartFile profileImageFile
+    ) {
+        User loginUser = userDetails.getUser();
+        userService.updateProfileImage(loginUser, profileImageFile);
+        SuccessType successType = SuccessType.UPDATE_PROFILE_IMAGE;
+        return ResponseEntity.status(successType.getHttpStatus()).body(new ResponseMessageDto(successType));
     }
 
 
