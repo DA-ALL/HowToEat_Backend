@@ -58,3 +58,12 @@ jwt:
 server:
   port: ${SERVER_PORT}
 
+cloud:
+  aws:
+    s3:
+      bucket: howtoeat
+    region:
+      static: ap-northeast-2
+    credentials:
+      instance-profile: true  # EC2 IAM 역할을 사용하는 경우
+
