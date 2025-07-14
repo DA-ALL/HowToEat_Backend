@@ -17,6 +17,9 @@ public class CorsConfig {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
         config.addAllowedOriginPattern("http://"+domainUrl+":3000");
+        config.addAllowedOriginPattern("https://howtoeat.ai.kr");
+        config.addAllowedOriginPattern("https://www.howtoeat.ai.kr");
+
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
         config.addExposedHeader("Authorization");

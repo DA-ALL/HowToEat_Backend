@@ -1,5 +1,6 @@
 package com.daall.howtoeat.common;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.auth.credentials.InstanceProfileCredentialsProvider;
@@ -13,6 +14,7 @@ import java.io.IOException;
 import java.util.UUID;
 
 @Component
+@Slf4j(topic = "S3Uploader")
 public class S3Uploader {
     private final String bucketName = "howtoeat";
     private final String cloudFrontDomain = "https://cdn.howtoeat.ai.kr";  // CloudFront 설정된 도메인
@@ -24,6 +26,7 @@ public class S3Uploader {
 
     public String upload(MultipartFile file, String dir, Long userId) throws IOException {
         String originalFilename = file.getOriginalFilename();
+
         if (originalFilename == null || !originalFilename.contains(".")) {
             throw new IllegalArgumentException("Invalid file name");
         }
@@ -42,11 +45,20 @@ public class S3Uploader {
         return cloudFrontDomain + "/" + key;
     }
 
-    // 삭제할 이미지가 없더라도, 예외 발생하지 않는다고 함
     public void delete(String url) {
         //url : "https://cdn.howtoeat.ai.kr/profiles/123/abc123.png";
         //key : "profiles/123/3ac7a9e3-....png" 형식
         String key = url.replace(cloudFrontDomain + "/", "");
+
+        if (url.trim().isEmpty()) {
+            log.warn("삭제할 URL이 비어 있습니다.");
+            return;
+        }
+
+        if (!url.startsWith(cloudFrontDomain)) {
+            log.debug("URL이 CloudFront 도메인으로 시작하지 않습니다: " + url);
+            return;
+        }
 
         DeleteObjectRequest deleteObjectRequest = DeleteObjectRequest.builder()
                 .bucket(bucketName)
