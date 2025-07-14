@@ -6,6 +6,7 @@ import com.daall.howtoeat.common.Timestamped;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Getter
@@ -24,17 +25,16 @@ public class Trainer extends Timestamped {
     private String name;
 
     @Column
+    @Setter
     private String imageUrl;
 
-    public Trainer(Gym gym, String name, String imageUrl) {
+    public Trainer(Gym gym, String name) {
         this.gym = gym;
         this.name = name;
-        this.imageUrl = imageUrl;
     }
 
-    public void update(Gym gym, String name, String imageUrl) {
+    public void update(Gym gym, String name) {
         this.gym = gym;
         this.name = name;
-        this.imageUrl = imageUrl;
     }
 }
