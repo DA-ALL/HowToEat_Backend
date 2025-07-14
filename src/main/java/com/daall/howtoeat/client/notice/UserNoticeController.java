@@ -9,16 +9,22 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
-public class NoticeController {
-    private final NoticeService noticeService;
+public class UserNoticeController {
+    private final UserNoticeService userNoticeService;
 
+    /**
+     * 공지사항 전체 조회
+     */
     @GetMapping("/notices")
-    public ResponseEntity<ResponseDataDto<NoticeResponseDto>> getNotices() {
-        NoticeResponseDto responseDto = noticeService.getNotices();
+    public ResponseEntity<ResponseDataDto<List<NoticeResponseDto>>> getNotices() {
+        List<NoticeResponseDto> responseDtos = userNoticeService.getNotices();
+
         SuccessType successType = SuccessType.GET_ALL_NOTICES_SUCCESS;
 
-        return ResponseEntity.status(successType.getHttpStatus()).body(new ResponseDataDto<>(successType, responseDto));
+        return ResponseEntity.status(successType.getHttpStatus()).body(new ResponseDataDto<>(successType, responseDtos));
     }
 }
