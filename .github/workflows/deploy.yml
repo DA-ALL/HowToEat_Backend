@@ -39,7 +39,7 @@ jobs:
           username: ec2-user
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-		  docker-compose pull backend
-		  docker-compose stop backend
-		  docker-compose rm -f backend
-		  docker-compose up -d backend
+            docker-compose pull backend
+            docker-compose stop backend
+            docker-compose rm -f backend
+            docker-compose up -d backend
