@@ -1,7 +1,7 @@
 package com.daall.howtoeat.domain.user;
 
-import com.daall.howtoeat.client.user.UserTargetService;
 import com.daall.howtoeat.client.user.dto.SignupRequestDto;
+import com.daall.howtoeat.client.usertarget.dto.UserInfoDetailRequestDto;
 import com.daall.howtoeat.common.Timestamped;
 import com.daall.howtoeat.common.enums.UserActivityLevel;
 import com.daall.howtoeat.common.enums.UserGoal;
@@ -65,10 +65,19 @@ public class UserTarget extends Timestamped {
         this.activityLevel = activityLevel;
     }
 
-    public void updateTargetByHeight(UserTarget generatedTarget) {
+    public void updateTargetByHeightOrWeight(UserTarget generatedTarget) {
         this.kcal = generatedTarget.getKcal();
         this.carbo = generatedTarget.getCarbo();
         this.protein = generatedTarget.getProtein();
         this.fat = generatedTarget.getFat();
+    }
+
+    public void updateTarget(UserTarget generatedTarget) {
+        this.kcal = generatedTarget.getKcal();
+        this.carbo = generatedTarget.getCarbo();
+        this.protein = generatedTarget.getProtein();
+        this.fat = generatedTarget.getFat();
+        this.goal = generatedTarget.getGoal();
+        this.activityLevel = generatedTarget.getActivityLevel();
     }
 }

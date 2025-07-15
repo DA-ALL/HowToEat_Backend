@@ -4,8 +4,7 @@ import com.daall.howtoeat.client.consumedfood.dto.ConsumedFoodByMealTimeResponse
 import com.daall.howtoeat.client.consumedfood.dto.ConsumedFoodDetailResponseDto;
 import com.daall.howtoeat.client.consumedfood.dto.ConsumedFoodsRequestDto;
 import com.daall.howtoeat.client.favoritefood.FavoriteFoodRepository;
-import com.daall.howtoeat.client.favoritefood.FavoriteFoodService;
-import com.daall.howtoeat.client.user.UserTargetService;
+import com.daall.howtoeat.client.usertarget.UserTargetService;
 import com.daall.howtoeat.client.userdailysummary.UserDailySummaryService;
 import com.daall.howtoeat.client.userdailysummary.dto.DailyNutritionSummary;
 import com.daall.howtoeat.common.enums.ErrorType;
@@ -22,7 +21,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 

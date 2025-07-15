@@ -23,6 +23,7 @@ public class Notice extends Timestamped {
     private String content;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private NoticeType noticeType;
 
     public Notice(NoticeRequestDto requestDto) {
