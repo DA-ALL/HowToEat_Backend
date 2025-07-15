@@ -82,7 +82,7 @@ public class UserTargetService {
 
 
     /**
-     * 키 업데이트로 인한 새로운 타겟 생성
+     * 몸무게 업데이트로 인한 새로운 타겟 생성
      */
     @Transactional
     public void updateTargetByWeight(User loginUser, UserStat userStat, UserTarget userTarget, UserWeightRequestDto requestDto) {
@@ -101,10 +101,10 @@ public class UserTargetService {
     }
 
     @Transactional
-    public void updateTarget(User loginUser, UserInfoDetailRequestDto requestDto, MultipartFile profileImageFile) {
+    public void updateTarget(User loginUser, UserInfoDetailRequestDto requestDto) {
         LocalDate today = LocalDate.now();
-
-        System.out.println(profileImageFile);
+        System.out.println(requestDto.getUserActivityLevel());
+        System.out.println(requestDto.getUserGoal());
         UserTarget userTarget = getLatestTargetBeforeOrOn(loginUser, LocalDate.now());
         UserStat userStat = userStatRepository.findTopByUserOrderByIdDesc(loginUser).orElseThrow(() -> new CustomException(ErrorType.NOT_FOUND_USER_STAT));
 
@@ -113,7 +113,7 @@ public class UserTargetService {
         UserTarget generatedTarget = generateUserTarget(userBodyInfo, loginUser);
 
         if(userTarget.getCreatedAt().toLocalDate().equals(today)) {
-            userTarget.updateTarget(requestDto);
+            userTarget.updateTarget(generatedTarget);
         } else {
             userTargetRepository.save(generatedTarget);
         }
