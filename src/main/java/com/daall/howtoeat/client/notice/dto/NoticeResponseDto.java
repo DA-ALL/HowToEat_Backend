@@ -9,11 +9,13 @@ import java.time.LocalDate;
 
 @Getter
 public class NoticeResponseDto {
+    private Long id;
     private String title;
     private NoticeType type;
     private LocalDate modifiedAt;
 
     public NoticeResponseDto(Notice notice) {
+        this.id = notice.getId();
         this.title = notice.getTitle();
         this.type = notice.getNoticeType();
         this.modifiedAt = notice.getModifiedAt().toLocalDate();
