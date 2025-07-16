@@ -1,6 +1,7 @@
 # Build stage
-ENV SPRING_PROFILES_ACTIVE=prod
 FROM bellsoft/liberica-openjdk-alpine:17 AS builder
+
+ENV SPRING_PROFILES_ACTIVE=prod
 
 WORKDIR /app
 
