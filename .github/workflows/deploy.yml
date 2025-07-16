@@ -24,6 +24,12 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
+      - name: make env.properties
+        run: |
+          mkdir -p src/main/resources/properties
+          echo "${{ secrets.PROPERTIES }}" > src/main/resources/properties/env.properties
+        shell: bash
+      
       - name: Build & push backend image
         uses: docker/build-push-action@v5
         with:
