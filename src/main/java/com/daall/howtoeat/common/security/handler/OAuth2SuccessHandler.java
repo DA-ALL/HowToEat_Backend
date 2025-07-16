@@ -2,15 +2,11 @@ package com.daall.howtoeat.common.security.handler;
 
 import com.daall.howtoeat.client.user.UserRepository;
 import com.daall.howtoeat.common.enums.ErrorType;
-import com.daall.howtoeat.common.enums.UserRole;
-import com.daall.howtoeat.common.exception.CustomException;
-import com.daall.howtoeat.common.security.UserDetailsImpl;
 import com.daall.howtoeat.common.security.jwt.JwtUtil;
 import com.daall.howtoeat.domain.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
@@ -30,8 +26,8 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
     private final UserRepository userRepository;
     private final JwtUtil jwtUtil;
 
-    @Value("${DOMAIN_URL}")
-    private String domainUrl;
+    @Value("${REDIRECT_URL}")
+    private String url;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
@@ -95,7 +91,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
 
         if (isNewUser) {
             String claimsToken = jwtUtil.createAccessTokenWithClaims(claims);
-            redirectUrl = "http://" + domainUrl.replaceAll(":8080", "") + ":3000/survey?token=" + claimsToken;
+            redirectUrl = url + "/survey?token=" + claimsToken;
         } else {
             User user = userRepository.findByEmail(email).orElseThrow(); // orElseThrow로 안정성
 
@@ -105,7 +101,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
                 String encodedMessage = URLEncoder.encode(message, StandardCharsets.UTF_8.toString());
 
                 response.setStatus(HttpServletResponse.SC_FOUND); // 302 redirect
-                response.setHeader("Location", "http://"+ domainUrl.replaceAll(":8080", "") + ":3000/error-page?message=" + encodedMessage);
+                response.setHeader("Location", url + "/error-page?message=" + encodedMessage);
                 response.flushBuffer();
                 return;
             }
@@ -114,7 +110,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
             user.saveRefreshToken(refreshToken);
             userRepository.save(user);
             jwtUtil.addRefreshTokenToCookie(response, refreshToken);
-            redirectUrl = "http://" + domainUrl.replaceAll(":8080", "") + ":3000/main";
+            redirectUrl = url + "/main";
         }
 
         response.sendRedirect(redirectUrl);
