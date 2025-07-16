@@ -5,7 +5,7 @@ on:
     branches: [main]
 
 env:
-  DOCKER_IMAGE_BACKEND: jay1261/back
+  DOCKER_IMAGE_BACKEND: jay1261/howtoeat-back
 
 jobs:
   deploy:
@@ -24,6 +24,12 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
+      - name: make env.properties
+        run: |
+          mkdir -p src/main/resources/properties
+          echo "${{ secrets.PROPERTIES }}" > src/main/resources/properties/env.properties
+        shell: bash
+      
       - name: Build & push backend image
         uses: docker/build-push-action@v5
         with:
@@ -43,3 +49,5 @@ jobs:
             docker-compose stop backend
             docker-compose rm -f backend
             docker-compose up -d backend
+            docker image prune -f
+            
