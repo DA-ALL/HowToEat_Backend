@@ -16,7 +16,7 @@ public class CorsConfig {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
-        config.addAllowedOriginPattern("http://"+domainUrl+":3000");
+        config.addAllowedOriginPattern("http://"+(domainUrl.replaceAll(":8080", ":3000")));
         config.addAllowedOriginPattern("https://howtoeat.ai.kr");
         config.addAllowedOriginPattern("https://www.howtoeat.ai.kr");
 
