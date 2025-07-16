@@ -27,7 +27,7 @@ jobs:
       - name: make env.properties
         run: |
           mkdir -p src/main/resources/properties
-          echo "${{ secrets.PROPERTIES }}" > src/main/resources/properties/env.properties
+          echo "${{ secrets.PROPERTIES }}" > src/main/resources/properties/env-prod.properties
         shell: bash
       
       - name: Build & push backend image
