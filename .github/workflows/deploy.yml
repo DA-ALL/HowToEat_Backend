@@ -5,7 +5,7 @@ on:
     branches: [main]
 
 env:
-  DOCKER_IMAGE_BACKEND: jay1261/back
+  DOCKER_IMAGE_BACKEND: jay1261/howtoeat-back
 
 jobs:
   deploy:
@@ -43,3 +43,5 @@ jobs:
             docker-compose stop backend
             docker-compose rm -f backend
             docker-compose up -d backend
+            docker image prune -f
+            
