@@ -1,16 +1,18 @@
 package com.daall.howtoeat.admin.user;
 
-import com.daall.howtoeat.admin.user.dto.AdminUserDetailResponseDto;
-import com.daall.howtoeat.admin.user.dto.AdminUserResponseDto;
-import com.daall.howtoeat.admin.user.dto.UpdateNextGymStatusRequestDto;
-import com.daall.howtoeat.admin.user.dto.UpdateUserRoleRequestDto;
+import com.daall.howtoeat.admin.user.dto.*;
 import com.daall.howtoeat.common.PageResponseDto;
 import com.daall.howtoeat.common.ResponseDataDto;
 import com.daall.howtoeat.common.ResponseMessageDto;
 import com.daall.howtoeat.common.enums.SuccessType;
+import com.daall.howtoeat.common.security.UserDetailsImpl;
+import com.daall.howtoeat.domain.user.User;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -67,6 +69,37 @@ public class AdminUserController {
     ){
         adminUserService.updateUserRole(userId, requestDto);
         SuccessType successType = SuccessType.UPDATE_USER_ROLE_SUCCESS;
+
+        return ResponseEntity.status(successType.getHttpStatus()).body(new ResponseMessageDto(successType));
+    }
+
+    @GetMapping("/admin/me")
+    public ResponseEntity<ResponseDataDto<AdminMeResponseDto>> getAdminInfo(@AuthenticationPrincipal UserDetailsImpl userDetails){
+        User loginUser = userDetails.getUser();
+        SuccessType successType = SuccessType.GET_USER_BASIC_INFO_SUCCESS;
+
+        return ResponseEntity.status(successType.getHttpStatus()).body(new ResponseDataDto<>(successType, new AdminMeResponseDto(loginUser)));
+    }
+
+    @PostMapping("/admin/logout")
+    public ResponseEntity<ResponseMessageDto> adminLogout(
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
+            HttpServletResponse response
+    ){
+        User loginUser = userDetails.getUser();
+        adminUserService.logout(loginUser);
+        SuccessType successType = SuccessType.LOGOUT_SUCCESS;
+
+        // 쿠키 삭제
+        ResponseCookie deleteCookie = ResponseCookie.from("RefreshToken", "")
+                .path("/")
+                .maxAge(0)
+                .httpOnly(true)
+                .secure(false)
+                .sameSite("Strict")
+                .build();
+
+        response.setHeader("Set-Cookie", deleteCookie.toString());
 
         return ResponseEntity.status(successType.getHttpStatus()).body(new ResponseMessageDto(successType));
     }

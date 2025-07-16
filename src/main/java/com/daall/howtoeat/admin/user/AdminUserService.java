@@ -96,4 +96,9 @@ public class AdminUserService {
             userRepository.countByUserRoleInAndIsNextGymTrue(userRoles)
         );
     }
+
+    @Transactional
+    public void logout(User loginUser) {
+        loginUser.deleteRefreshToken();
+    }
 }
