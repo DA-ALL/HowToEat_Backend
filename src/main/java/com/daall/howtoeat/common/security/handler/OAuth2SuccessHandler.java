@@ -95,7 +95,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
 
         if (isNewUser) {
             String claimsToken = jwtUtil.createAccessTokenWithClaims(claims);
-            redirectUrl = "http://" + domainUrl + ":3000/survey?token=" + claimsToken;
+            redirectUrl = "http://" + domainUrl.replaceAll(":8080", "") + ":3000/survey?token=" + claimsToken;
         } else {
             User user = userRepository.findByEmail(email).orElseThrow(); // orElseThrow로 안정성
 
@@ -105,7 +105,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
                 String encodedMessage = URLEncoder.encode(message, StandardCharsets.UTF_8.toString());
 
                 response.setStatus(HttpServletResponse.SC_FOUND); // 302 redirect
-                response.setHeader("Location", "http://localhost:3000/error-page?message=" + encodedMessage);
+                response.setHeader("Location", "http://"+ domainUrl.replaceAll(":8080", "") + ":3000/error-page?message=" + encodedMessage);
                 response.flushBuffer();
                 return;
             }
@@ -114,7 +114,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
             user.saveRefreshToken(refreshToken);
             userRepository.save(user);
             jwtUtil.addRefreshTokenToCookie(response, refreshToken);
-            redirectUrl = "http://" + domainUrl + ":3000/main";
+            redirectUrl = "http://" + domainUrl.replaceAll(":8080", "") + ":3000/main";
         }
 
         response.sendRedirect(redirectUrl);
