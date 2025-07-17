@@ -3,7 +3,7 @@ package com.daall.howtoeat.admin.account;
 import com.daall.howtoeat.admin.account.dto.AdminAccountRequestDto;
 import com.daall.howtoeat.admin.account.dto.AdminAccountResponseDto;
 import com.daall.howtoeat.client.user.UserRepository;
-import com.daall.howtoeat.client.user.UserTargetService;
+import com.daall.howtoeat.client.usertarget.UserTargetService;
 import com.daall.howtoeat.client.user.dto.SignupRequestDto;
 import com.daall.howtoeat.common.enums.ErrorType;
 import com.daall.howtoeat.common.enums.SignupProvider;

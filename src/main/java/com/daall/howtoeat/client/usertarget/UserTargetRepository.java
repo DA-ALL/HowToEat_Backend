@@ -1,4 +1,4 @@
-package com.daall.howtoeat.client.user;
+package com.daall.howtoeat.client.usertarget;
 
 import com.daall.howtoeat.domain.user.User;
 import com.daall.howtoeat.domain.user.UserTarget;
