@@ -11,6 +11,7 @@ import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 public class SignupRequestDto {
@@ -34,6 +35,12 @@ public class SignupRequestDto {
     private SignupProvider signupProvider;
     private String profileImageUrl;
 
+    @NotNull(message = "이용약관에 동의하지 않으면 회원가입이 불가능합니다.")
+    private LocalDateTime termsAgreedAt;
+
+    @NotNull(message = "개인정보 처리에 동의하지 않으면 회원가입이 불가능합니다.")
+    private LocalDateTime privacyAgreedAt;
+
     // admin 계정생성에
     public SignupRequestDto(String name) {
         this.email = "admin";
@@ -47,5 +54,8 @@ public class SignupRequestDto {
         this.isNextGym = false;
         this.signupProvider = SignupProvider.ADMIN;
         this.profileImageUrl = "/administrate/images/icon_human_red.png";
+        //어드민 계정 생성은 일단 동의 처리
+        this.termsAgreedAt = LocalDateTime.now();
+        this.privacyAgreedAt = LocalDateTime.now();
     }
 }

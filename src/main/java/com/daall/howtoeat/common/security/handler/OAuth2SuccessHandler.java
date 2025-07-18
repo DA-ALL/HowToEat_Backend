@@ -91,7 +91,9 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
 
         if (isNewUser) {
             String claimsToken = jwtUtil.createAccessTokenWithClaims(claims);
-            redirectUrl = url + "/survey?token=" + claimsToken;
+//            redirectUrl = url + "/survey?token=" + claimsToken;
+            redirectUrl = url + "/signup/terms-privacy?token=" + claimsToken;
+
         } else {
             User user = userRepository.findByEmail(email).orElseThrow(); // orElseThrow로 안정성
 

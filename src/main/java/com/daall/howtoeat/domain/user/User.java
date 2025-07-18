@@ -14,6 +14,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -64,6 +65,12 @@ public class User extends Timestamped {
     @Column(columnDefinition = "Text")
     private String refreshToken;
 
+    @Column(nullable = false)
+    private LocalDateTime termsAgreedAt;
+
+    @Column(nullable = false)
+    private LocalDateTime privacyAgreedAt;
+
     public User(SignupRequestDto requestDto) {
         this.name = requestDto.getName();
         this.email = requestDto.getEmail();
@@ -74,6 +81,8 @@ public class User extends Timestamped {
         this.userRole = UserRole.USER;
         this.userStatus = UserStatus.ACTIVATE;
         this.signup_provider = requestDto.getSignupProvider();
+        this.termsAgreedAt = requestDto.getTermsAgreedAt();
+        this.privacyAgreedAt = requestDto.getPrivacyAgreedAt();
     }
 
     public User(AdminAccountRequestDto requestDto, String password){
