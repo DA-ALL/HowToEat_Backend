@@ -1,6 +1,7 @@
 package com.daall.howtoeat.client.userstat;
 
 import com.daall.howtoeat.client.user.UserStatRepository;
+import com.daall.howtoeat.client.userstat.dto.UserWeightResponseDto;
 import com.daall.howtoeat.client.usertarget.UserTargetService;
 import com.daall.howtoeat.client.user.dto.SignupRequestDto;
 import com.daall.howtoeat.client.userstat.dto.UserHeightRequestDto;
@@ -15,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -101,4 +103,9 @@ public class UserStatService {
     }
 
 
+    public List<UserWeightResponseDto> getUserStatsWeight(User loginUser) {
+        List<UserStat> userStats = userStatRepository.findAllByUserOrderByWeightRecordedAtAsc(loginUser);
+
+        return userStats.stream().map(UserWeightResponseDto::new).toList();
+    }
 }
