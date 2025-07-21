@@ -8,12 +8,15 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
+@ActiveProfiles("dev") // 또는 dev, test 등
 class AdminAccountControllerTest {
     @Autowired
     AdminAccountService adminAccountService;
@@ -30,6 +33,8 @@ class AdminAccountControllerTest {
         when(userMock.getUserRole()).thenReturn(UserRole.MASTER);
         when(userMock.getBirth()).thenReturn(LocalDate.now());
         when(userMock.getName()).thenReturn("admin");
+        when(userMock.getTermsAgreedAt()).thenReturn(LocalDateTime.now());
+        when(userMock.getPrivacyAgreedAt()).thenReturn(LocalDateTime.now());
 
         adminAccountService.createAdminAccount(mock1);
     }
