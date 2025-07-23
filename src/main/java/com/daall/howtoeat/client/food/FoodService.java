@@ -3,51 +3,25 @@ package com.daall.howtoeat.client.food;
 import com.daall.howtoeat.client.food.dto.FoodResponseDto;
 import com.daall.howtoeat.common.dto.ScrollResponseDto;
 import com.daall.howtoeat.common.enums.ErrorType;
+import com.daall.howtoeat.common.enums.FoodType;
 import com.daall.howtoeat.common.exception.CustomException;
 import com.daall.howtoeat.domain.food.Food;
+import info.debatty.java.stringsimilarity.JaroWinkler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 
+import java.util.Comparator;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class FoodService {
     private final FoodRepository foodRepository;
-
-    /**
-     * 음식 이름에 해당하는 음식 데이터를 페이지네이션하여 조회합니다.
-     *
-     * - 검색어가 null 또는 공백이면 전체 음식 데이터를 조회합니다.
-     * - food_name 컬럼에 name 값이 포함된 데이터를 검색합니다.
-     * - 결과는 ScrollResponseDto로 감싸서 반환되며, content와 hasNext를 포함합니다.
-     *
-     * @param name 검색할 음식 이름 (예: "소고기"). null 또는 공백이면 전체 검색.
-     * @param page 조회할 페이지 번호 (0부터 시작).
-     * @param size 한 페이지당 조회할 데이터 개수.
-     * @return {@link ScrollResponseDto} 음식 응답 DTO 리스트와 다음 페이지 존재 여부를 포함한 객체.
-     */
-    public ScrollResponseDto<FoodResponseDto> getFoods(String name, int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
-
-        //검색어가 없을 경우, 빈객체 반환
-        if (name == null || name.isBlank()) {
-            return new ScrollResponseDto<>(List.of(), false);
-        }
-
-        Page<Food> foodPage = foodRepository.findByFoodNameContaining(name, pageable);
-
-        List<FoodResponseDto> dtoList = foodPage.getContent().stream()
-                .map(FoodResponseDto::new)
-                .toList();
-
-        return new ScrollResponseDto<>(dtoList, foodPage.hasNext());
-    }
-
 
     /**
      * 주어진 음식 ID를 기반으로 단일 음식 정보를 조회합니다.
@@ -64,4 +38,42 @@ public class FoodService {
 
         return new FoodResponseDto(food);
     }
+
+
+    public ScrollResponseDto<FoodResponseDto> searchSimilarFoods(String name, int page, int size){
+        String trimmedKeyword = name.replaceAll("\\s+", "");
+
+        // 받아온 음식이름과 공백을 제거한 음식이름으로 Like 검색
+        List<Food> candidates = foodRepository.findByNameContainingVariants(name, trimmedKeyword);
+        Pageable pageable = PageRequest.of(page, size);
+        JaroWinkler jw = new JaroWinkler();
+
+        // 받아온 음식이름과 조회한 값들을 유사도로 정렬, 같은 유사도는 foodTyper
+        List<Food> sorted = candidates.stream()
+                .sorted(Comparator
+                        .comparingDouble((Food f) -> jw.similarity(name, f.getFoodName()))
+                        .reversed()
+                        .thenComparing(f -> foodTypeOrder(f.getFoodType()))
+                )
+                .toList();
+
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), sorted.size());
+
+        List<FoodResponseDto> pageContent = sorted.subList(start, end).stream().map(FoodResponseDto::new).toList();
+        Page<FoodResponseDto> foodPage = new PageImpl<>(pageContent, pageable, sorted.size());
+
+        return new ScrollResponseDto<>(pageContent, foodPage.hasNext());
+    }
+
+    private int foodTypeOrder(FoodType type) {
+        return switch (type) {
+            case COOKED-> 0;
+            case INGREDIENT -> 1;
+            case PROCESSED -> 2;
+            case CUSTOM_SHARED -> 3;
+            default -> 4;
+        };
+    }
+
 }
