@@ -1,10 +1,3 @@
-server:
-  port: ${SERVER_PORT:8080}
-  ssl:
-    key-store: classpath:mkcert/localhost.p12
-    key-store-password: ${SSL_KEY_STORE_PASSWORD}
-    key-store-type: PKCS12
-
 spring:
   datasource:
     url: ${DATASOURCE_URL}
@@ -20,13 +13,13 @@ spring:
             client-id: ${NAVER_CLIENT_ID}
             client-secret: ${NAVER_CLIENT_SECRET}
             client-name: Naver
-            redirect-uri: "http://${DOMAIN_URL}/login/oauth2/code/naver"
+            redirect-uri: "https://${DOMAIN_URL}/login/oauth2/code/naver"
             authorization-grant-type: authorization_code
             scope: name,email,birthyear, gender, profile_image
           kakao:
             client-id: ${KAKAO_CLIENT_ID}
             client-secret: ${KAKAO_CLIENT_SECRET}
-            redirect-uri: "http://${DOMAIN_URL}/login/oauth2/code/kakao"
+            redirect-uri: "https://${DOMAIN_URL}/login/oauth2/code/kakao"
             client-authentication-method: client_secret_post
             #            client-authentication-method: POST
             authorization-grant-type: authorization_code

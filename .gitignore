@@ -42,8 +42,7 @@ out/
 ### properties
 /src/main/resources/properties/*
 
-
-###
+### localhost https 인증
 /src/main/resources/mkcert/*
 
 ### test.http
