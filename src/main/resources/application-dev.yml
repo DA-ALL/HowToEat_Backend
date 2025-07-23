@@ -1,3 +1,10 @@
+server:
+  port: ${SERVER_PORT:8080}
+  ssl:
+    key-store: classpath:mkcert/localhost.p12
+    key-store-password: ${SSL_KEY_STORE_PASSWORD}
+    key-store-type: PKCS12
+
 spring:
   datasource:
     url: ${DATASOURCE_URL}

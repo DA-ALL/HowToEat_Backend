@@ -42,5 +42,9 @@ out/
 ### properties
 /src/main/resources/properties/*
 
+
+###
+/src/main/resources/mkcert/*
+
 ### test.http
 /http/test.http
