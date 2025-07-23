@@ -24,7 +24,7 @@ repositories {
 }
 
 dependencies {
-	implementation 'info.debatty:java-string-similarity:1.2.1'
+	implementation 'info.debatty:java-string-similarity:2.0.0'
 
 	//S3
 	implementation platform('software.amazon.awssdk:bom:2.25.32') // 최신 BOM을 먼저 지정 (버전 맞춰줌)
