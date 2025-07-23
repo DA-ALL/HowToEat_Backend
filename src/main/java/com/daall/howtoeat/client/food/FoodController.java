@@ -21,11 +21,11 @@ public class FoodController {
     public ResponseEntity<ResponseDataDto<ScrollResponseDto<FoodResponseDto>>> getFoods(
             @RequestParam(required = false) String name,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size
+            @RequestParam(defaultValue = "20") int size
     ) {
             System.out.println("Controller");
 
-            ScrollResponseDto<FoodResponseDto> result = foodService.getFoods(name, page, size);
+            ScrollResponseDto<FoodResponseDto> result = foodService.searchSimilarFoods(name, page, size);
 
             SuccessType successType = SuccessType.GET_ALL_FOODS_SUCCESS;
 
@@ -39,6 +39,5 @@ public class FoodController {
             SuccessType successType = SuccessType.GET_FOOD_SUCCESS;
             FoodResponseDto responseDto = foodService.getFood(foodId);
             return ResponseEntity.status(successType.getHttpStatus()).body(new ResponseDataDto<>(successType, responseDto));
-
     }
 }
