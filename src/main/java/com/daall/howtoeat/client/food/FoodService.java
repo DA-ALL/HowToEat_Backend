@@ -40,7 +40,11 @@ public class FoodService {
     }
 
 
-    public ScrollResponseDto<FoodResponseDto> searchSimilarFoods(String name, int page, int size){
+    public ScrollResponseDto<FoodResponseDto> searchSimilarFoods(String name, int page, int size) {
+        if (name == null || name.trim().isEmpty()) {
+            return new ScrollResponseDto<>(List.of(), false);
+        }
+
         String trimmedKeyword = name.replaceAll("\\s+", "");
 
         // 받아온 음식이름과 공백을 제거한 음식이름으로 Like 검색
@@ -68,7 +72,7 @@ public class FoodService {
 
     private int foodTypeOrder(FoodType type) {
         return switch (type) {
-            case COOKED-> 0;
+            case COOKED -> 0;
             case INGREDIENT -> 1;
             case PROCESSED -> 2;
             case CUSTOM_SHARED -> 3;
