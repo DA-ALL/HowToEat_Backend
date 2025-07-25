@@ -55,13 +55,17 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
             email = attributes.get("email") != null ? attributes.get("email").toString() : null;
             name = attributes.get("name") != null ? attributes.get("name").toString() : null;
             profileImage = attributes.get("profile_image") != null ? attributes.get("profile_image").toString() : null;
-        } else {
+        } else if("naver".equals(provider)) {
             email = attributes.get("email") != null ? attributes.get("email").toString() : null;
             name = attributes.get("name") != null ? attributes.get("name").toString() : null;
             birthyear = attributes.get("birthyear") != null ? attributes.get("birthyear").toString() : null;
             birthday = attributes.get("birthday") != null ? attributes.get("birthday").toString() : null;
             gender = attributes.get("gender") != null ? attributes.get("gender").toString() : null;
             profileImage = attributes.get("profile_image") != null ? attributes.get("profile_image").toString() : null;
+        } else if ("apple".equals(provider)) {
+            email = attributes.get("email") != null ? attributes.get("email").toString() : null;
+            name = attributes.get("name") != null ? attributes.get("name").toString() : null;
+            profileImage = null; // Apple은 프로필 이미지 제공 안 함
         }
 
         if (email == null || email.equals("null")) {
