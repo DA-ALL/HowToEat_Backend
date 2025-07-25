@@ -50,12 +50,17 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
             userInfo.put("profile_image", profile.get("profile_image_url"));
         }
         else if ("apple".equals(registrationId)) {
-            String idToken = userRequest.getAdditionalParameters().get("id_token").toString();
+            String idToken = (String) userRequest.getAdditionalParameters().get("id_token");
+
+            if (idToken == null) {
+                throw new OAuth2AuthenticationException("Apple id_token 누락");
+            }
+
             DecodedJWT decoded = JWT.decode(idToken);
 
             userInfo.put("provider", registrationId);
             userInfo.put("email", decoded.getClaim("email").asString());
-            userInfo.put("name", decoded.getClaim("name").asString()); // Apple은 첫 로그인만 name 제공
+            userInfo.put("name", decoded.getClaim("name").asString());
         }
 
         // 디버깅 출력
