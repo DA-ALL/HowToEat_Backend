@@ -19,6 +19,8 @@ public class CorsConfig {
         config.addAllowedOriginPattern("http://"+(domainUrl.replaceAll(":8080", ":3000")));
         config.addAllowedOriginPattern("https://howtoeat.ai.kr");
         config.addAllowedOriginPattern("https://www.howtoeat.ai.kr");
+        config.addAllowedOriginPattern("https://appleid.apple.com");
+
 
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
