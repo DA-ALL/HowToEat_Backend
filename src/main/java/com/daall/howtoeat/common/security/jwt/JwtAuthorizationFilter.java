@@ -33,7 +33,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String path = request.getRequestURI();
-
+        System.out.println("path: " + path);
         // 로그인 요청은 토큰 검증하지 않음
         if ("/admin/login".equals(path) || "/signup".equals(path)) {
             filterChain.doFilter(request, response);
