@@ -37,7 +37,7 @@ spring:
           apple:
             client-id: ${APPLE_CLIENT_ID}
             client-name: Apple
-            redirect-uri: "https://${DOMAIN_URL}/api/login/oauth2/code/apple"
+            redirect-uri: "https://${DOMAIN_URL}/login/oauth2/code/apple"
             authorization-grant-type: authorization_code
             client-authentication-method: client_secret_post
             scope:
