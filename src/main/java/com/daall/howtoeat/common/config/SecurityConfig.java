@@ -95,6 +95,13 @@ public class SecurityConfig {
                             .userService(customOAuth2UserService())
                     )
                     .successHandler(oAuth2SuccessHandler())
+                    .failureHandler((request, response, exception) -> {
+                        exception.printStackTrace(); // ❗ 콘솔에 자세한 예외 로그 출력
+                
+                        // 프론트로 리디렉션 + 에러 메시지 전달
+                        String errorMessage = URLEncoder.encode(exception.getMessage(), StandardCharsets.UTF_8);
+                        response.sendRedirect("https://howtoeat.ai.kr/oauth-failure?error=" + errorMessage);
+                    })
             );
 
         http.exceptionHandling(exception ->
