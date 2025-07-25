@@ -60,5 +60,7 @@ spring:
             authorization-uri: https://appleid.apple.com/auth/authorize
             token-uri: https://appleid.apple.com/auth/token
             user-name-attribute: sub
+            authorization-parameters:
+              response_mode: form_post
 
 
