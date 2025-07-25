@@ -66,6 +66,7 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        System.out.println("securityFilterChain 접근");
         http.cors(Customizer.withDefaults()).csrf((csrf) -> csrf.disable());
 
         // jwt 사용 설정
