@@ -1,5 +1,7 @@
 package com.daall.howtoeat.common.security;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
@@ -46,6 +48,14 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
             userInfo.put("name", profile.get("nickname"));
             userInfo.put("email", kakaoAccount.get("email"));
             userInfo.put("profile_image", profile.get("profile_image_url"));
+        }
+        else if ("apple".equals(registrationId)) {
+            String idToken = userRequest.getAdditionalParameters().get("id_token").toString();
+            DecodedJWT decoded = JWT.decode(idToken);
+
+            userInfo.put("provider", registrationId);
+            userInfo.put("email", decoded.getClaim("email").asString());
+            userInfo.put("name", decoded.getClaim("name").asString()); // Apple은 첫 로그인만 name 제공
         }
 
         // 디버깅 출력
