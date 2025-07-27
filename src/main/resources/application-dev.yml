@@ -31,6 +31,7 @@ spring:
           apple:
             client-id: ${APPLE_CLIENT_ID} # com.daall.howtoeat.web
             client-name: Apple
+            client-secret: ${APPLE_CLIENT_SECRET}
             redirect-uri: "http://${DOMAIN_URL}/login/oauth2/code/apple"
             authorization-grant-type: authorization_code
             client-authentication-method: client_secret_post
