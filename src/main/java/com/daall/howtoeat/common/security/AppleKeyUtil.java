@@ -19,7 +19,7 @@ public class AppleKeyUtil {
             KeyFactory keyFactory = KeyFactory.getInstance("EC"); // 애플 키는 ECDSA 기반
             return (ECPrivateKey) keyFactory.generatePrivate(keySpec);
         } catch (Exception e) {
-            throw new IllegalArgumentException("Invalid Apple Private Key", e);
+            throw new IllegalArgumentException("Invalid Apple Private Key" + e, e);
         }
     }
 }
