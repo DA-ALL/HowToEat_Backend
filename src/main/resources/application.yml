@@ -18,6 +18,7 @@ jwt:
     key: ${JWT_SECRET_KEY}
 server:
   port: ${SERVER_PORT}
+  forward-headers-strategy: framework
 
 cloud:
   aws:
