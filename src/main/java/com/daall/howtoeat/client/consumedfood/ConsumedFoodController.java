@@ -15,7 +15,9 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -37,7 +39,7 @@ public class ConsumedFoodController {
     }
 
     /**
-     * 섭취 음식 등록
+     * 섭취 음식 등록 (즐겨찾기)
      * @param requestDtoList - 섭취 음식에 필요한 데이터
      */
     @PostMapping("/consumed-foods")
@@ -50,6 +52,23 @@ public class ConsumedFoodController {
         SuccessType successType = SuccessType.ADD_CONSUMED_FOOD_SUCCESS;
         return ResponseEntity.status(successType.getHttpStatus()).body(new ResponseMessageDto(successType));
     }
+
+    /**
+     * 섭취 음식 등록 (검색)
+     * @param requestDto - 섭취 음식에 필요한 데이터
+     */
+    @PostMapping("/consumed-foods/search")
+    public ResponseEntity<ResponseMessageDto> addConsumedFoodsBySearch(
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
+            @ModelAttribute @Valid ConsumedFoodsRequestDto requestDto,
+            @RequestParam(value = "foodImageFile", required = false) MultipartFile foodImageFile
+    ) throws IOException {
+        User loginUser = userDetails.getUser();
+        consumedFoodService.addConsumedFood(loginUser, requestDto, foodImageFile);
+        SuccessType successType = SuccessType.ADD_CONSUMED_FOOD_SUCCESS;
+        return ResponseEntity.status(successType.getHttpStatus()).body(new ResponseMessageDto(successType));
+    }
+
 
 
     /**
