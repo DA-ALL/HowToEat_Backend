@@ -63,13 +63,3 @@ spring:
             user-name-attribute: sub
             authorization-parameters:
               response_mode: form_post
-
-logging:
-  level:
-    org:
-      springframework:
-        security: DEBUG
-
-
-
-
