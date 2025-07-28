@@ -3,10 +3,11 @@ package com.daall.howtoeat.client.consumedfood.dto;
 import com.daall.howtoeat.common.enums.FoodType;
 import com.daall.howtoeat.common.enums.MealTime;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
+import lombok.Setter;
 
+@Setter
 @Getter
 public class ConsumedFoodsRequestDto {
     @NotBlank(message = "음식 코드가 비어있습니다. 다시 시도해주세요.")
@@ -49,6 +50,4 @@ public class ConsumedFoodsRequestDto {
 
     @NotBlank(message = "단위 정보가 비어있습니다. 다시 시도해주세요.")
     private String source;
-
-    private String foodImageUrl;
 }
