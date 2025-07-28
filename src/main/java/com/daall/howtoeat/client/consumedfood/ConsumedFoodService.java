@@ -7,6 +7,7 @@ import com.daall.howtoeat.client.favoritefood.FavoriteFoodRepository;
 import com.daall.howtoeat.client.usertarget.UserTargetService;
 import com.daall.howtoeat.client.userdailysummary.UserDailySummaryService;
 import com.daall.howtoeat.client.userdailysummary.dto.DailyNutritionSummary;
+import com.daall.howtoeat.common.S3Uploader;
 import com.daall.howtoeat.common.enums.ErrorType;
 import com.daall.howtoeat.common.enums.MealTime;
 import com.daall.howtoeat.common.exception.CustomException;
@@ -18,7 +19,9 @@ import com.daall.howtoeat.domain.user.UserTarget;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -31,7 +34,7 @@ public class ConsumedFoodService {
     private final FavoriteFoodRepository favoriteFoodRepository;
     private final UserDailySummaryService userDailySummaryService;
     private final UserTargetService userTargetService;
-
+    private final S3Uploader s3Uploader;
     /**
      * 섭취 음식 조회
      * @param loginUser 유저 정보
@@ -81,6 +84,42 @@ public class ConsumedFoodService {
         }
 
         consumedFoodRepository.saveAll(consumedFoods);
+
+        // 2. 오늘 날짜 기준 유저의 요약 정보 조회 (존재하지 않을 수 있음)
+        UserDailySummary summary = userDailySummaryService.findUserDailySummary(loginUser, today).orElse(null);
+
+        // 3. 오늘 날짜에 기록된 전체 섭취 음식 조회 및 영양소 요약 계산
+        List<ConsumedFood> totalConsumedFoods = consumedFoodRepository.findAllByUserAndCreatedAtBetween(loginUser, startOfDay, endOfDay).orElseThrow(() -> new CustomException(ErrorType.NOT_FOUND_CONSUMED_FOOD));
+        DailyNutritionSummary nutritionSummary = new DailyNutritionSummary(totalConsumedFoods);
+
+        // 4. 오늘 날짜에 적용할 최신 목표 정보 조회
+        UserTarget latestTarget = userTargetService.getLatestTargetBeforeOrOn(loginUser, today);
+
+        // 5. 오늘 요약 정보가 없으면 새로 생성, 있으면 갱신
+        if (summary == null) {
+            userDailySummaryService.createUserDailySummary(loginUser, latestTarget, nutritionSummary);
+        } else {
+            summary.setData(loginUser, latestTarget, nutritionSummary);
+        }
+    }
+
+    /**
+     * 섭취 음식 등록(검색)
+     *
+     * @param loginUser 현재 로그인한 유저
+     * @param requestDto 등록할 음식 정보 리스트
+     */
+    @Transactional
+    public void addConsumedFood(User loginUser, ConsumedFoodsRequestDto requestDto, MultipartFile imageFile) throws IOException {
+        LocalDate today = LocalDate.now();
+        LocalDateTime startOfDay = today.atStartOfDay();
+        LocalDateTime endOfDay = today.atTime(23, 59, 59);
+
+        String imageUrl = s3Uploader.upload(imageFile, "consumed_food_images", loginUser.getId());
+
+        ConsumedFood consumedFood = new ConsumedFood(loginUser, requestDto, imageUrl);
+
+        consumedFoodRepository.save(consumedFood);
 
         // 2. 오늘 날짜 기준 유저의 요약 정보 조회 (존재하지 않을 수 있음)
         UserDailySummary summary = userDailySummaryService.findUserDailySummary(loginUser, today).orElse(null);

@@ -71,7 +71,6 @@ public class ConsumedFood extends Timestamped {
     @Column
     private String foodImageUrl;
 
-
     public ConsumedFood(User loginUser, ConsumedFoodsRequestDto requestDto) {
         this.user = loginUser;
         this.foodCode = requestDto.getFoodCode();
@@ -86,7 +85,23 @@ public class ConsumedFood extends Timestamped {
         this.mealTime = requestDto.getMealTime();
         this.providedBy = requestDto.getProvidedBy();
         this.source = requestDto.getSource();
-        this.foodImageUrl = requestDto.getFoodImageUrl();
+    }
+
+    public ConsumedFood(User loginUser, ConsumedFoodsRequestDto requestDto, String imageUrl) {
+        this.user = loginUser;
+        this.foodCode = requestDto.getFoodCode();
+        this.foodType = requestDto.getFoodType();
+        this.foodName = requestDto.getFoodName();
+        this.kcal = requestDto.getKcal();
+        this.carbo = requestDto.getCarbo();
+        this.protein = requestDto.getProtein();
+        this.fat = requestDto.getFat();
+        this.foodWeight = requestDto.getFoodWeight();
+        this.unit = requestDto.getUnit();
+        this.mealTime = requestDto.getMealTime();
+        this.providedBy = requestDto.getProvidedBy();
+        this.source = requestDto.getSource();
+        this.foodImageUrl = imageUrl;
     }
 
     public void setFavoriteFood(FavoriteFood favoriteFood) {
