@@ -79,9 +79,11 @@ public class TrainerService {
 
         trainerRepository.save(trainer);
 
-        String imageUrl = s3Uploader.upload(image, "trainer_profile_images", trainer.getId());
+        if(image != null) {
+            String imageUrl =  s3Uploader.upload(image, "trainer_profile_images", trainer.getId());
+            trainer.setImageUrl(imageUrl);
+        }
 
-        trainer.setImageUrl(imageUrl);
     }
 
     @Transactional
@@ -91,13 +93,11 @@ public class TrainerService {
         );
         Gym gym = gymService.getGymEntity(gymId);
 
-        System.out.println("trainerService 업데이트 시작");
-        if(!image.isEmpty()){
+        if(image != null){
             String imageUrl = s3Uploader.upload(image, "trainer_profile_images", trainer.getId());
             // 기존 프로필 이미지 삭제
             s3Uploader.delete(trainer.getImageUrl());
             trainer.setImageUrl(imageUrl);
-            System.out.println("trainerService 이미지url: " + imageUrl);
         }
 
         trainer.update(gym, name);
