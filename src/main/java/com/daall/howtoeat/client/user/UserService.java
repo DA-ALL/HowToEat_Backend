@@ -39,6 +39,18 @@ public class UserService {
     private final PtMemberRepository ptMemberRepository;
 
     /**
+     * 유저 회원가입 날짜 조회
+     *
+     * @param loginUser 현재 로그인한 유저
+     * @return UserSignupDateResponseDto 유저 날짜 값
+     */
+    public UserSignupDateResponseDto getUserSignupDate(User loginUser) {
+        User user = userRepository.findByEmail(loginUser.getEmail()).orElseThrow(() -> new CustomException(ErrorType.NOT_FOUND_USER));
+
+        return new UserSignupDateResponseDto(user);
+    }
+
+    /**
      * 유저 회원가입
      *
      * @param requestDto 유저 정보
@@ -58,18 +70,6 @@ public class UserService {
 
         userStatService.createStat(requestDto, savedUser);
         return user;
-    }
-
-    /**
-     * 유저 회원가입 날짜 조회
-     *
-     * @param loginUser 현재 로그인한 유저
-     * @return UserSignupDateResponseDto 유저 날짜 값
-     */
-    public UserSignupDateResponseDto getUserSignupDate(User loginUser) {
-        User user = userRepository.findByEmail(loginUser.getEmail()).orElseThrow(() -> new CustomException(ErrorType.NOT_FOUND_USER));
-
-        return new UserSignupDateResponseDto(user);
     }
 
     /**

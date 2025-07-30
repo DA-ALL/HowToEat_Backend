@@ -115,9 +115,14 @@ public class ConsumedFoodService {
         LocalDateTime startOfDay = today.atStartOfDay();
         LocalDateTime endOfDay = today.atTime(23, 59, 59);
 
-        String imageUrl = s3Uploader.upload(imageFile, "consumed_food_images", loginUser.getId());
+        // 1. 이미지 업로드 및 ConsumedFood 저장
+        String imageUrl = (!imageFile.isEmpty())
+                ? s3Uploader.upload(imageFile, "consumed_food_images", loginUser.getId())
+                : null;
 
-        ConsumedFood consumedFood = new ConsumedFood(loginUser, requestDto, imageUrl);
+        ConsumedFood consumedFood = (imageUrl != null)
+                ? new ConsumedFood(loginUser, requestDto, imageUrl)
+                : new ConsumedFood(loginUser, requestDto);
 
         consumedFoodRepository.save(consumedFood);
 
