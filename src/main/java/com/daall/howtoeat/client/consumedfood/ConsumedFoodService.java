@@ -125,7 +125,7 @@ public class ConsumedFoodService {
                 : new ConsumedFood(loginUser, requestDto);
 
         consumedFoodRepository.save(consumedFood);
-        System.out.println("TEST2");
+
         // 2. 오늘 날짜 기준 유저의 요약 정보 조회 (존재하지 않을 수 있음)
         UserDailySummary summary = userDailySummaryService.findUserDailySummary(loginUser, today).orElse(null);
 
