@@ -39,7 +39,6 @@ public class ConsumedFoodsRequestDto {
     @NotNull(message = "지방 정보가 비어있습니다. 다시 시도해주세요.")
     private Double fat;
 
-    @NotBlank(message = "제공처 정보가 비어있습니다. 다시 시도해주세요.")
     private String providedBy;
 
     @NotNull(message = "1회 제공량 여부 정보가 비어있습니다. 다시 시도해주세요.")
