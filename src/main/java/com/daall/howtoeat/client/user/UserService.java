@@ -59,7 +59,7 @@ public class UserService {
     @Transactional
     public User signup(SignupRequestDto requestDto) {
         if (userRepository.existsByEmail(requestDto.getEmail())) {
-            throw new IllegalArgumentException("이미 가입된 이메일입니다.");
+            throw new CustomException(ErrorType.ALREADY_EXISTS_EMAIL);
         }
 
         User user = new User(requestDto);
