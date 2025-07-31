@@ -132,7 +132,7 @@ public class UserController {
     public ResponseEntity<ResponseMessageDto> updateProfileImage (
             @AuthenticationPrincipal UserDetailsImpl userDetails,
             @RequestParam(value = "profileImageFile", required = false) MultipartFile profileImageFile
-    ) {
+    ) throws IOException {
         User loginUser = userDetails.getUser();
         userService.updateProfileImage(loginUser, profileImageFile);
         SuccessType successType = SuccessType.UPDATE_PROFILE_IMAGE;
