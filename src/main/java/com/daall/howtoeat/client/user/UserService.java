@@ -12,8 +12,10 @@ import com.daall.howtoeat.client.userdailysummary.UserDailySummaryService;
 import com.daall.howtoeat.client.userstat.UserStatService;
 import com.daall.howtoeat.client.usertarget.UserTargetRepository;
 import com.daall.howtoeat.client.usertarget.UserTargetService;
+import com.daall.howtoeat.common.S3Uploader;
 import com.daall.howtoeat.common.enums.ErrorType;
 import com.daall.howtoeat.common.exception.CustomException;
+import com.daall.howtoeat.domain.consumedfood.ConsumedFood;
 import com.daall.howtoeat.domain.user.User;
 import com.daall.howtoeat.domain.user.UserStat;
 import com.daall.howtoeat.domain.user.UserTarget;
@@ -22,6 +24,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDate;
 
 @Service
@@ -37,6 +40,7 @@ public class UserService {
     private final UserTargetRepository userTargetRepository;
     private final UserStatRepository userStatRepository;
     private final PtMemberRepository ptMemberRepository;
+    private final S3Uploader s3Uploader;
 
     /**
      * 유저 회원가입 날짜 조회
@@ -110,9 +114,16 @@ public class UserService {
      * @param profileImageFile 이미지 파일
      *
      */
-    public void updateProfileImage(User loginUser, MultipartFile profileImageFile) {
-        System.out.println("파일 : " + profileImageFile);
+    @Transactional
+    public void updateProfileImage(User loginUser, MultipartFile profileImageFile) throws IOException {
+        if (profileImageFile == null) {
+            throw new CustomException(ErrorType.IMAGE_FILE_NOT_FOUND);
+        }
+
+        String imageUrl = s3Uploader.upload(profileImageFile, "user_profile_images", loginUser.getId());
+        loginUser.updateProfileImage(imageUrl);
     }
+
 
 
     /**
