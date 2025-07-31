@@ -102,6 +102,10 @@ public class User extends Timestamped {
         this.password = password;
     }
 
+    public void updateProfileImage(String profileImageUrl){
+        this.profileImageUrl = profileImageUrl;
+    }
+
     public void saveRefreshToken(String refreshToken) {
         this.refreshToken = refreshToken.substring(7);
     }

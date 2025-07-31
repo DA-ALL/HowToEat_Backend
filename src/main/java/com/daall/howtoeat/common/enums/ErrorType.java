@@ -20,6 +20,7 @@ public enum ErrorType {
     NOT_FOUND_USER(HttpStatus.BAD_REQUEST, "존재하지 않는 회원입니다."),
     ALREADY_EXISTS_EMAIL(HttpStatus.BAD_REQUEST, "이미 존재하는 이메일입니다."),
     ALREADY_LOGGED_OUT(HttpStatus.BAD_REQUEST, "이미 로그아웃 되었습니다."),
+    IMAGE_FILE_NOT_FOUND(HttpStatus.BAD_REQUEST, "이미지 파일이 존재하지 않습니다."),
 
     //USER_STAT
     SAME_AS_CURRENT_HEIGHT(HttpStatus.BAD_REQUEST, "변경할 키가 현재와 동일합니다."),
