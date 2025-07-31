@@ -95,7 +95,6 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
 
         if (isNewUser) {
             String claimsToken = jwtUtil.createAccessTokenWithClaims(claims);
-//            redirectUrl = url + "/survey?token=" + claimsToken;
             redirectUrl = url + "/signup/terms-privacy?token=" + claimsToken;
 
         } else {
@@ -103,11 +102,13 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
 
             // 유저의 이메일이 같지만, signupProvider가 다를경우(naver로 회원가입했는데 같은 이메일로 카카오 로그인 시도할 경우)
             if(!user.getSignup_provider().toString().equals(provider != null ? provider.toUpperCase() : "")){
-                String message = ErrorType.ALREADY_EXISTS_EMAIL.getMessage();
-                String encodedMessage = URLEncoder.encode(message, StandardCharsets.UTF_8.toString());
+//                String message = ErrorType.ALREADY_EXISTS_EMAIL.getMessage();
+//                String encodedMessage = URLEncoder.encode(message, StandardCharsets.UTF_8.toString());
+
+                String encodedUserProvider = URLEncoder.encode(user.getSignup_provider().toString(), StandardCharsets.UTF_8);
 
                 response.setStatus(HttpServletResponse.SC_FOUND); // 302 redirect
-                response.setHeader("Location", url + "/error-page?message=" + encodedMessage);
+                response.setHeader("Location", url + "/email-exists?provider=" + encodedUserProvider);
                 response.flushBuffer();
                 return;
             }
