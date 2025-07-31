@@ -3,6 +3,7 @@ package com.daall.howtoeat.admin.food;
 import com.daall.howtoeat.admin.food.dto.AdminFoodResponseDto;
 import com.daall.howtoeat.domain.food.QFood;
 import com.daall.howtoeat.domain.food.QRecommendFood;
+import com.daall.howtoeat.domain.food.RecommendFood;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -44,6 +45,17 @@ public class RecommendFoodRepositoryQueryImpl implements RecommendFoodRepository
                 .from(recommendFood)
                 .leftJoin(food).on(recommendFood.food.eq(food))
                 .orderBy(orderSpecifier)
+                .fetch();
+    }
+
+    @Override
+    public List<RecommendFood> findAllWithFood() {
+        QRecommendFood recommendFood = QRecommendFood.recommendFood;
+        QFood food = QFood.food;
+
+        return jpaQueryFactory
+                .selectFrom(recommendFood)
+                .join(recommendFood.food, food).fetchJoin()
                 .fetch();
     }
 

@@ -23,7 +23,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class AdminFoodService {
     private final FoodRepository foodRepository;
-    private final RecommendFoodService recommendFoodService;
+    private final AdminRecommendFoodService adminRecommendFoodService;
     private final AdminFavoriteFoodService adminFavoriteFoodService;
 
     public Page<AdminFoodResponseDto> getFoods(int page, int size,String name, String orderBy, String foodType, String recommendation) {
@@ -49,7 +49,7 @@ public class AdminFoodService {
 
         // 추천음식이면
         if(requestDto.getIsRecommended()){
-            recommendFoodService.createRecommendFood(newFood);
+            adminRecommendFoodService.createRecommendFood(newFood);
         }
     }
 
@@ -61,9 +61,9 @@ public class AdminFoodService {
 
         // 추천음식 처리
         if(requestDto.getIsRecommended()){
-            recommendFoodService.createRecommendFood(food);
+            adminRecommendFoodService.createRecommendFood(food);
         } else {
-            recommendFoodService.deleteRecommendFood(food);
+            adminRecommendFoodService.deleteRecommendFood(food);
         }
     }
 
@@ -72,7 +72,7 @@ public class AdminFoodService {
         Food food = this.findById(foodId);
 
         //추천음식 처리
-        recommendFoodService.deleteRecommendFood(food);
+        adminRecommendFoodService.deleteRecommendFood(food);
         foodRepository.delete(food);
     }
 
@@ -95,7 +95,7 @@ public class AdminFoodService {
 
         // 추천음식이라면 생성
         if(requestDto.getIsRecommended()) {
-            recommendFoodService.createRecommendFood(food);
+            adminRecommendFoodService.createRecommendFood(food);
         }
 
         // 유저가 등록한 음식에 공유됨 처리

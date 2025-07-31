@@ -14,13 +14,13 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 public class AdminRecommendFoodController {
-    private final RecommendFoodService recommendFoodService;
+    private final AdminRecommendFoodService adminRecommendFoodService;
 
     @GetMapping("/admin/recommend-foods")
     public ResponseEntity<ResponseDataDto<List<AdminFoodResponseDto>>> getRecommendFoods(
             @RequestParam(value = "sortBy", required = false) String sortBy
     ){
-        List<AdminFoodResponseDto> response = recommendFoodService.getRecommendFoods(sortBy);
+        List<AdminFoodResponseDto> response = adminRecommendFoodService.getRecommendFoods(sortBy);
         SuccessType successType = SuccessType.GET_ALL_RECOMMEND_FOODS_SUCCESS;
 
         return ResponseEntity.status(successType.getHttpStatus()).body(new ResponseDataDto<>(successType, response));
