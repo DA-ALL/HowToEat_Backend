@@ -4,7 +4,6 @@ import com.daall.howtoeat.admin.food.dto.AdminFoodResponseDto;
 import com.daall.howtoeat.domain.food.Food;
 import com.daall.howtoeat.domain.food.RecommendFood;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,7 +11,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class RecommendFoodService {
+public class AdminRecommendFoodService {
     private final RecommendFoodRepository recommendFoodRepository;
 
     public void createRecommendFood(Food food) {
