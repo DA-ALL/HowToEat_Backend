@@ -177,6 +177,31 @@ public class ConsumedFoodService {
         consumedFood.updateFavoriteFood(favoriteFood);
     }
 
+    /**
+     * 섭취 음식 이미지 변경
+     *
+     * @param loginUser 로그인 유저 정보
+     * @param consumedFoodImageFile 음식 이미지 파일
+     */
+    @Transactional
+    public void updateConsumedFoodImage(User loginUser, Long consumedFoodId, MultipartFile consumedFoodImageFile) throws IOException {
+        if (consumedFoodImageFile == null) {
+            throw new CustomException(ErrorType.IMAGE_FILE_NOT_FOUND);
+        }
+
+        ConsumedFood consumedFood = consumedFoodRepository.findById(consumedFoodId).orElseThrow(() -> new CustomException(ErrorType.NOT_FOUND_CONSUMED_FOOD));
+
+        String imageUrl = consumedFood.getFoodImageUrl();
+
+        if (imageUrl != null) {
+            s3Uploader.delete(imageUrl);
+        }
+
+        // 새 이미지 업로드 및 업데이트
+        String newImageUrl = s3Uploader.upload(consumedFoodImageFile, "consumed_food_images", loginUser.getId());
+        consumedFood.updateImage(newImageUrl);
+    }
+
 
 
     /**

@@ -55,6 +55,7 @@ public class ConsumedFoodController {
 
     /**
      * 섭취 음식 등록 (검색)
+     *
      * @param requestDto - 섭취 음식에 필요한 데이터
      */
     @PostMapping("/consumed-foods/search")
@@ -66,6 +67,24 @@ public class ConsumedFoodController {
         User loginUser = userDetails.getUser();
         consumedFoodService.addConsumedFood(loginUser, requestDto, foodImageFile);
         SuccessType successType = SuccessType.ADD_CONSUMED_FOOD_SUCCESS;
+        return ResponseEntity.status(successType.getHttpStatus()).body(new ResponseMessageDto(successType));
+    }
+
+    /**
+     * 섭취 음식 이미지 변경
+     *
+     * @param user - 로그인 유저 정보
+     * @param consumedFoodImageFile - 이미지 파일
+     */
+    @PatchMapping("/consumed-foods/{consumedFoodId}/image")
+    public ResponseEntity<ResponseMessageDto> updateConsumedFoodImage(
+            @AuthenticationPrincipal UserDetailsImpl user,
+            @PathVariable(value = "consumedFoodId") Long consumedFoodId,
+            @RequestParam(value = "consumedFoodImageFile", required = false) MultipartFile consumedFoodImageFile
+    )  throws IOException {
+        User loginUser = user.getUser();
+        consumedFoodService.updateConsumedFoodImage(loginUser, consumedFoodId, consumedFoodImageFile);
+        SuccessType successType = SuccessType.UPDATE_CONSUMED_FOOD_IMAGE;
         return ResponseEntity.status(successType.getHttpStatus()).body(new ResponseMessageDto(successType));
     }
 
