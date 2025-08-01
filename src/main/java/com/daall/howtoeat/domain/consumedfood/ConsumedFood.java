@@ -108,6 +108,10 @@ public class ConsumedFood extends Timestamped {
         this.favoriteFood = favoriteFood;
     }
 
+    public void updateImage(String consumedFoodImageUrl) {
+        this.foodImageUrl = consumedFoodImageUrl;
+    }
+
 
     public void updateFavoriteFood(FavoriteFood favoriteFood) {
         this.favoriteFood = favoriteFood;

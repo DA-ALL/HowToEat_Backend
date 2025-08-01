@@ -39,6 +39,7 @@ public enum SuccessType {
     GET_CONSUMED_FOOD_BY_MEAL_SUCCESS(HttpStatus.OK, "끼니별 섭취 음식 조회에 성공하였습니다."),
     GET_CONSUMED_FOOD_DETAIL_INFO(HttpStatus.OK, "섭취 음식 세부정보 조회에 성공하였습니다."),
     GET_CONSUMED_FOOD_BY_DATE_SUCCESS(HttpStatus.OK, "날짜별 섭취 음식 리스트 조회에 성공하였습니다."),
+    UPDATE_CONSUMED_FOOD_IMAGE(HttpStatus.OK, "날짜별 섭취 음식 리스트 조회에 성공하였습니다."),
 
     // ======================= DAILY_SUMMARIES =======================
     GET_DAILY_KCAL_SUMMARIES_SUCCESS(HttpStatus.OK, "날짜별 목표칼로리, 섭취칼로리 조회에 성공하였습니다."),
