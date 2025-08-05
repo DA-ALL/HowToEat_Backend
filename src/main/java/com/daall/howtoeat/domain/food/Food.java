@@ -7,11 +7,13 @@ import com.daall.howtoeat.common.enums.FoodType;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.elasticsearch.annotations.Document;
 
 @Entity
 @Getter
 @NoArgsConstructor
 @Table(name = "foods")
+@Document(indexName = "howtoeat-foods")
 public class Food extends Timestamped {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

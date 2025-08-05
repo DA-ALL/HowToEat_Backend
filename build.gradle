@@ -24,6 +24,11 @@ repositories {
 }
 
 dependencies {
+	// 엘라스틱 서치
+	implementation 'org.springframework.boot:spring-boot-starter-data-elasticsearch'
+
+
+	// 검색시 유사도 측정 라이브러리
 	implementation 'info.debatty:java-string-similarity:2.0.0'
 
 	//S3
