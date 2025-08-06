@@ -119,9 +119,9 @@ public class UserService {
         if (profileImageFile == null) {
             throw new CustomException(ErrorType.IMAGE_FILE_NOT_FOUND);
         }
-
+        User user = userRepository.findByEmail(loginUser.getEmail()).orElseThrow(() -> new CustomException(ErrorType.NOT_FOUND_USER));
         String imageUrl = s3Uploader.upload(profileImageFile, "user_profile_images", loginUser.getId());
-        loginUser.updateProfileImage(imageUrl);
+        user.updateProfileImage(imageUrl);
     }
 
 
