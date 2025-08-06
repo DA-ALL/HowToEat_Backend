@@ -20,11 +20,11 @@ public class AdminUserResponseDto {
     private final String profileImageUrl;
     private final UserRole userRole;
     private final UserStatus userStatus;
-    private final Integer consumedFoodCount;
+    private final Long consumedFoodCount;
     private final LocalDate createdAt;
     private final LocalDate modifiedAt;
 
-    public AdminUserResponseDto(User user) {
+    public AdminUserResponseDto(User user, Long consumedFoodCount) {
         this.id = user.getId();
         this.name = user.getName();
         this.email = user.getEmail();
@@ -34,7 +34,7 @@ public class AdminUserResponseDto {
         this.profileImageUrl = user.getProfileImageUrl();
         this.userRole = user.getUserRole();
         this.userStatus = user.getUserStatus();
-        this.consumedFoodCount = 0;
+        this.consumedFoodCount = consumedFoodCount;
         this.createdAt = user.getCreatedAt().toLocalDate();
         this.modifiedAt = user.getModifiedAt().toLocalDate();
     }
