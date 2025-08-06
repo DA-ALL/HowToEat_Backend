@@ -29,4 +29,9 @@ public interface ConsumedFoodRepository extends JpaRepository<ConsumedFood, Long
     void deleteAllByUser(@Param("user") User user);
 
     long countByCreatedAtBetween(LocalDateTime startOfDay, LocalDateTime endOfDay);
+
+    @Query("SELECT cf.user.id, COUNT(cf) FROM ConsumedFood cf WHERE cf.user.id IN :userIds GROUP BY cf.user.id")
+    List<Object[]> countConsumedFoodsByUserIds(@Param("userIds") List<Long> userIds);
+
+    Long countByUser(User user);
 }
