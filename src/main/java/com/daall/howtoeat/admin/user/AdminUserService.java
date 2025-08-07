@@ -1,7 +1,7 @@
 package com.daall.howtoeat.admin.user;
 
 import com.daall.howtoeat.admin.dailyreport.dto.UserStatisticsDto;
-import com.daall.howtoeat.admin.food.AdminConsumedFoodService;
+import com.daall.howtoeat.admin.consumedfood.AdminConsumedFoodService;
 import com.daall.howtoeat.admin.user.dto.AdminUserDetailResponseDto;
 import com.daall.howtoeat.admin.user.dto.UpdateNextGymStatusRequestDto;
 import com.daall.howtoeat.admin.user.dto.UpdateUserRoleRequestDto;

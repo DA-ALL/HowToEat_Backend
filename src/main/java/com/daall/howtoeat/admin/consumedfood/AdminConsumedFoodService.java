@@ -1,7 +1,10 @@
-package com.daall.howtoeat.admin.food;
+package com.daall.howtoeat.admin.consumedfood;
 
+import com.daall.howtoeat.admin.consumedfood.dto.ConsumedFoodsByDateResponseDto;
 import com.daall.howtoeat.admin.dailyreport.dto.ConsumedFoodStatisticsDto;
 import com.daall.howtoeat.client.consumedfood.ConsumedFoodRepository;
+import com.daall.howtoeat.client.user.UserService;
+import com.daall.howtoeat.domain.consumedfood.ConsumedFood;
 import com.daall.howtoeat.domain.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -9,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,6 +21,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class AdminConsumedFoodService {
     private final ConsumedFoodRepository consumedFoodRepository;
+    private final UserService userService;
 
     public ConsumedFoodStatisticsDto getConsumedFoodStatistics(LocalDate today) {
         LocalDateTime startOfDay = today.atStartOfDay();
@@ -26,6 +31,31 @@ public class AdminConsumedFoodService {
                 consumedFoodRepository.count(),
                 consumedFoodRepository.countByCreatedAtBetween(startOfDay, endOfDay)
         );
+    }
+
+
+
+    public List<List<ConsumedFoodsByDateResponseDto>> getConsumedFoodsByDate(Long userId, LocalDate date) {
+        LocalDateTime start = date.atStartOfDay();
+        LocalDateTime end = date.atTime(23, 59, 59);
+        String[] mealTimeList = {"BREAKFAST", "LUNCH", "DINNER", "SNACK"};
+
+        List<ArrayList<ConsumedFoodsByDateResponseDto>> consumedFoodsList = new ArrayList<>();
+
+        for(int i = 0; i < 4; i++) {
+            consumedFoodsList.add(new ArrayList<>());
+        }
+
+        User user = userService.getUser(userId);
+
+        for(String mealTime : mealTimeList) {
+            List<ConsumedFood> consumedFoods = consumedFoodRepository.findAllByUserAndCreatedAtBetweenAndMealTime(user, start, end, mealTime);
+
+            for(ConsumedFood consumedfood : consumedFoods) {
+                new ConsumedFoodsByDateResponseDto(consumedfood);
+            }
+        }
+
     }
 
     public Map<Long, Long> getConsumedFoodCountOfUsers(List<Long> userIds){

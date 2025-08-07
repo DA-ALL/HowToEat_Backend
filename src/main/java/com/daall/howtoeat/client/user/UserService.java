@@ -160,9 +160,12 @@ public class UserService {
     }
 
 
-
     public void updateRefreshToken(User user, String refreshToken) {
         user.saveRefreshToken(refreshToken);
         userRepository.save(user);
+    }
+
+    public User getUser(Long userId) {
+        return userRepository.findById(userId).orElseThrow(() -> new CustomException(ErrorType.NOT_FOUND_USER));
     }
 }

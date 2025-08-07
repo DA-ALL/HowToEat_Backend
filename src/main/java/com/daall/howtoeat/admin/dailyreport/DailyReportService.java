@@ -1,7 +1,7 @@
 package com.daall.howtoeat.admin.dailyreport;
 
 import com.daall.howtoeat.admin.dailyreport.dto.*;
-import com.daall.howtoeat.admin.food.AdminConsumedFoodService;
+import com.daall.howtoeat.admin.consumedfood.AdminConsumedFoodService;
 import com.daall.howtoeat.admin.food.AdminFoodService;
 import com.daall.howtoeat.admin.user.AdminUserService;
 import com.daall.howtoeat.domain.dailyreport.DailyReport;
@@ -10,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
