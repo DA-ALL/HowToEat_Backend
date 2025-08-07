@@ -11,6 +11,6 @@ public class PtMemberUserResponseDto {
 
     public PtMemberUserResponseDto(PtMember ptMember) {
         this.ptMemberId = ptMember.getId();
-        this.user = new AdminUserResponseDto(ptMember.getUser());
+        this.user = new AdminUserResponseDto(ptMember.getUser(), 0L);
     }
 }

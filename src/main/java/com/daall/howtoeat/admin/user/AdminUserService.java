@@ -1,6 +1,7 @@
 package com.daall.howtoeat.admin.user;
 
 import com.daall.howtoeat.admin.dailyreport.dto.UserStatisticsDto;
+import com.daall.howtoeat.admin.food.AdminConsumedFoodService;
 import com.daall.howtoeat.admin.user.dto.AdminUserDetailResponseDto;
 import com.daall.howtoeat.admin.user.dto.UpdateNextGymStatusRequestDto;
 import com.daall.howtoeat.admin.user.dto.UpdateUserRoleRequestDto;
@@ -24,6 +25,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -31,6 +33,7 @@ public class AdminUserService {
     private final UserRepository userRepository;
     private final UserTargetService userTargetService;
     private final UserDailySummaryService userDailySummaryService;
+    private final AdminConsumedFoodService adminConsumedFoodService;
 
     public Page<AdminUserResponseDto> getUsers(int page, int size, String name, String orderBy, Boolean isNextGym, Boolean isAddPtMember) {
         Pageable pageable = PageRequest.of(page, size);
@@ -48,7 +51,16 @@ public class AdminUserService {
             users = userRepository.findUsersByConditions(name, isNextGym, orderBy, pageable);
         }
 
-        return users.map(AdminUserResponseDto::new);
+        List<Long> userIds = users.getContent().stream()
+                .map(User::getId)
+                .toList();
+
+        Map<Long, Long> consumedFoodCountMap = adminConsumedFoodService.getConsumedFoodCountOfUsers(userIds);
+
+        return users.map(user -> {
+            Long consumedFoodCount = consumedFoodCountMap.getOrDefault(user.getId(), 0L);
+            return new AdminUserResponseDto(user, consumedFoodCount);
+        });
     }
 
     public User findUserById(Long userId) {
@@ -59,8 +71,8 @@ public class AdminUserService {
 
     public AdminUserResponseDto getUser(Long userId) {
         User user = this.findUserById(userId);
-
-        return new AdminUserResponseDto(user);
+        Long consumedFoodCount = adminConsumedFoodService.getConsumedFoodCountOfUser(user);
+        return new AdminUserResponseDto(user, consumedFoodCount);
     }
 
     public AdminUserDetailResponseDto getUserDetail(Long userId) {
