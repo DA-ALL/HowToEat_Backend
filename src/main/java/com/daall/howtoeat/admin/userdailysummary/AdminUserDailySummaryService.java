@@ -36,6 +36,15 @@ public class AdminUserDailySummaryService {
         return userDailySummaries.map(DailyCaloriesSummaryDto::new);
     }
 
+
+    /**
+     * 유저 dailySummary 정보 + 이전 or 다음 날짜 조회
+     *
+     * @PathVariable userId 조회할 유저 아이디
+     * @PathVariable date 조회할 날짜
+     * @return ResponseEntity<ResponseDataDto<DailyMacrosWithDatesResponseDto>>
+     *
+     */
     public DailyMacrosWithDatesResponseDto getUserDailySummaryMacrosWithDates(Long userId, LocalDate date) {
         LocalDateTime start = date.atStartOfDay();
         LocalDateTime end   = date.atTime(LocalTime.MAX);
@@ -45,13 +54,10 @@ public class AdminUserDailySummaryService {
         // 현재 날짜의 매크로
         UserDailySummary summary = userDailySummaryRepository.findByUserAndCreatedAtBetween(user, start, end).orElse(null);
         UserTarget target = userTargetService.getLatestTargetBeforeOrOn(user, date);
-//        System.out.println(macros.getDate());
-//        System.out.println(target.getCarbo());
 
         DailyConsumedMacrosResponseDto macros =
                 (summary == null) ? new DailyConsumedMacrosResponseDto(target, date)
                         : new DailyConsumedMacrosResponseDto(summary);
-
 
 
         // 이전 / 다음 날짜 조회
@@ -59,8 +65,6 @@ public class AdminUserDailySummaryService {
                 .findTopByUserAndCreatedAtBeforeOrderByCreatedAtDesc(user, start)
                 .map(s -> s.getCreatedAt().toLocalDate().toString())
                 .orElse(null);
-        System.out.println("TESTSTETT");
-
 
         String nextDate = userDailySummaryRepository
                 .findTopByUserAndCreatedAtAfterOrderByCreatedAtAsc(user, end)

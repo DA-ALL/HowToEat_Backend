@@ -37,7 +37,14 @@ public class AdminUserDailySummaryController {
     }
 
 
-
+    /**
+     * 유저 dailySummary 정보 + 이전 or 다음 날짜 조회
+     *
+     * @PathVariable userId 조회할 유저 아이디
+     * @PathVariable date 조회할 날짜
+     * @return ResponseEntity<ResponseDataDto<DailyMacrosWithDatesResponseDto>>
+     *
+     */
     @GetMapping("/admin/users/{userId}/daily-summaries/{date}/macros")
     public ResponseEntity<ResponseDataDto<DailyMacrosWithDatesResponseDto>> getUserDailySummaryMacros(
             @PathVariable Long userId,
