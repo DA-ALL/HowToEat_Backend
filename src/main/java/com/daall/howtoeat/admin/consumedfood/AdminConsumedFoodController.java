@@ -15,26 +15,26 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
 public class AdminConsumedFoodController {
     private final AdminConsumedFoodService adminConsumedFoodService;
 
+    /**
+     * 날짜별 섭취음식 끼니로 구분하여 조회 - 어드민 - 유저섭취정보 팝업
+     *
+     * @param userId 조회할 유저 아이디
+     * @param date 조회할 날짜
+     */
     @GetMapping("/admin/users/{userId}/consumed-foods")
-    public ResponseEntity<ResponseDataDto<List<ConsumedFoodsByDateResponseDto>>> getConsumedFoodsByDate(
-            @AuthenticationPrincipal UserDetailsImpl userDetails,
+    public ResponseEntity<ResponseDataDto<ConsumedFoodsByDateResponseDto>> getConsumedFoodsByDate(
             @PathVariable Long userId,
             @RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date
     ) {
-
-        List<ConsumedFoodsByDateResponseDto> responseDtos = adminConsumedFoodService.getConsumedFoodsByDate(userId, date);
+        ConsumedFoodsByDateResponseDto responseDtos = adminConsumedFoodService.getConsumedFoodsByDate(userId, date);
         SuccessType successType = SuccessType.GET_CONSUMED_FOOD_BY_DATE_SUCCESS;
-
 
         return ResponseEntity.status(successType.getHttpStatus()).body(new ResponseDataDto<>(successType, responseDtos));
     }
-
-
 }

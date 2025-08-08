@@ -1,9 +1,11 @@
 package com.daall.howtoeat.admin.consumedfood;
 
+import com.daall.howtoeat.admin.consumedfood.dto.ConsumedFoodResponseDto;
 import com.daall.howtoeat.admin.consumedfood.dto.ConsumedFoodsByDateResponseDto;
 import com.daall.howtoeat.admin.dailyreport.dto.ConsumedFoodStatisticsDto;
 import com.daall.howtoeat.client.consumedfood.ConsumedFoodRepository;
 import com.daall.howtoeat.client.user.UserService;
+import com.daall.howtoeat.common.enums.MealTime;
 import com.daall.howtoeat.domain.consumedfood.ConsumedFood;
 import com.daall.howtoeat.domain.user.User;
 import lombok.RequiredArgsConstructor;
@@ -33,29 +35,42 @@ public class AdminConsumedFoodService {
         );
     }
 
-
-
-    public List<List<ConsumedFoodsByDateResponseDto>> getConsumedFoodsByDate(Long userId, LocalDate date) {
+    /**
+     * 날짜별 섭취음식 끼니로 구분하여 조회 - 어드민 - 유저섭취정보 팝업
+     *
+     * @param userId 조회할 유저 아이디
+     * @param date 조회할 날짜
+     */
+    public ConsumedFoodsByDateResponseDto getConsumedFoodsByDate(Long userId, LocalDate date) {
         LocalDateTime start = date.atStartOfDay();
         LocalDateTime end = date.atTime(23, 59, 59);
-        String[] mealTimeList = {"BREAKFAST", "LUNCH", "DINNER", "SNACK"};
-
-        List<ArrayList<ConsumedFoodsByDateResponseDto>> consumedFoodsList = new ArrayList<>();
-
-        for(int i = 0; i < 4; i++) {
-            consumedFoodsList.add(new ArrayList<>());
-        }
 
         User user = userService.getUser(userId);
 
-        for(String mealTime : mealTimeList) {
+        List<ConsumedFoodResponseDto> breakfastConsumedFoods = new ArrayList<>();
+        List<ConsumedFoodResponseDto> lunchConsumedFoods = new ArrayList<>();
+        List<ConsumedFoodResponseDto> dinnerConsumedFoods = new ArrayList<>();
+        List<ConsumedFoodResponseDto> snackConsumedFoods = new ArrayList<>();
+
+        for(MealTime mealTime : MealTime.values()) {
             List<ConsumedFood> consumedFoods = consumedFoodRepository.findAllByUserAndCreatedAtBetweenAndMealTime(user, start, end, mealTime);
 
-            for(ConsumedFood consumedfood : consumedFoods) {
-                new ConsumedFoodsByDateResponseDto(consumedfood);
+            for(ConsumedFood consumedFood : consumedFoods) {
+                if(mealTime.equals(MealTime.BREAKFAST)) {
+                    breakfastConsumedFoods.add(new ConsumedFoodResponseDto(consumedFood));
+                }
+                if(mealTime.equals(MealTime.LUNCH)) {
+                    lunchConsumedFoods.add(new ConsumedFoodResponseDto(consumedFood));
+                }
+                if(mealTime.equals(MealTime.DINNER)) {
+                    dinnerConsumedFoods.add(new ConsumedFoodResponseDto(consumedFood));
+                }
+                if(mealTime.equals(MealTime.SNACK)) {
+                    snackConsumedFoods.add(new ConsumedFoodResponseDto(consumedFood));
+                }
             }
         }
-
+        return new ConsumedFoodsByDateResponseDto(breakfastConsumedFoods, lunchConsumedFoods, dinnerConsumedFoods, snackConsumedFoods);
     }
 
     public Map<Long, Long> getConsumedFoodCountOfUsers(List<Long> userIds){
