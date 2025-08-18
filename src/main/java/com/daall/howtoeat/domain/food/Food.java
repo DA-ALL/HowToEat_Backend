@@ -13,7 +13,6 @@ import org.springframework.data.elasticsearch.annotations.Document;
 @Getter
 @NoArgsConstructor
 @Table(name = "foods")
-@Document(indexName = "howtoeat-foods")
 public class Food extends Timestamped {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
