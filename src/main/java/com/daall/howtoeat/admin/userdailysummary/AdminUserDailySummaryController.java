@@ -2,6 +2,7 @@ package com.daall.howtoeat.admin.userdailysummary;
 
 import com.daall.howtoeat.admin.userdailysummary.dto.DailyCaloriesSummaryDto;
 import com.daall.howtoeat.admin.userdailysummary.dto.DailyMacrosWithDatesResponseDto;
+import com.daall.howtoeat.admin.userdailysummary.dto.DailySummariesByMealTimeResponseDto;
 import com.daall.howtoeat.client.userdailysummary.UserDailySummaryService;
 import com.daall.howtoeat.client.userdailysummary.dto.DailyConsumedMacrosResponseDto;
 import com.daall.howtoeat.common.PageResponseDto;
@@ -51,6 +52,26 @@ public class AdminUserDailySummaryController {
             @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date
     ) {
         DailyMacrosWithDatesResponseDto dto = adminUserDailySummaryService.getUserDailySummaryMacrosWithDates(userId, date);
+        SuccessType successType = SuccessType.GET_DAILY_MACROS_SUMMARIES_SUCCESS;
+
+        return ResponseEntity.status(successType.getHttpStatus()).body(new ResponseDataDto<>(successType, dto));
+    }
+
+
+    /**
+     * 유저 dailySummary 정보 + 이전 or 다음 날짜 조회
+     *
+     * @PathVariable userId 조회할 유저 아이디
+     * @PathVariable date 조회할 날짜
+     * @return ResponseEntity<ResponseDataDto<DailyMacrosWithDatesResponseDto>>
+     *
+     */
+    @GetMapping("/admin/users/{userId}/daily-summaries/{date}/meal-times")
+    public ResponseEntity<ResponseDataDto<DailySummariesByMealTimeResponseDto>> getUserDailySummaryByMealTimes(
+            @PathVariable Long userId,
+            @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date
+    ) {
+        DailySummariesByMealTimeResponseDto dto = adminUserDailySummaryService.getUserDailySummaryByMealTimes(userId, date);
         SuccessType successType = SuccessType.GET_DAILY_MACROS_SUMMARIES_SUCCESS;
 
         return ResponseEntity.status(successType.getHttpStatus()).body(new ResponseDataDto<>(successType, dto));
