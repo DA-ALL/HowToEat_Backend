@@ -2,6 +2,7 @@ package com.daall.howtoeat.client.food;
 
 
 import com.daall.howtoeat.client.food.dto.FoodResponseDto;
+import com.daall.howtoeat.client.food.elastic.FoodSearchService;
 import com.daall.howtoeat.common.ResponseDataDto;
 import com.daall.howtoeat.common.dto.ScrollResponseDto;
 import com.daall.howtoeat.common.enums.SuccessType;
@@ -12,20 +13,24 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
+
 @RestController
 @RequiredArgsConstructor
 public class FoodController {
     private final FoodService foodService;
+    private final FoodSearchService foodSearchService;
 
     @GetMapping("/foods")
     public ResponseEntity<ResponseDataDto<ScrollResponseDto<FoodResponseDto>>> getFoods(
             @RequestParam(required = false) String name,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size
-    ) {
+    ) throws IOException {
             System.out.println("Controller");
 
-            ScrollResponseDto<FoodResponseDto> result = foodService.searchSimilarFoods(name, page, size);
+//            ScrollResponseDto<FoodResponseDto> result = foodService.searchSimilarFoods(name, page, size);
+            ScrollResponseDto<FoodResponseDto> result = foodSearchService.search(name, page, size);
 
             SuccessType successType = SuccessType.GET_ALL_FOODS_SUCCESS;
 
