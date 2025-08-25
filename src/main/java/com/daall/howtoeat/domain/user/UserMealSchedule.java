@@ -1,5 +1,6 @@
 package com.daall.howtoeat.domain.user;
 
+import com.daall.howtoeat.client.user.dto.SignupRequestDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,4 +28,10 @@ public class UserMealSchedule {
 
     @Column(nullable = false)
     private LocalTime dinnerTime;
+
+    public UserMealSchedule(SignupRequestDto requestDto) {
+        this.breakfastTime = requestDto.getBreakfastTime();
+        this.lunchTime = requestDto.getLunchTime();
+        this.dinnerTime = requestDto.getDinnerTime();
+    }
 }
