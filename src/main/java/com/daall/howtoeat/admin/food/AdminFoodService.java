@@ -45,7 +45,10 @@ public class AdminFoodService {
         if(codeNumber == null){
             codeNumber = 0;
         }
-        newFood.setFoodCode("Admin" + (codeNumber + 1));
+
+        int nextCodeNumber = codeNumber + 1;
+        String formattedCode = String.format("Admin-%06d", nextCodeNumber);
+        newFood.setFoodCode(formattedCode);
 
         // 추천음식이면
         if(requestDto.getIsRecommended()){

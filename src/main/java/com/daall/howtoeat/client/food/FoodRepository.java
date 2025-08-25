@@ -17,7 +17,7 @@ public interface FoodRepository extends JpaRepository<Food, Long>, FoodRepositor
     Page<Food> findByFoodNameContaining(String name, Pageable pageable);
     Optional<Food> findById(Long id);
 
-    @Query("SELECT MAX(CAST(SUBSTRING(f.foodCode, 6) AS int)) " +
+    @Query("SELECT MAX(CAST(SUBSTRING(f.foodCode, 7) AS int)) " +
             "FROM Food f WHERE f.foodCode LIKE 'Admin%'")
     Integer findMaxAdminFoodCodeNumber();
 
