@@ -39,7 +39,7 @@ public class UserDailySummaryController {
         return ResponseEntity.status(successType.getHttpStatus()).body(new ResponseDataDto<>(successType, responseDtos));
     }
 
-    @GetMapping("daily-summary/{date}/macros")
+    @GetMapping("/daily-summary/{date}/macros")
     public ResponseEntity<ResponseDataDto<DailyConsumedMacrosResponseDto>> getDailyMacrosSummary(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
             @PathVariable("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date
@@ -53,7 +53,7 @@ public class UserDailySummaryController {
     }
 
 
-    @GetMapping("daily-summaries/{date}/meal-time/{mealTime}/macros")
+    @GetMapping("/daily-summaries/{date}/meal-time/{mealTime}/macros")
     public ResponseEntity<ResponseDataDto<DailyConsumedMacrosByMealTimeResponseDto>> getDailyMacrosByMealTime(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
             @PathVariable("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
