@@ -2,6 +2,7 @@ package com.daall.howtoeat.client.usertarget;
 
 import com.daall.howtoeat.client.user.UserStatRepository;
 import com.daall.howtoeat.client.user.dto.SignupRequestDto;
+import com.daall.howtoeat.client.userdailysummary.UserDailySummaryRepository;
 import com.daall.howtoeat.client.userstat.dto.UserHeightRequestDto;
 import com.daall.howtoeat.client.userstat.dto.UserWeightRequestDto;
 import com.daall.howtoeat.client.usertarget.dto.UserInfoDetailRequestDto;
@@ -11,6 +12,7 @@ import com.daall.howtoeat.common.enums.UserActivityLevel;
 import com.daall.howtoeat.common.enums.UserGoal;
 import com.daall.howtoeat.common.exception.CustomException;
 import com.daall.howtoeat.domain.user.User;
+import com.daall.howtoeat.domain.user.UserDailySummary;
 import com.daall.howtoeat.domain.user.UserStat;
 import com.daall.howtoeat.domain.user.UserTarget;
 import jakarta.transaction.Transactional;
@@ -29,6 +31,7 @@ import java.time.Period;
 public class UserTargetService {
     private final UserTargetRepository userTargetRepository;
     private final UserStatRepository userStatRepository;
+    private final UserDailySummaryRepository userDailySummaryRepository;
 
     /**
      * 첫 회원가입 시, 유저 타겟 macros 생성
@@ -103,10 +106,14 @@ public class UserTargetService {
     @Transactional
     public void updateTarget(User loginUser, UserInfoDetailRequestDto requestDto) {
         LocalDate today = LocalDate.now();
-        System.out.println(requestDto.getUserActivityLevel());
-        System.out.println(requestDto.getUserGoal());
+        LocalDateTime start = today.atStartOfDay();
+        LocalDateTime end = today.atTime(LocalTime.MAX);
+
         UserTarget userTarget = getLatestTargetBeforeOrOn(loginUser, LocalDate.now());
+
         UserStat userStat = userStatRepository.findTopByUserOrderByIdDesc(loginUser).orElseThrow(() -> new CustomException(ErrorType.NOT_FOUND_USER_STAT));
+
+        UserDailySummary summary = userDailySummaryRepository.findByUserAndCreatedAtBetween(loginUser, start, end).orElse(null);
 
         UserBodyInfo userBodyInfo = new UserBodyInfo(loginUser.getGender(), userStat.getHeight(), userStat.getWeight(), loginUser.getBirth(), requestDto.getUserActivityLevel(), requestDto.getUserGoal());
 
@@ -115,7 +122,10 @@ public class UserTargetService {
         if(userTarget.getCreatedAt().toLocalDate().equals(today)) {
             userTarget.updateTarget(generatedTarget);
         } else {
-            userTargetRepository.save(generatedTarget);
+            UserTarget newTarget = userTargetRepository.save(generatedTarget);
+            if(summary != null) {
+                summary.updateSummaryTarget(newTarget);
+            }
         }
     }
 

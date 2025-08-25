@@ -120,6 +120,10 @@ public class UserDailySummary extends Timestamped {
         this.snackFat = dailyNutritionSummary.getSnackFat();
     }
 
+    public void updateSummaryTarget(UserTarget target) {
+        this.userTarget = target;
+    }
+
     //섭취음식 삭제 시, 해당 음식값 감소
     public void decreaseMacros(ConsumedFood consumedFood) {
         MealTime mealTime = consumedFood.getMealTime();

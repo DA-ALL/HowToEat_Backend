@@ -18,6 +18,10 @@ import java.util.Optional;
 public interface UserDailySummaryRepository extends JpaRepository<UserDailySummary, Long> {
     List<UserDailySummary> findAllByUserAndCreatedAtBetween (User user, LocalDateTime start, LocalDateTime end);
     Optional<UserDailySummary> findByUserAndCreatedAtBetween(User user, LocalDateTime start, LocalDateTime end);
+    // 이전(과거) 중 가장 최신
+    Optional<UserDailySummary> findTopByUserAndCreatedAtBeforeOrderByCreatedAtDesc(User user, LocalDateTime before);
+    // 다음(미래) 중 가장 빠른
+    Optional<UserDailySummary> findTopByUserAndCreatedAtAfterOrderByCreatedAtAsc(User user, LocalDateTime after);
 
     //회원탈퇴 시 연관관계 끊기
     void deleteAllByUser(User user);
