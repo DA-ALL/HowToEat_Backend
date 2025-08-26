@@ -56,7 +56,14 @@ public class UserTargetService {
         }
 
         double tdee = round(bmr * userBodyInfo.getActivity().getActivityFactor());
-        double targetKcal = round(tdee + userBodyInfo.getGoal().getKcalOffset());
+
+        double targetKcal = 0.0;
+        //근육 증량의 경우 1.07을 곱하고 그 이외는 설정에 맞게 kcal 산정하기
+        if (userBodyInfo.getGoal() == UserGoal.GAIN_MUSCLE) {
+            targetKcal = round(tdee * 1.07);
+        } else {
+            targetKcal = round(tdee + userBodyInfo.getGoal().getKcalOffset());
+        }
         double targetCarbo = round((targetKcal * userBodyInfo.getGoal().getCarboRatio() / 100) / 4);
         double targetProtein = round((targetKcal * userBodyInfo.getGoal().getProteinRatio() / 100) / 4);
         double targetFat = round((targetKcal * userBodyInfo.getGoal().getFatRatio() / 100) / 9);

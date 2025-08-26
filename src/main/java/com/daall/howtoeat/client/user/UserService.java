@@ -12,11 +12,14 @@ import com.daall.howtoeat.client.userdailysummary.UserDailySummaryService;
 import com.daall.howtoeat.client.userstat.UserStatService;
 import com.daall.howtoeat.client.usertarget.UserTargetRepository;
 import com.daall.howtoeat.client.usertarget.UserTargetService;
+import com.daall.howtoeat.client.usesrmealschedule.UserMealScheduleRepository;
+import com.daall.howtoeat.client.usesrmealschedule.UserMealScheduleService;
 import com.daall.howtoeat.common.S3Uploader;
 import com.daall.howtoeat.common.enums.ErrorType;
 import com.daall.howtoeat.common.exception.CustomException;
 import com.daall.howtoeat.domain.consumedfood.ConsumedFood;
 import com.daall.howtoeat.domain.user.User;
+import com.daall.howtoeat.domain.user.UserMealSchedule;
 import com.daall.howtoeat.domain.user.UserStat;
 import com.daall.howtoeat.domain.user.UserTarget;
 import jakarta.transaction.Transactional;
@@ -32,10 +35,12 @@ import java.time.LocalDate;
 public class UserService {
     private final UserRepository userRepository;
     private final UserTargetService userTargetService;
+    private final UserMealScheduleService userMealScheduleService;
     private final UserStatService userStatService;
     private final UserDailySummaryService userDailySummaryService;
     private final ConsumedFoodRepository consumedFoodRepository;
     private final FavoriteFoodRepository favoriteFoodRepository;
+    private final UserMealScheduleRepository userMealScheduleRepository;
     private final UserDailySummaryRepository userDailySummaryRepository;
     private final UserTargetRepository userTargetRepository;
     private final UserStatRepository userStatRepository;
@@ -73,6 +78,9 @@ public class UserService {
         userTargetService.createTarget(requestDto, savedUser);
 
         userStatService.createStat(requestDto, savedUser);
+
+        userMealScheduleService.createUserMealSchedule(savedUser, requestDto);
+
         return user;
     }
 
@@ -155,6 +163,7 @@ public class UserService {
         userTargetRepository.deleteAllByUser(user);
         userStatRepository.deleteAllByUser(user);
         ptMemberRepository.deleteAllByUser(user);
+        userMealScheduleRepository.deleteAllByUser(user);
 
         userRepository.delete(user);
     }

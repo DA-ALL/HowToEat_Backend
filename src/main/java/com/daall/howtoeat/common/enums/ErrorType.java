@@ -27,6 +27,9 @@ public enum ErrorType {
     SAME_AS_CURRENT_WEIGHT(HttpStatus.BAD_REQUEST, "변경할 몸무게가 현재와 동일합니다."),
     NOT_FOUND_USER_STAT(HttpStatus.BAD_REQUEST, "유저 스탯이 존재하지 않습니다."),
 
+    //USER_MEAL_SCHEDULE
+    NOT_FOUND_USER_MEAL_SCHEDULE(HttpStatus.BAD_REQUEST, "유저 식단 시간이 존재하지 않습니다."),
+
     //TARGET
     NOT_FOUND_TARGET_ON_DATE(HttpStatus.BAD_REQUEST, "해당 날짜에 대한 목표 정보가 없습니다."),
 

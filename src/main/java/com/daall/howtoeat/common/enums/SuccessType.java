@@ -54,6 +54,9 @@ public enum SuccessType {
     DELETE_FAVORITE_SUCCESS(HttpStatus.OK, "즐겨찾기 삭제에 성공하였습니다."),
     CREATE_FAVORITE_FOOD_SUCCESS(HttpStatus.CREATED, "즐겨찾기 음식 추가에 성공하였습니다."),
 
+    // ======================= USER_MEAL_SCHEDULE =======================
+    GET_USER_MEAL_SCHEDULE(HttpStatus.OK, "유저 식사 시간 조회에 성공하였습니다."),
+
     GET_ALL_USER_REGISTERED_FOOD_SUCCESS(HttpStatus.OK, "유저 등록 음식 전체 조회에 성공했습니다"),
     GET_USER_REGISTERED_FOOD_SUCCESS(HttpStatus.OK, "유저 등록 음식 단일 조회에 성공했습니다"),
 
