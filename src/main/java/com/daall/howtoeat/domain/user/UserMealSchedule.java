@@ -29,7 +29,8 @@ public class UserMealSchedule {
     @Column(nullable = false)
     private LocalTime dinnerTime;
 
-    public UserMealSchedule(SignupRequestDto requestDto) {
+    public UserMealSchedule(User user, SignupRequestDto requestDto) {
+        this.user = user;
         this.breakfastTime = requestDto.getBreakfastTime();
         this.lunchTime = requestDto.getLunchTime();
         this.dinnerTime = requestDto.getDinnerTime();
