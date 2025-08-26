@@ -37,8 +37,6 @@ public class FoodSearchService {
         Query query = new StringQuery(finalQuery);
         query.setPageable(PageRequest.of(page, size));
 
-        System.out.println("finalQuery: " + finalQuery);
-        System.out.println("query: " + query);
         try {
             SearchHits<FoodDocument> searchHits = operations.search(query, FoodDocument.class);
 
@@ -49,8 +47,6 @@ public class FoodSearchService {
 
             long totalHits = searchHits.getTotalHits(); // 전체 결과 개수
             boolean hasNext = (from + size) < totalHits;
-
-            System.out.println("ESearch Result: " + pageContent);
 
             return new ScrollResponseDto<>(pageContent, hasNext);
         } catch (Exception e) {
