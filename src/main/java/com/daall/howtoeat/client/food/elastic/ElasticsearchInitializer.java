@@ -18,7 +18,6 @@ public class ElasticsearchInitializer {
     private final ElasticsearchOperations operations;
     private final FoodRepository foodRepository;
 
-
     private static final int BATCH_SIZE = 5000;
 
     @PostConstruct

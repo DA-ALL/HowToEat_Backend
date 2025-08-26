@@ -5,11 +5,11 @@ spring:
     password: ${DATASOURCE_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
 
-  data:
-    elasticsearch:
-      cluster-nodes: localhost:9200
-      repositories:
-        enabled: true
+  elasticsearch:
+    uris: http://localhost:9200
+    username: elastic
+    password: ekdhf1234
+
 
   security:
     oauth2:

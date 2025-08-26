@@ -1,18 +1,18 @@
 package com.daall.howtoeat.client.food.elastic;
 
-import lombok.AllArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.elasticsearch.annotations.*;
 
-import java.time.Instant;
-import java.time.ZoneId;
 
 @Getter
 @Setter
 @NoArgsConstructor
+@JsonIgnoreProperties(ignoreUnknown = true)
+@Setting(settingPath = "/elasticsearch/settings.json")
 @Document(indexName = "howtoeat-foods")
 public class FoodDocument {
     @Id
@@ -28,7 +28,7 @@ public class FoodDocument {
     @MultiField(
             mainField = @Field(type = FieldType.Text, analyzer = "nori"),
             otherFields = {
-                    @InnerField(suffix = "keyword", type = FieldType.Keyword)
+                    @InnerField(suffix = "keyword", type = FieldType.Keyword, normalizer = "lower_ascii")
             }
     )
     private String foodName;
@@ -55,10 +55,9 @@ public class FoodDocument {
     private String unit;
 
     @MultiField(
-            mainField = @Field(type = FieldType.Keyword /*, normalizer = "lower_ascii"*/),
+            mainField = @Field(type = FieldType.Keyword , normalizer = "lower_ascii"),
             otherFields = {
                     @InnerField(suffix = "text", type = FieldType.Text, analyzer = "nori"),
-//                    @InnerField(suffix = "auto", type = FieldType.Text, analyzer = "ko_autocomplete", searchAnalyzer = "ko_search")
             }
     )
     private String providedBy;
@@ -71,10 +70,6 @@ public class FoodDocument {
 
     @Field(type = FieldType.Long)
     private Long selectedCount;
-
-    @Field(type = FieldType.Date, format = DateFormat.epoch_millis) // 실제 저장형식에 맞추세요
-    private Instant createdAt;
-
 
     // 생성자 추가: Entity -> Document 변환용
     public FoodDocument(com.daall.howtoeat.domain.food.Food food) {
@@ -93,12 +88,6 @@ public class FoodDocument {
         this.source = food.getSource();
         this.isPerServing = food.getIsPerServing();
         this.selectedCount = food.getSelectedCount();
-//        this.createdAt = food.getCreatedAt();
-        if (food.getCreatedAt() != null) {
-            this.createdAt = food.getCreatedAt()
-                    .atZone(ZoneId.of("Asia/Seoul")) // DB 기준에 맞게. 서버가 UTC면 ZoneOffset.UTC
-                    .toInstant();
-        }
     }
 
 }

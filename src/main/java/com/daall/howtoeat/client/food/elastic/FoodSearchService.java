@@ -24,7 +24,7 @@ public class FoodSearchService {
     public ScrollResponseDto<FoodResponseDto> search(String keyword, int page, int size) throws IOException {
         String queryTemplate = new String(
                 Objects.requireNonNull(
-                        getClass().getClassLoader().getResourceAsStream("queries/food_search.json")
+                        getClass().getClassLoader().getResourceAsStream("elasticsearch/food_search.json")
                 ).readAllBytes(),
                 StandardCharsets.UTF_8
         );
