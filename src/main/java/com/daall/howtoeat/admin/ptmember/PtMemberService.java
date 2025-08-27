@@ -69,4 +69,9 @@ public class PtMemberService {
     public Map<Long, Long> getPtMemberCountsByTrainerIds(List<Long> trainerIds) {
         return ptMemberRepository.countPtMembersByTrainerIds(trainerIds);
     }
+
+    @Transactional
+    public void deletePtMemberByTrainer(Trainer trainer) {
+        ptMemberRepository.deleteAllByTrainer(trainer);
+    }
 }

@@ -48,12 +48,12 @@ public class S3Uploader {
     public void delete(String url) {
         //url : "https://cdn.howtoeat.ai.kr/profiles/123/abc123.png";
         //key : "profiles/123/3ac7a9e3-....png" 형식
-        String key = url.replace(cloudFrontDomain + "/", "");
-
-        if (url.trim().isEmpty()) {
+        if (url == null || url.trim().isEmpty()) {
             log.warn("삭제할 URL이 비어 있습니다.");
             return;
         }
+
+        String key = url.replace(cloudFrontDomain + "/", "");
 
         if (!url.startsWith(cloudFrontDomain)) {
             log.debug("URL이 CloudFront 도메인으로 시작하지 않습니다: " + url);
