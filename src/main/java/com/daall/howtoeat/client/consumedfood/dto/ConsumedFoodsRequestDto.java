@@ -7,6 +7,8 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
+
 @Setter
 @Getter
 public class ConsumedFoodsRequestDto {
@@ -49,4 +51,7 @@ public class ConsumedFoodsRequestDto {
 
     @NotBlank(message = "단위 정보가 비어있습니다. 다시 시도해주세요.")
     private String source;
+
+    @NotNull(message = "날짜가 비어있습니다. 다시 시도해주세요.")
+    private LocalDate date;
 }

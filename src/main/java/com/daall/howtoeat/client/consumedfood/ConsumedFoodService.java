@@ -38,14 +38,11 @@ public class ConsumedFoodService {
     /**
      * 섭취 음식 조회
      * @param loginUser 유저 정보
-     * @param localDate 음식 섭취 날짜
+     * @param date 음식 섭취 날짜
      * @param mealTime 음식 섭취 끼니(아침 점심 저녁 간식)
      */
-    public List<ConsumedFoodByMealTimeResponseDto> getConsumedFoodList(User loginUser, LocalDate localDate, MealTime mealTime) {
-        LocalDateTime start = localDate.atStartOfDay();
-        LocalDateTime end = localDate.atTime(23, 59, 59);
-
-        List<ConsumedFood> consumedFoods = consumedFoodRepository.findAllByUserAndCreatedAtBetweenAndMealTime(loginUser, start, end, mealTime);
+    public List<ConsumedFoodByMealTimeResponseDto> getConsumedFoodList(User loginUser, LocalDate date, MealTime mealTime) {
+        List<ConsumedFood> consumedFoods = consumedFoodRepository.findAllByUserAndRegisteredAtAndMealTime(loginUser, date, mealTime);
 
         List<ConsumedFoodByMealTimeResponseDto> responseDtos = new ArrayList<>();
 
@@ -63,21 +60,17 @@ public class ConsumedFoodService {
      * @param requestDtoList 등록할 음식 정보 리스트 (다중 등록 가능)
      */
     @Transactional
-    public void addConsumedFoods(User loginUser, List<ConsumedFoodsRequestDto> requestDtoList) {
-        LocalDate today = LocalDate.now();
-        LocalDateTime startOfDay = today.atStartOfDay();
-        LocalDateTime endOfDay = today.atTime(23, 59, 59);
+    public void addConsumedFoods(User loginUser, List<ConsumedFoodsRequestDto> requestDtoList, LocalDate date) {
 
         // 1. 전달받은 음식 리스트를 엔티티로 변환 후 저장
         List<ConsumedFood> consumedFoods = new ArrayList<>();
 
-
         for (ConsumedFoodsRequestDto requestDto : requestDtoList) {
             if(requestDto.getFavoriteFoodId() == null) {
-                consumedFoods.add(new ConsumedFood(loginUser, requestDto));
+                consumedFoods.add(new ConsumedFood(loginUser, requestDto, date));
             } else {
                 FavoriteFood favoriteFood = favoriteFoodRepository.findById(requestDto.getFavoriteFoodId()).orElseThrow(() -> new CustomException(ErrorType.NOT_FOUND_FAVORITE_FOOD));
-                ConsumedFood consumedFood = new ConsumedFood(loginUser, requestDto);
+                ConsumedFood consumedFood = new ConsumedFood(loginUser, requestDto, date);
                 consumedFood.setFavoriteFood(favoriteFood);
                 consumedFoods.add(consumedFood);
             }
@@ -86,20 +79,20 @@ public class ConsumedFoodService {
         consumedFoodRepository.saveAll(consumedFoods);
 
         // 2. 오늘 날짜 기준 유저의 요약 정보 조회 (존재하지 않을 수 있음)
-        UserDailySummary summary = userDailySummaryService.findUserDailySummary(loginUser, today).orElse(null);
+        UserDailySummary summary = userDailySummaryService.findUserDailySummary(loginUser, date).orElse(null);
 
         // 3. 오늘 날짜에 기록된 전체 섭취 음식 조회 및 영양소 요약 계산
-        List<ConsumedFood> totalConsumedFoods = consumedFoodRepository.findAllByUserAndCreatedAtBetween(loginUser, startOfDay, endOfDay).orElseThrow(() -> new CustomException(ErrorType.NOT_FOUND_CONSUMED_FOOD));
+        List<ConsumedFood> totalConsumedFoods = consumedFoodRepository.findAllByUserAndRegisteredAt(loginUser, date).orElseThrow(() -> new CustomException(ErrorType.NOT_FOUND_CONSUMED_FOOD));
         DailyNutritionSummary nutritionSummary = new DailyNutritionSummary(totalConsumedFoods);
 
         // 4. 오늘 날짜에 적용할 최신 목표 정보 조회
-        UserTarget latestTarget = userTargetService.getLatestTargetBeforeOrOn(loginUser, today);
+        UserTarget latestTarget = userTargetService.getLatestTargetBeforeOrOn(loginUser, date);
 
         // 5. 오늘 요약 정보가 없으면 새로 생성, 있으면 갱신
         if (summary == null) {
-            userDailySummaryService.createUserDailySummary(loginUser, latestTarget, nutritionSummary);
+            userDailySummaryService.createUserDailySummary(loginUser, latestTarget, nutritionSummary, date);
         } else {
-            summary.setData(loginUser, latestTarget, nutritionSummary);
+            summary.setData(loginUser, latestTarget, nutritionSummary, date);
         }
     }
 
@@ -111,9 +104,9 @@ public class ConsumedFoodService {
      */
     @Transactional
     public void addConsumedFood(User loginUser, ConsumedFoodsRequestDto requestDto, MultipartFile imageFile) throws IOException {
-        LocalDate today = LocalDate.now();
-        LocalDateTime startOfDay = today.atStartOfDay();
-        LocalDateTime endOfDay = today.atTime(23, 59, 59);
+        LocalDate date = requestDto.getDate();
+        LocalDateTime startOfDay = date.atStartOfDay();
+        LocalDateTime endOfDay = date.atTime(23, 59, 59);
 
         // 1. 이미지 업로드 및 ConsumedFood 저장
         String imageUrl = (imageFile != null)
@@ -121,26 +114,26 @@ public class ConsumedFoodService {
                 : null;
 
         ConsumedFood consumedFood = (imageUrl != null)
-                ? new ConsumedFood(loginUser, requestDto, imageUrl)
-                : new ConsumedFood(loginUser, requestDto);
+                ? new ConsumedFood(loginUser, requestDto, imageUrl, date)
+                : new ConsumedFood(loginUser, requestDto, date);
 
         consumedFoodRepository.save(consumedFood);
 
         // 2. 오늘 날짜 기준 유저의 요약 정보 조회 (존재하지 않을 수 있음)
-        UserDailySummary summary = userDailySummaryService.findUserDailySummary(loginUser, today).orElse(null);
+        UserDailySummary summary = userDailySummaryService.findUserDailySummary(loginUser, date).orElse(null);
 
         // 3. 오늘 날짜에 기록된 전체 섭취 음식 조회 및 영양소 요약 계산
-        List<ConsumedFood> totalConsumedFoods = consumedFoodRepository.findAllByUserAndCreatedAtBetween(loginUser, startOfDay, endOfDay).orElseThrow(() -> new CustomException(ErrorType.NOT_FOUND_CONSUMED_FOOD));
+        List<ConsumedFood> totalConsumedFoods = consumedFoodRepository.findAllByUserAndRegisteredAt(loginUser, date).orElseThrow(() -> new CustomException(ErrorType.NOT_FOUND_CONSUMED_FOOD));
         DailyNutritionSummary nutritionSummary = new DailyNutritionSummary(totalConsumedFoods);
 
         // 4. 오늘 날짜에 적용할 최신 목표 정보 조회
-        UserTarget latestTarget = userTargetService.getLatestTargetBeforeOrOn(loginUser, today);
+        UserTarget latestTarget = userTargetService.getLatestTargetBeforeOrOn(loginUser, date);
 
         // 5. 오늘 요약 정보가 없으면 새로 생성, 있으면 갱신
         if (summary == null) {
-            userDailySummaryService.createUserDailySummary(loginUser, latestTarget, nutritionSummary);
+            userDailySummaryService.createUserDailySummary(loginUser, latestTarget, nutritionSummary, date);
         } else {
-            summary.setData(loginUser, latestTarget, nutritionSummary);
+            summary.setData(loginUser, latestTarget, nutritionSummary, date);
         }
     }
 
@@ -156,10 +149,10 @@ public class ConsumedFoodService {
         ConsumedFood consumedFood = consumedFoodRepository.findById(consumedFoodId).orElseThrow(() -> new CustomException(ErrorType.NOT_FOUND_CONSUMED_FOOD));
 
         //섭취한 날짜
-        LocalDate consumedFoodCreatedAt = consumedFood.getCreatedAt().toLocalDate();
+        LocalDate consumedFoodRegisteredAt = consumedFood.getRegisteredAt();
 
         //섭취한 음식 + 섭취한 날짜 정보를 보내주기 (UserDailySummaryService)에서 삭제
-        userDailySummaryService.decreaseUserDailySummary(loginUser, consumedFood, consumedFoodCreatedAt);
+        userDailySummaryService.decreaseUserDailySummary(loginUser, consumedFood, consumedFoodRegisteredAt);
 
         consumedFoodRepository.delete(consumedFood);
     }

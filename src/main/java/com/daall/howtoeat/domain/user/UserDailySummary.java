@@ -8,6 +8,9 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 @Entity
 @Getter
 @NoArgsConstructor
@@ -94,8 +97,11 @@ public class UserDailySummary extends Timestamped {
     @Column(nullable = false)
     private Double snackFat;
 
+    @Column(nullable = false)
+    private LocalDate registeredAt;
+
     //오늘 처음 음식들을 섭취 후 등록했을 때
-    public void setData(User loginUser, UserTarget userTarget, DailyNutritionSummary dailyNutritionSummary) {
+    public void setData(User loginUser, UserTarget userTarget, DailyNutritionSummary dailyNutritionSummary, LocalDate date) {
         this.user = loginUser;
         this.userTarget = userTarget;
         this.totalKcal = dailyNutritionSummary.getTotalKcal();
@@ -118,6 +124,7 @@ public class UserDailySummary extends Timestamped {
         this.snackCarbo = dailyNutritionSummary.getSnackCarbo();
         this.snackProtein = dailyNutritionSummary.getSnackProtein();
         this.snackFat = dailyNutritionSummary.getSnackFat();
+        this.registeredAt = date;
     }
 
     public void updateSummaryTarget(UserTarget target) {

@@ -42,13 +42,14 @@ public class ConsumedFoodController {
      * 섭취 음식 등록 (즐겨찾기)
      * @param requestDtoList - 섭취 음식에 필요한 데이터
      */
-    @PostMapping("/consumed-foods")
+    @PostMapping("/consumed-foods/{date}")
     public ResponseEntity<ResponseMessageDto> addConsumedFoods(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
-            @RequestBody @Valid List<ConsumedFoodsRequestDto> requestDtoList
+            @RequestBody @Valid List<ConsumedFoodsRequestDto> requestDtoList,
+            @PathVariable("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date
     ) {
         User loginUser = userDetails.getUser();
-        consumedFoodService.addConsumedFoods(loginUser, requestDtoList);
+        consumedFoodService.addConsumedFoods(loginUser, requestDtoList, date);
         SuccessType successType = SuccessType.ADD_CONSUMED_FOOD_SUCCESS;
         return ResponseEntity.status(successType.getHttpStatus()).body(new ResponseMessageDto(successType));
     }
@@ -58,7 +59,7 @@ public class ConsumedFoodController {
      *
      * @param requestDto - 섭취 음식에 필요한 데이터
      */
-    @PostMapping("/consumed-foods/search")
+    @PostMapping("/consumed-foods/from-search")
     public ResponseEntity<ResponseMessageDto> addConsumedFoodsBySearch(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
             @ModelAttribute @Valid ConsumedFoodsRequestDto requestDto,
