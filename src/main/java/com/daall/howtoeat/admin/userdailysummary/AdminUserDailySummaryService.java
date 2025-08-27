@@ -53,13 +53,11 @@ public class AdminUserDailySummaryService {
      *
      */
     public DailyMacrosWithDatesResponseDto getUserDailySummaryMacrosWithDates(Long userId, LocalDate date) {
-        LocalDateTime start = date.atStartOfDay();
-        LocalDateTime end   = date.atTime(LocalTime.MAX);
 
         User user = userService.getUser(userId);
 
         // 현재 날짜의 매크로
-        UserDailySummary summary = userDailySummaryRepository.findByUserAndCreatedAtBetween(user, start, end).orElse(null);
+        UserDailySummary summary = userDailySummaryRepository.findByUserAndRegisteredAt(user, date).orElse(null);
         UserTarget target = userTargetService.getLatestTargetBeforeOrOn(user, date);
 
         DailyConsumedMacrosResponseDto macros =
@@ -69,13 +67,13 @@ public class AdminUserDailySummaryService {
 
         // 이전 / 다음 날짜 조회
         String prevDate = userDailySummaryRepository
-                .findTopByUserAndCreatedAtBeforeOrderByCreatedAtDesc(user, start)
-                .map(s -> s.getCreatedAt().toLocalDate().toString())
+                .findTopByUserAndRegisteredAtBeforeOrderByRegisteredAtDesc(user, date)
+                .map(s -> s.getRegisteredAt().toString())
                 .orElse(null);
 
         String nextDate = userDailySummaryRepository
-                .findTopByUserAndCreatedAtAfterOrderByCreatedAtAsc(user, end)
-                .map(s -> s.getCreatedAt().toLocalDate().toString())
+                .findTopByUserAndRegisteredAtAfterOrderByRegisteredAtAsc(user, date)
+                .map(s -> s.getRegisteredAt().toString())
                 .orElse(null);
 
         List<String> dates = Arrays.asList(prevDate, nextDate);
@@ -91,11 +89,11 @@ public class AdminUserDailySummaryService {
      *
      */
     public DailySummariesByMealTimeResponseDto getUserDailySummaryByMealTimes(Long userId, LocalDate date) {
-        LocalDateTime start = date.atStartOfDay();
-        LocalDateTime end = date.atTime(23, 59, 59);
+//        LocalDateTime start = date.atStartOfDay();
+//        LocalDateTime end = date.atTime(23, 59, 59);
         User user = userService.getUser(userId);
 
-        UserDailySummary summary = userDailySummaryRepository.findByUserAndCreatedAtBetween(user, start, end).orElseThrow(() -> new CustomException(ErrorType.NOT_FOUND_USER_DAILY_SUMMARY));
+        UserDailySummary summary = userDailySummaryRepository.findByUserAndRegisteredAt(user, date).orElseThrow(() -> new CustomException(ErrorType.NOT_FOUND_USER_DAILY_SUMMARY));
 
         DailyConsumedMacrosByMealTimeResponseDto breakfast = new DailyConsumedMacrosByMealTimeResponseDto(summary, MealTime.BREAKFAST);
         DailyConsumedMacrosByMealTimeResponseDto lunch = new DailyConsumedMacrosByMealTimeResponseDto(summary, MealTime.LUNCH);
