@@ -3,9 +3,12 @@ package com.daall.howtoeat.admin.gym;
 import com.daall.howtoeat.admin.gym.dto.GymRequestDto;
 import com.daall.howtoeat.admin.gym.dto.GymResponseDto;
 import com.daall.howtoeat.admin.gym.dto.GymWithTrainerCountResponseDto;
+import com.daall.howtoeat.admin.ptmember.PtMemberService;
+import com.daall.howtoeat.admin.trainer.TrainerRepository;
 import com.daall.howtoeat.common.enums.ErrorType;
 import com.daall.howtoeat.common.exception.CustomException;
 import com.daall.howtoeat.domain.pt.Gym;
+import com.daall.howtoeat.domain.pt.Trainer;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -16,12 +19,13 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class GymService {
     private final GymRepository gymRepository;
+    private final TrainerRepository trainerRepository;
+    private final PtMemberService ptMemberService;
 
     public Page<GymWithTrainerCountResponseDto> getGyms(int page, int size, String name) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("id").ascending());
@@ -78,6 +82,13 @@ public class GymService {
         Gym gym = gymRepository.findById(gymId).orElseThrow(
                 ()-> new CustomException(ErrorType.NOT_FOUND_GYM)
         );
+
+        List<Trainer> trainers = trainerRepository.findAllByGym(gym);
+        for (Trainer trainer : trainers) {
+            ptMemberService.deletePtMemberByTrainer(trainer);
+        }
+
+        trainerRepository.deleteAllByGym(gym);
 
         gymRepository.delete(gym);
     }

@@ -1,6 +1,7 @@
 package com.daall.howtoeat.admin.ptmember;
 
 import com.daall.howtoeat.domain.pt.PtMember;
+import com.daall.howtoeat.domain.pt.Trainer;
 import com.daall.howtoeat.domain.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -13,4 +14,6 @@ public interface PtMemberRepository extends JpaRepository<PtMember, Long>, PtMem
 
     //회원탈퇴 시 연관관계 끊기
     void deleteAllByUser(User user);
+
+    void deleteAllByTrainer(Trainer trainer);
 }

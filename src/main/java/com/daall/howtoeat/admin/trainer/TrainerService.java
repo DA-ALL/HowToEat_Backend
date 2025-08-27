@@ -110,6 +110,7 @@ public class TrainerService {
         );
 
         s3Uploader.delete(trainer.getImageUrl());
+        ptMemberService.deletePtMemberByTrainer(trainer);
 
         trainerRepository.delete(trainer);
     }
