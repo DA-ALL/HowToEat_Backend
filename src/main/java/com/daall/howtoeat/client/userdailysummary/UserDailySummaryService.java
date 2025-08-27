@@ -30,15 +30,14 @@ public class UserDailySummaryService {
     private final UserTargetService userTargetService;
 
     public ArrayList<DailyKcalResponseDto> getDailyKcalSummaries(User user, LocalDate start_date, LocalDate end_date) {
-        LocalDateTime start = start_date.atStartOfDay();
-        LocalDateTime end = end_date.atTime(23, 59, 59);
 
-        List<UserDailySummary> dailySummaries = userDailySummaryRepository.findAllByUserAndCreatedAtBetween(user, start, end);
+
+        List<UserDailySummary> dailySummaries = userDailySummaryRepository.findAllByUserAndRegisteredAtBetween(user, start_date, end_date);
 
         ArrayList<DailyKcalResponseDto> responseDto = new ArrayList<>();
 
         for (UserDailySummary dailySummary : dailySummaries) {
-            LocalDate date = dailySummary.getCreatedAt().toLocalDate();
+            LocalDate date = dailySummary.getRegisteredAt();
             Double targetKcal = dailySummary.getUserTarget().getKcal();
             Double consumedKcal = dailySummary.getTotalKcal();
 
@@ -49,10 +48,8 @@ public class UserDailySummaryService {
     }
 
     public DailyConsumedMacrosResponseDto getDailyMacrosSummary(User user, LocalDate date) {
-        LocalDateTime start = date.atStartOfDay();
-        LocalDateTime end = date.atTime(LocalTime.MAX);
+        UserDailySummary summary = userDailySummaryRepository.findByUserAndRegisteredAt(user, date).orElse(null);
 
-        UserDailySummary summary = userDailySummaryRepository.findByUserAndCreatedAtBetween(user, start, end).orElse(null);
         UserTarget target = userTargetService.getLatestTargetBeforeOrOn(user, date);
 
         if (summary == null) {
@@ -76,10 +73,7 @@ public class UserDailySummaryService {
      * @return 선택한 날짜와 끼니에 대한 목표 및 섭취 탄단지 정보 DTO
      */
     public DailyConsumedMacrosByMealTimeResponseDto getMacrosByUserDateAndMealTime(User user, LocalDate date, MealTime mealTime) {
-        LocalDateTime start = date.atStartOfDay();
-        LocalDateTime end = date.atTime(LocalTime.MAX);
-
-        UserDailySummary summary = userDailySummaryRepository.findByUserAndCreatedAtBetween(user, start, end).orElse(null);
+        UserDailySummary summary = userDailySummaryRepository.findByUserAndRegisteredAt(user, date).orElse(null);
         UserTarget target = userTargetService.getLatestTargetBeforeOrOn(user, date);
 
         if(summary == null) {
@@ -98,10 +92,7 @@ public class UserDailySummaryService {
      * @return 오늘 날짜의 userDailySummary
      */
     public Optional<UserDailySummary> findUserDailySummary(User loginUser, LocalDate date) {
-        LocalDateTime start = date.atStartOfDay();
-        LocalDateTime end = date.atTime(LocalTime.MAX);
-
-        return userDailySummaryRepository.findByUserAndCreatedAtBetween(loginUser, start, end);
+        return userDailySummaryRepository.findByUserAndRegisteredAt(loginUser, date);
     }
 
     /**
@@ -110,9 +101,9 @@ public class UserDailySummaryService {
      * @param userTarget                음식 등록하는 날짜의 유저 타겟
      * @param dailyNutritionSummary     consumedFood에 기록되어있는 모든 음식들의 전체 칼로리 / 탄 / 단 / 지
      */
-    public void createUserDailySummary(User loginUser, UserTarget userTarget, DailyNutritionSummary dailyNutritionSummary) {
+    public void createUserDailySummary(User loginUser, UserTarget userTarget, DailyNutritionSummary dailyNutritionSummary, LocalDate date) {
         UserDailySummary userDailySummary = new UserDailySummary();
-        userDailySummary.setData(loginUser, userTarget, dailyNutritionSummary);
+        userDailySummary.setData(loginUser, userTarget, dailyNutritionSummary, date);
         userDailySummaryRepository.save(userDailySummary);
     }
 
@@ -125,10 +116,7 @@ public class UserDailySummaryService {
      */
     @Transactional
     public void decreaseUserDailySummary(User loginUser, ConsumedFood consumedFood, LocalDate consumedFoodDate) {
-        LocalDateTime startOfDay = consumedFoodDate.atStartOfDay();
-        LocalDateTime endOfDay = consumedFoodDate.atTime(LocalTime.MAX);
-
-        UserDailySummary userDailySummary = userDailySummaryRepository.findByUserAndCreatedAtBetween(loginUser, startOfDay, endOfDay).orElseThrow(() -> new CustomException(ErrorType.NOT_FOUND_USER_DAILY_SUMMARY));
+        UserDailySummary userDailySummary = userDailySummaryRepository.findByUserAndRegisteredAt(loginUser, consumedFoodDate).orElseThrow(() -> new CustomException(ErrorType.NOT_FOUND_USER_DAILY_SUMMARY));
 
         userDailySummary.decreaseMacros(consumedFood);
     }

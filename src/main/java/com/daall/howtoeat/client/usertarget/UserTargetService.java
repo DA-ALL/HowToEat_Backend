@@ -83,8 +83,13 @@ public class UserTargetService {
 
         UserTarget generatedTarget = generateUserTarget(userBodyInfo, loginUser);
 
+        UserDailySummary summary = userDailySummaryRepository.findByUserAndRegisteredAt(loginUser, today).orElse(null);
+
         if(userTarget.getCreatedAt().toLocalDate().equals(today)) {
             userTarget.updateTargetByHeightOrWeight(generatedTarget);
+            if(summary != null) {
+                summary.updateSummaryTarget(userTarget);
+            }
         } else {
             userTargetRepository.save(generatedTarget);
         }
@@ -102,10 +107,17 @@ public class UserTargetService {
 
         UserTarget generatedTarget = generateUserTarget(userBodyInfo, loginUser);
 
+        UserDailySummary summary = userDailySummaryRepository.findByUserAndRegisteredAt(loginUser, today).orElse(null);
+
         if(userTarget.getCreatedAt().toLocalDate().equals(today)) {
             userTarget.updateTargetByHeightOrWeight(generatedTarget);
+            if(summary != null) {
+                summary.updateSummaryTarget(userTarget);
+            }
+
         } else {
             userTargetRepository.save(generatedTarget);
+
         }
 
     }
@@ -120,7 +132,7 @@ public class UserTargetService {
 
         UserStat userStat = userStatRepository.findTopByUserOrderByIdDesc(loginUser).orElseThrow(() -> new CustomException(ErrorType.NOT_FOUND_USER_STAT));
 
-        UserDailySummary summary = userDailySummaryRepository.findByUserAndCreatedAtBetween(loginUser, start, end).orElse(null);
+        UserDailySummary summary = userDailySummaryRepository.findByUserAndRegisteredAt(loginUser, today).orElse(null);
 
         UserBodyInfo userBodyInfo = new UserBodyInfo(loginUser.getGender(), userStat.getHeight(), userStat.getWeight(), loginUser.getBirth(), requestDto.getUserActivityLevel(), requestDto.getUserGoal());
 
@@ -131,6 +143,7 @@ public class UserTargetService {
         } else {
             UserTarget newTarget = userTargetRepository.save(generatedTarget);
             if(summary != null) {
+                System.out.println("today = " + today);
                 summary.updateSummaryTarget(newTarget);
             }
         }

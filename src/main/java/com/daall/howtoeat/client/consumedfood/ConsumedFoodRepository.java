@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -17,7 +18,9 @@ import java.util.Optional;
 @Repository
 public interface ConsumedFoodRepository extends JpaRepository<ConsumedFood, Long> {
     List<ConsumedFood> findAllByUserAndCreatedAtBetweenAndMealTime(User user, LocalDateTime start, LocalDateTime end, MealTime mealTime);
+    List<ConsumedFood> findAllByUserAndRegisteredAtAndMealTime(User user, LocalDate date, MealTime mealTime);
     Optional<List<ConsumedFood>> findAllByUserAndCreatedAtBetween(User user, LocalDateTime start, LocalDateTime end);
+    Optional<List<ConsumedFood>> findAllByUserAndRegisteredAt(User user, LocalDate start);
     List<ConsumedFood> findAllByFavoriteFood(FavoriteFood favoriteFood);
     List<ConsumedFood> findByFavoriteFoodIn(List<FavoriteFood> favoriteFoods);
 

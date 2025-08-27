@@ -10,6 +10,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+
 @Entity
 @Getter
 @NoArgsConstructor
@@ -71,7 +73,10 @@ public class ConsumedFood extends Timestamped {
     @Column
     private String foodImageUrl;
 
-    public ConsumedFood(User loginUser, ConsumedFoodsRequestDto requestDto) {
+    @Column(nullable = false)
+    private LocalDate registeredAt;
+
+    public ConsumedFood(User loginUser, ConsumedFoodsRequestDto requestDto, LocalDate date) {
         this.user = loginUser;
         this.foodCode = requestDto.getFoodCode();
         this.foodType = requestDto.getFoodType();
@@ -85,9 +90,10 @@ public class ConsumedFood extends Timestamped {
         this.mealTime = requestDto.getMealTime();
         this.providedBy = requestDto.getProvidedBy();
         this.source = requestDto.getSource();
+        this.registeredAt = date;
     }
 
-    public ConsumedFood(User loginUser, ConsumedFoodsRequestDto requestDto, String imageUrl) {
+    public ConsumedFood(User loginUser, ConsumedFoodsRequestDto requestDto, String imageUrl, LocalDate date) {
         this.user = loginUser;
         this.foodCode = requestDto.getFoodCode();
         this.foodType = requestDto.getFoodType();
@@ -102,6 +108,7 @@ public class ConsumedFood extends Timestamped {
         this.providedBy = requestDto.getProvidedBy();
         this.source = requestDto.getSource();
         this.foodImageUrl = imageUrl;
+        this.registeredAt = date;
     }
 
     public void setFavoriteFood(FavoriteFood favoriteFood) {
