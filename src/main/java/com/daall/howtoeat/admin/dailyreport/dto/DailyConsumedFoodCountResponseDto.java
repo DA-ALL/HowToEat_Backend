@@ -11,8 +11,8 @@ public class DailyConsumedFoodCountResponseDto {
     private final LocalDate date;
     private final Long consumedFoodCount;
 
-    public DailyConsumedFoodCountResponseDto(DailyReport dailyReport) {
-        this.date = dailyReport.getCreatedAt().toLocalDate();
-        this.consumedFoodCount = dailyReport.getTodayConsumedFoodCount();
+    public DailyConsumedFoodCountResponseDto(LocalDate date, Long consumedFoodCount) {
+        this.date = date;
+        this.consumedFoodCount = consumedFoodCount;
     }
 }

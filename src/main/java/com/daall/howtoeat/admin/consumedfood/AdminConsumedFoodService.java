@@ -3,6 +3,7 @@ package com.daall.howtoeat.admin.consumedfood;
 import com.daall.howtoeat.admin.consumedfood.dto.ConsumedFoodResponseDto;
 import com.daall.howtoeat.admin.consumedfood.dto.ConsumedFoodsByDateResponseDto;
 import com.daall.howtoeat.admin.dailyreport.dto.ConsumedFoodStatisticsDto;
+import com.daall.howtoeat.admin.dailyreport.dto.DailyConsumedFoodCountResponseDto;
 import com.daall.howtoeat.client.consumedfood.ConsumedFoodRepository;
 import com.daall.howtoeat.client.user.UserService;
 import com.daall.howtoeat.common.enums.MealTime;
@@ -18,6 +19,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -93,5 +95,25 @@ public class AdminConsumedFoodService {
 
     public Long getConsumedFoodCountOfUser(User user){
         return consumedFoodRepository.countByUser(user);
+    }
+
+    public List<DailyConsumedFoodCountResponseDto> getConsumedFoodCountsBetween(LocalDate startDate, LocalDate endDate) {
+        List<DailyConsumedFoodCountResponseDto> dailyCounts = consumedFoodRepository.getDailyCounts(startDate, endDate);
+
+        // 2. 빠른 조회를 위해 Map으로 변환
+        Map<LocalDate, Long> countMap = dailyCounts.stream()
+                .collect(Collectors.toMap(DailyConsumedFoodCountResponseDto::getDate,
+                        DailyConsumedFoodCountResponseDto::getConsumedFoodCount));
+
+        // 3. startDate ~ endDate 까지 하루씩 돌면서 결과 채우기
+        List<DailyConsumedFoodCountResponseDto> filledCounts = new ArrayList<>();
+        LocalDate current = startDate;
+        while (!current.isAfter(endDate)) {
+            Long count = countMap.getOrDefault(current, 0L);
+            filledCounts.add(new DailyConsumedFoodCountResponseDto(current, count));
+            current = current.plusDays(1);
+        }
+
+        return filledCounts;
     }
 }

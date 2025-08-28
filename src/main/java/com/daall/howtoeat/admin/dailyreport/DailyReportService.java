@@ -7,9 +7,11 @@ import com.daall.howtoeat.admin.user.AdminUserService;
 import com.daall.howtoeat.domain.dailyreport.DailyReport;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -75,12 +77,6 @@ public class DailyReportService {
         LocalDate endDate = LocalDate.now();
         LocalDate startDate = endDate.minusDays(29);
 
-        List<DailyReport> reports = dailyReportRepository.findAllByCreatedAtBetweenOrderByCreatedAtAsc(
-                startDate.atStartOfDay(), endDate.plusDays(1).atStartOfDay()
-        );
-
-        return reports.stream()
-                .map(DailyConsumedFoodCountResponseDto::new)
-                .toList();
+        return adminConsumedFoodService.getConsumedFoodCountsBetween(startDate, endDate);
     }
 }

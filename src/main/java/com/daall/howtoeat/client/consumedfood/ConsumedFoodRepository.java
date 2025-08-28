@@ -1,5 +1,6 @@
 package com.daall.howtoeat.client.consumedfood;
 
+import com.daall.howtoeat.admin.dailyreport.dto.DailyConsumedFoodCountResponseDto;
 import com.daall.howtoeat.common.enums.MealTime;
 import com.daall.howtoeat.domain.consumedfood.ConsumedFood;
 import com.daall.howtoeat.domain.favoritefood.FavoriteFood;
@@ -37,4 +38,14 @@ public interface ConsumedFoodRepository extends JpaRepository<ConsumedFood, Long
     List<Object[]> countConsumedFoodsByUserIds(@Param("userIds") List<Long> userIds);
 
     Long countByUser(User user);
+
+    @Query("SELECT new com.daall.howtoeat.admin.dailyreport.dto.DailyConsumedFoodCountResponseDto(" +
+            "c.registeredAt, COUNT(c)) " +
+            "FROM ConsumedFood c " +
+            "WHERE c.registeredAt BETWEEN :startDate AND :endDate " +
+            "GROUP BY c.registeredAt " +
+            "ORDER BY c.registeredAt ASC")
+    List<DailyConsumedFoodCountResponseDto> getDailyCounts(@Param("startDate") LocalDate startDate,
+                                                           @Param("endDate") LocalDate endDate);
+
 }
