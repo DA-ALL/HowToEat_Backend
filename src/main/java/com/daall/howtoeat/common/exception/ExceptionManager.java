@@ -49,4 +49,11 @@ public class ExceptionManager {
         mav.setViewName("error/404");  // 404 에러 페이지 뷰 설정
         return mav;
     }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<?> handleUnexpectedException(Exception e) {
+        log.error("Unexpected error", e);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body("서버 내부 에러 발생");
+    }
 }
