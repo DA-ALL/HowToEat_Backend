@@ -53,7 +53,7 @@ public class AdminConsumedFoodService {
         List<ConsumedFoodResponseDto> snackConsumedFoods = new ArrayList<>();
 
         for(MealTime mealTime : MealTime.values()) {
-            List<ConsumedFood> consumedFoods = consumedFoodRepository.findAllByUserAndCreatedAtBetweenAndMealTime(user, start, end, mealTime);
+            List<ConsumedFood> consumedFoods = consumedFoodRepository.findAllByUserAndRegisteredAtAndMealTime(user, date, mealTime);
 
             for(ConsumedFood consumedFood : consumedFoods) {
                 if(mealTime.equals(MealTime.BREAKFAST)) {
