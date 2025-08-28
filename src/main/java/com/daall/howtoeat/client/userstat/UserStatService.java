@@ -1,6 +1,7 @@
 package com.daall.howtoeat.client.userstat;
 
 import com.daall.howtoeat.client.user.UserStatRepository;
+import com.daall.howtoeat.client.userdailysummary.UserDailySummaryRepository;
 import com.daall.howtoeat.client.userstat.dto.UserWeightResponseDto;
 import com.daall.howtoeat.client.usertarget.UserTargetService;
 import com.daall.howtoeat.client.user.dto.SignupRequestDto;
@@ -9,6 +10,7 @@ import com.daall.howtoeat.client.userstat.dto.UserWeightRequestDto;
 import com.daall.howtoeat.common.enums.ErrorType;
 import com.daall.howtoeat.common.exception.CustomException;
 import com.daall.howtoeat.domain.user.User;
+import com.daall.howtoeat.domain.user.UserDailySummary;
 import com.daall.howtoeat.domain.user.UserStat;
 import com.daall.howtoeat.domain.user.UserTarget;
 import jakarta.transaction.Transactional;
@@ -23,6 +25,7 @@ import java.util.List;
 public class UserStatService {
     private final UserStatRepository userStatRepository;
     private final UserTargetService userTargetService;
+    private final UserDailySummaryRepository userDailySummaryRepository;
 
     /**
      * 첫 회원가입 시, 유저 스탯 생성

@@ -12,6 +12,7 @@ import lombok.Getter;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Getter
 public class SignupRequestDto {
@@ -41,6 +42,15 @@ public class SignupRequestDto {
     @NotNull(message = "개인정보 처리에 동의하지 않으면 회원가입이 불가능합니다.")
     private LocalDateTime privacyAgreedAt;
 
+    @NotNull(message = "에러가 발생했습니다.")
+    private LocalTime breakfastTime;
+
+    @NotNull(message = "에러가 발생했습니다.")
+    private LocalTime lunchTime;
+
+    @NotNull(message = "에러가 발생했습니다.")
+    private LocalTime dinnerTime;
+
     // admin 계정생성에
     public SignupRequestDto(String name) {
         this.email = "admin";
@@ -57,5 +67,9 @@ public class SignupRequestDto {
         //어드민 계정 생성은 일단 동의 처리
         this.termsAgreedAt = LocalDateTime.now();
         this.privacyAgreedAt = LocalDateTime.now();
+        this.breakfastTime = LocalTime.of(7, 0);
+        this.lunchTime = LocalTime.of(13, 0);
+        this.dinnerTime = LocalTime.of(20, 0);
+
     }
 }

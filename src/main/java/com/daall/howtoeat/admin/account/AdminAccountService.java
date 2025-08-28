@@ -2,9 +2,20 @@ package com.daall.howtoeat.admin.account;
 
 import com.daall.howtoeat.admin.account.dto.AdminAccountRequestDto;
 import com.daall.howtoeat.admin.account.dto.AdminAccountResponseDto;
+import com.daall.howtoeat.admin.ptmember.PtMemberRepository;
+import com.daall.howtoeat.client.consumedfood.ConsumedFoodRepository;
+import com.daall.howtoeat.client.favoritefood.FavoriteFoodRepository;
 import com.daall.howtoeat.client.user.UserRepository;
+import com.daall.howtoeat.client.user.UserStatRepository;
+import com.daall.howtoeat.client.userdailysummary.UserDailySummaryRepository;
+import com.daall.howtoeat.client.userdailysummary.UserDailySummaryService;
+import com.daall.howtoeat.client.userstat.UserStatService;
+import com.daall.howtoeat.client.usertarget.UserTargetRepository;
 import com.daall.howtoeat.client.usertarget.UserTargetService;
 import com.daall.howtoeat.client.user.dto.SignupRequestDto;
+import com.daall.howtoeat.client.usesrmealschedule.UserMealScheduleRepository;
+import com.daall.howtoeat.client.usesrmealschedule.UserMealScheduleService;
+import com.daall.howtoeat.common.S3Uploader;
 import com.daall.howtoeat.common.enums.ErrorType;
 import com.daall.howtoeat.common.enums.SignupProvider;
 import com.daall.howtoeat.common.enums.UserRole;
@@ -24,7 +35,6 @@ import org.springframework.stereotype.Service;
 public class AdminAccountService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final UserTargetService userTargetService;
 
     @Transactional
     public void createAdminAccount(AdminAccountRequestDto requestDto) {
@@ -37,8 +47,6 @@ public class AdminAccountService {
         User newUser = new User(requestDto, encodedPassword);
 
         User savedUser = userRepository.save(newUser);
-
-        userTargetService.createTarget(new SignupRequestDto("admin"), savedUser);
     }
 
     public Page<AdminAccountResponseDto> getAdminAccounts(int page, int size) {

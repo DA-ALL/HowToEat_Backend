@@ -1,4 +1,4 @@
-package com.daall.howtoeat.admin.user.dto;
+package com.daall.howtoeat.admin.userdailysummary.dto;
 
 import com.daall.howtoeat.domain.user.UserDailySummary;
 import lombok.Getter;
@@ -12,7 +12,7 @@ public class DailyCaloriesSummaryDto {
     private final Double lunchKcal;
     private final Double dinnerKcal;
     private final Double snackKcal;
-    private final LocalDate createdAt;
+    private final LocalDate registeredAt;
 
     public DailyCaloriesSummaryDto(UserDailySummary userDailySummary) {
         this.id = userDailySummary.getId();
@@ -21,6 +21,6 @@ public class DailyCaloriesSummaryDto {
         this.lunchKcal = userDailySummary.getLunchKcal();
         this.dinnerKcal = userDailySummary.getDinnerKcal();
         this.snackKcal = userDailySummary.getSnackKcal();
-        this.createdAt = userDailySummary.getCreatedAt().toLocalDate();
+        this.registeredAt = userDailySummary.getRegisteredAt();
     }
 }
