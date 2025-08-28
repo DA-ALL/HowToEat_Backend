@@ -4,6 +4,7 @@ import com.daall.howtoeat.client.consumedfood.dto.ConsumedFoodByMealTimeResponse
 import com.daall.howtoeat.client.consumedfood.dto.ConsumedFoodDetailResponseDto;
 import com.daall.howtoeat.client.consumedfood.dto.ConsumedFoodsRequestDto;
 import com.daall.howtoeat.client.favoritefood.FavoriteFoodRepository;
+import com.daall.howtoeat.client.food.FoodService;
 import com.daall.howtoeat.client.usertarget.UserTargetService;
 import com.daall.howtoeat.client.userdailysummary.UserDailySummaryService;
 import com.daall.howtoeat.client.userdailysummary.dto.DailyNutritionSummary;
@@ -26,6 +27,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -35,6 +37,8 @@ public class ConsumedFoodService {
     private final UserDailySummaryService userDailySummaryService;
     private final UserTargetService userTargetService;
     private final S3Uploader s3Uploader;
+    private final FoodService foodService;
+
     /**
      * 섭취 음식 조회
      * @param loginUser 유저 정보
@@ -94,6 +98,14 @@ public class ConsumedFoodService {
         } else {
             summary.setData(loginUser, latestTarget, nutritionSummary, date);
         }
+
+        System.out.println("CF Service에서 시작");
+        // 6. Food의 selectedCount 증가
+        List<String> foodCodes = requestDtoList.stream()
+                .map(ConsumedFoodsRequestDto::getFoodCode)
+                .toList();
+
+        foodService.updateFoodsSelectedCountsByFoodCodes(foodCodes);
     }
 
     /**
@@ -104,6 +116,8 @@ public class ConsumedFoodService {
      */
     @Transactional
     public void addConsumedFood(User loginUser, ConsumedFoodsRequestDto requestDto, MultipartFile imageFile) throws IOException {
+        System.out.println("섭취음식등록 시작");
+
         LocalDate date = requestDto.getDate();
         LocalDateTime startOfDay = date.atStartOfDay();
         LocalDateTime endOfDay = date.atTime(23, 59, 59);
@@ -135,6 +149,12 @@ public class ConsumedFoodService {
         } else {
             summary.setData(loginUser, latestTarget, nutritionSummary, date);
         }
+
+        System.out.println("CF Service에서 시작");
+        // 6. Food의 selectedCount 증가
+        List<String> foodCodes = new ArrayList<>();
+        foodCodes.add(requestDto.getFoodCode());
+        foodService.updateFoodsSelectedCountsByFoodCodes(foodCodes);
     }
 
 

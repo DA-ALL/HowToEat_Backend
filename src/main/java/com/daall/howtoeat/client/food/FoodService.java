@@ -7,6 +7,7 @@ import com.daall.howtoeat.common.enums.FoodType;
 import com.daall.howtoeat.common.exception.CustomException;
 import com.daall.howtoeat.domain.food.Food;
 import info.debatty.java.stringsimilarity.JaroWinkler;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -68,6 +69,16 @@ public class FoodService {
         Page<FoodResponseDto> foodPage = new PageImpl<>(pageContent, pageable, sorted.size());
 
         return new ScrollResponseDto<>(pageContent, foodPage.hasNext());
+    }
+
+    @Transactional
+    public void updateFoodsSelectedCountsByFoodCodes(List<String> foodCodes){
+        System.out.println("foodCodes" + foodCodes);
+        List<Food> foods = foodRepository.findByFoodCodeIn(foodCodes);
+        System.out.println("foods" + foods);
+        for (Food food : foods) {
+            food.addSelectedCount();
+        }
     }
 
     private int foodTypeOrder(FoodType type) {

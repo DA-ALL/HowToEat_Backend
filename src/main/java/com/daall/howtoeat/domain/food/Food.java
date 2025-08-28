@@ -7,7 +7,6 @@ import com.daall.howtoeat.common.enums.FoodType;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.elasticsearch.annotations.Document;
 
 @Entity
 @Getter
@@ -67,6 +66,9 @@ public class Food extends Timestamped {
     @Column
     private Long selectedCount;
 
+    @Version
+    private Long version;
+
     public Food(AdminFoodRequestDto requestDto) {
         this.foodCode = "TEMP";
         this.foodType = requestDto.getFoodType();
@@ -117,5 +119,9 @@ public class Food extends Timestamped {
         this.providedBy = requestDto.getProvidedBy();
         this.isPerServing = requestDto.getIsPerServing();
         this.source = "User";
+    }
+
+    public void addSelectedCount(){
+        selectedCount++;
     }
 }
