@@ -82,14 +82,14 @@ public class SecurityConfig {
         http
             .authorizeHttpRequests((authorizeHttpRequests) ->
                 authorizeHttpRequests
+                    .requestMatchers(
+                        "/admin/login", "/signup", "oauth2/**",
+                        "/error"
+                    ).permitAll()
+                    .requestMatchers(HttpMethod.GET, "/admin/gyms/**", "/admin/trainers/**", "/admin/users/**").hasAnyAuthority(UserRole.ADMIN.getAuthority(), UserRole.MASTER.getAuthority())
+                    .requestMatchers("/admin/accounts/**", "/admin/gyms/**", "/admin/trainers/**", "/admin/users/**").hasAuthority(UserRole.MASTER.getAuthority())
+                    .requestMatchers("/admin/**").hasAnyAuthority(UserRole.ADMIN.getAuthority(), UserRole.MASTER.getAuthority())
                     .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
-                    .requestMatchers(HttpMethod.POST, "/signup").permitAll()
-                    .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                    .requestMatchers("/admin/login").permitAll()
-                    .requestMatchers("/login/**").permitAll()
-                    .requestMatchers("/oauth2/**").permitAll()
-                    .requestMatchers("/admin/accounts/**").hasAuthority(UserRole.MASTER.getAuthority())
-                    .requestMatchers(HttpMethod.PATCH,"/admin/users/**").hasAuthority(UserRole.MASTER.getAuthority())
                     .anyRequest().authenticated()
         );
         http
