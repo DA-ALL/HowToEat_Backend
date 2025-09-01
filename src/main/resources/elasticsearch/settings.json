@@ -1,0 +1,10 @@
+{
+  "analysis": {
+    "normalizer": {
+      "lower_ascii": {
+        "type": "custom",
+        "filter": ["lowercase", "asciifolding"]
+      }
+    }
+  }
+}

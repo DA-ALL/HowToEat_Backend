@@ -1,5 +1,6 @@
 package com.daall.howtoeat.client.food.dto;
 
+import com.daall.howtoeat.client.food.elastic.FoodDocument;
 import com.daall.howtoeat.domain.food.Food;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -29,6 +30,22 @@ public class FoodResponseDto {
         this.foodWeight = food.getFoodWeight();
         this.kcal = food.getKcal();
         this.type = food.getFoodType().name();
+        this.carbo = food.getCarbo();
+        this.protein = food.getProtein();
+        this.fat = food.getFat();
+        this.providedBy = food.getProvidedBy();
+        this.source = food.getSource();
+        this.isPerServing = food.getIsPerServing();
+        this.unit = food.getUnit();
+    }
+
+    public FoodResponseDto(FoodDocument food){
+        this.foodId = Long.valueOf(food.getId());
+        this.foodCode = food.getFoodCode();
+        this.foodName = food.getFoodName();
+        this.foodWeight = food.getFoodWeight();
+        this.kcal = food.getKcal();
+        this.type = food.getFoodType();
         this.carbo = food.getCarbo();
         this.protein = food.getProtein();
         this.fat = food.getFat();

@@ -5,6 +5,9 @@ spring:
     password: ${DATASOURCE_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
 
+  elasticsearch:
+    uris: http://localhost:9200
+
   security:
     oauth2:
       client:

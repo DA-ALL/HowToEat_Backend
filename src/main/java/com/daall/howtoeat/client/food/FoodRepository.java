@@ -28,4 +28,5 @@ public interface FoodRepository extends JpaRepository<Food, Long>, FoodRepositor
     @Query("SELECT f FROM Food f WHERE f.foodName LIKE %:raw% OR f.foodName LIKE %:trimmed%")
     List<Food> findByNameContainingVariants(@Param("raw") String raw, @Param("trimmed") String trimmed);
 
+    List<Food> findByFoodCodeIn(List<String> foodCodes);
 }

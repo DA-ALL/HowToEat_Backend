@@ -66,6 +66,9 @@ public class Food extends Timestamped {
     @Column
     private Long selectedCount;
 
+    @Version
+    private Long version;
+
     public Food(AdminFoodRequestDto requestDto) {
         this.foodCode = "TEMP";
         this.foodType = requestDto.getFoodType();
@@ -116,5 +119,9 @@ public class Food extends Timestamped {
         this.providedBy = requestDto.getProvidedBy();
         this.isPerServing = requestDto.getIsPerServing();
         this.source = "User";
+    }
+
+    public void addSelectedCount(){
+        selectedCount++;
     }
 }
