@@ -6,6 +6,8 @@ import com.daall.howtoeat.admin.food.dto.AdminFoodResponseDto;
 import com.daall.howtoeat.admin.food.dto.AdminFoodRequestDto;
 import com.daall.howtoeat.admin.food.dto.FoodShareRequestDto;
 import com.daall.howtoeat.client.food.FoodRepository;
+import com.daall.howtoeat.client.food.elastic.FoodDocument;
+import com.daall.howtoeat.client.food.elastic.FoodSearchRepository;
 import com.daall.howtoeat.common.enums.ErrorType;
 import com.daall.howtoeat.common.enums.FoodType;
 import com.daall.howtoeat.common.exception.CustomException;
@@ -25,6 +27,7 @@ public class AdminFoodService {
     private final FoodRepository foodRepository;
     private final AdminRecommendFoodService adminRecommendFoodService;
     private final AdminFavoriteFoodService adminFavoriteFoodService;
+    private final FoodSearchRepository foodSearchRepository;
 
     public Page<AdminFoodResponseDto> getFoods(int page, int size,String name, String orderBy, String foodType, String recommendation) {
         return foodRepository.searchFoods(page, size, name, orderBy, foodType, recommendation);
@@ -54,6 +57,8 @@ public class AdminFoodService {
         if(requestDto.getIsRecommended()){
             adminRecommendFoodService.createRecommendFood(newFood);
         }
+        // ElasticSearch 추가
+        foodSearchRepository.save(new FoodDocument(newFood));
     }
 
     @Transactional
@@ -68,6 +73,8 @@ public class AdminFoodService {
         } else {
             adminRecommendFoodService.deleteRecommendFood(food);
         }
+        // ElasticSearch 업데이트
+        foodSearchRepository.save(new FoodDocument(food));
     }
 
     @Transactional
@@ -77,6 +84,9 @@ public class AdminFoodService {
         //추천음식 처리
         adminRecommendFoodService.deleteRecommendFood(food);
         foodRepository.delete(food);
+
+        // ElasticSearch 삭제
+        foodSearchRepository.deleteById(food.getId());
     }
 
     public Food findById(Long foodId){
@@ -104,6 +114,9 @@ public class AdminFoodService {
         // 유저가 등록한 음식에 공유됨 처리
         FavoriteFood favoriteFood = adminFavoriteFoodService.findById(requestDto.getFavoriteFoodId());
         favoriteFood.updateShared();
+
+        // ElasticSearch 추가
+        foodSearchRepository.save(new FoodDocument(food));
     }
 
     public FoodStatisticsDto getFoodStatistics() {
