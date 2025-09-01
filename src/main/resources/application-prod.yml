@@ -11,6 +11,9 @@ spring:
     password: ${DATASOURCE_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
 
+  elasticsearch:
+    uris: http://es.howtoeat.ai.kr:9200
+
   security:
     oauth2:
       client:

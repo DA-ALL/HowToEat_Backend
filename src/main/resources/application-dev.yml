@@ -7,9 +7,6 @@ spring:
 
   elasticsearch:
     uris: http://localhost:9200
-    username: elastic
-    password: ekdhf1234
-
 
   security:
     oauth2:
