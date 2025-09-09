@@ -66,12 +66,17 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
             gender = attributes.get("gender") != null ? attributes.get("gender").toString() : null;
             profileImage = attributes.get("profile_image") != null ? attributes.get("profile_image").toString() : null;
         } else if ("apple".equals(provider)) {
-            String idToken = ((OidcUser) oAuth2User).getIdToken().getTokenValue();
-            DecodedJWT jwt = JWT.decode(idToken);
-            String givenName = jwt.getClaim("given_name").asString();
-            String familyName = jwt.getClaim("family_name").asString();
-            System.out.println("apple given name: " + givenName);
-            System.out.println("apple family name: " + familyName);
+            try {
+                String idToken = ((OidcUser) oAuth2User).getIdToken().getTokenValue();
+                DecodedJWT jwt = JWT.decode(idToken);
+                String givenName = jwt.getClaim("given_name").asString();
+                String familyName = jwt.getClaim("family_name").asString();
+
+                System.out.println("apple given name: " + givenName);
+                System.out.println("apple family name: " + familyName);
+            } catch (Exception e){
+                System.out.println("exception : " + e);
+            }
 
             email = attributes.get("email") != null ? attributes.get("email").toString() : null;
             name = attributes.get("name") != null ? attributes.get("name").toString() : null;
