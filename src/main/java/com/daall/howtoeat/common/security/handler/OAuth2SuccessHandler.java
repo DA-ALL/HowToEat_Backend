@@ -6,6 +6,8 @@ import com.daall.howtoeat.client.user.UserRepository;
 import com.daall.howtoeat.common.enums.ErrorType;
 import com.daall.howtoeat.common.security.jwt.JwtUtil;
 import com.daall.howtoeat.domain.user.User;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
@@ -67,13 +69,24 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
             profileImage = attributes.get("profile_image") != null ? attributes.get("profile_image").toString() : null;
         } else if ("apple".equals(provider)) {
             try {
-                String idToken = ((OidcUser) oAuth2User).getIdToken().getTokenValue();
-                DecodedJWT jwt = JWT.decode(idToken);
-                String givenName = jwt.getClaim("given_name").asString();
-                String familyName = jwt.getClaim("family_name").asString();
+                String userParam = request.getParameter("user");
 
-                System.out.println("apple given name: " + givenName);
-                System.out.println("apple family name: " + familyName);
+                ObjectMapper objectMapper = new ObjectMapper();
+                JsonNode userNode = objectMapper.readTree(userParam);
+                JsonNode nameNode = userNode.path("name");
+                String firstName = nameNode.path("firstName").asText(null);
+                String lastName = nameNode.path("lastName").asText(null);
+
+                System.out.println("apple first name: " + firstName);
+                System.out.println("apple first name: " + lastName);
+
+//                String idToken = ((OidcUser) oAuth2User).getIdToken().getTokenValue();
+//                DecodedJWT jwt = JWT.decode(idToken);
+//                String givenName = jwt.getClaim("given_name").asString();
+//                String familyName = jwt.getClaim("family_name").asString();
+
+//                System.out.println("apple given name: " + givenName);
+//                System.out.println("apple family name: " + familyName);
             } catch (Exception e){
                 System.out.println("exception : " + e);
             }
