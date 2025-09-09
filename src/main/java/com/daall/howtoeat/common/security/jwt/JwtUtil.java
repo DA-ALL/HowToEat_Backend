@@ -34,8 +34,8 @@ public class JwtUtil {
     public static final String BEARER_PREFIX = "Bearer ";
     // accessToken 만료 시간 (60분)
     private final long ACCESS_TOKEN_EXPIRE_TIME = 60 * 60 * 1000L;
-    // refreshToken 만료 시간 (2주)
-    private final long REFRESH_TOKEN_EXPIRE_TIME = 14 * 24 * 60 * 60 * 1000L;
+    // refreshToken 만료 시간 (1년)
+    private final long REFRESH_TOKEN_EXPIRE_TIME = 365L * 24 * 60 * 60 * 1000L; // 31,536,000,000 ms
 
     @Value("${jwt.secret.key}")
     private String secretKey;
@@ -116,6 +116,7 @@ public class JwtUtil {
             throw new CustomException(ErrorType.INVALID_JWT);
         } catch (ExpiredJwtException e) {
             log.error("Expired JWT token, 만료된 JWT token 입니다.");
+            throw new CustomException(ErrorType.EXPIRED_JWT);
         } catch (UnsupportedJwtException e) {
             log.error("Unsupported JWT token, 지원되지 않는 JWT 토큰 입니다.");
             throw new CustomException(ErrorType.INVALID_JWT);
@@ -123,7 +124,7 @@ public class JwtUtil {
             log.error("JWT claims is empty, 잘못된 JWT 토큰 입니다.");
             throw new CustomException(ErrorType.INVALID_JWT);
         }
-        return false;
+//        return false;
     }
 
     // 토큰에서 사용자 정보 가져오기
