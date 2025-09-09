@@ -63,10 +63,10 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
             gender = attributes.get("gender") != null ? attributes.get("gender").toString() : null;
             profileImage = attributes.get("profile_image") != null ? attributes.get("profile_image").toString() : null;
         } else if ("apple".equals(provider)) {
-            System.out.println("apple name = " + name);
-            System.out.println("apple email = " + email);
             email = attributes.get("email") != null ? attributes.get("email").toString() : null;
             name = attributes.get("name") != null ? attributes.get("name").toString() : null;
+            System.out.println("apple name = " + name);
+            System.out.println("apple email = " + email);
             profileImage = null; // Apple은 프로필 이미지 제공 안 함
         }
 
