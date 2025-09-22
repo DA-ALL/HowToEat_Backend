@@ -21,8 +21,8 @@ public class SignupRequestDto {
     private String email;
 
     @NotBlank(message = "이름을 입력해 주세요.")
-    @Pattern(regexp = "^[a-zA-Z가-힣]{1,}$",
-            message = "이름은 숫자나 특수문자를 포함할 수 없으며, 최소 1글자 이상이어야 합니다.")
+//    @Pattern(regexp = "^[a-zA-Z가-힣]{1,}$",
+//            message = "이름은 숫자나 특수문자를 포함할 수 없으며, 최소 1글자 이상이어야 합니다.")
     private String name;
 
     private LocalDate birthday;  // yyyy-MM-dd 형식

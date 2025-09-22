@@ -1,12 +1,17 @@
 package com.daall.howtoeat.common.security.handler;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import com.daall.howtoeat.client.user.UserRepository;
 import com.daall.howtoeat.common.enums.ErrorType;
 import com.daall.howtoeat.common.security.jwt.JwtUtil;
 import com.daall.howtoeat.domain.user.User;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
@@ -63,8 +68,21 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
             gender = attributes.get("gender") != null ? attributes.get("gender").toString() : null;
             profileImage = attributes.get("profile_image") != null ? attributes.get("profile_image").toString() : null;
         } else if ("apple".equals(provider)) {
+            String userParam = request.getParameter("user");
+            if (userParam != null) {
+                ObjectMapper objectMapper = new ObjectMapper();
+                JsonNode userNode = objectMapper.readTree(userParam);
+                JsonNode nameNode = userNode.path("name");
+                String firstName = nameNode.path("firstName").asText(null);
+                String lastName = nameNode.path("lastName").asText(null);
+
+                name = (lastName != null ? lastName : "") + (firstName != null ? firstName : "");
+            }
+
             email = attributes.get("email") != null ? attributes.get("email").toString() : null;
-            name = attributes.get("name") != null ? attributes.get("name").toString() : null;
+
+            System.out.println("apple name = " + name);
+            System.out.println("apple email = " + email);
             profileImage = null; // Apple은 프로필 이미지 제공 안 함
         }
 
