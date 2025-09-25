@@ -8,6 +8,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -134,38 +135,38 @@ public class UserDailySummary extends Timestamped {
     //섭취음식 삭제 시, 해당 음식값 감소
     public void decreaseMacros(ConsumedFood consumedFood) {
         MealTime mealTime = consumedFood.getMealTime();
-        this.totalKcal = this.totalKcal - consumedFood.getKcal();
-        this.totalCarbo = this.totalCarbo - consumedFood.getCarbo();
-        this.totalProtein = this.totalProtein - consumedFood.getProtein();
-        this.totalFat = this.totalFat - consumedFood.getFat();
-
+        this.totalKcal = Math.max(0.0, round(this.totalKcal - consumedFood.getKcal()));
+        this.totalCarbo = Math.max(0.0, round(this.totalCarbo - consumedFood.getCarbo()));
+        this.totalProtein = Math.max(0.0, round(this.totalProtein - consumedFood.getProtein()));
+        this.totalFat = Math.max(0.0, round(this.totalFat - consumedFood.getFat()));
         switch (mealTime) {
             case BREAKFAST -> {
-                this.breakfastKcal = round(this.getBreakfastKcal() - consumedFood.getKcal());
-                this.breakfastCarbo = round(this.getBreakfastCarbo() - consumedFood.getCarbo());
-                this.breakfastProtein = round(this.getBreakfastProtein() - consumedFood.getProtein());
-                this.breakfastFat = round(this.getBreakfastFat() - consumedFood.getFat());
+                this.breakfastKcal = Math.max(0.0, round(this.getBreakfastKcal() - consumedFood.getKcal()));
+                this.breakfastCarbo = Math.max(0.0, round(this.getBreakfastCarbo() - consumedFood.getCarbo()));
+                this.breakfastProtein = Math.max(0.0, round(this.getBreakfastProtein() - consumedFood.getProtein()));
+                this.breakfastFat = Math.max(0.0, round(this.getBreakfastFat() - consumedFood.getFat()));
             }
             case LUNCH -> {
-                this.lunchKcal = round(this.getLunchKcal() - consumedFood.getKcal());
-                this.lunchCarbo = round(this.getLunchCarbo() - consumedFood.getCarbo());
-                this.lunchProtein = round(this.getLunchProtein() - consumedFood.getProtein());
-                this.lunchFat = round(this.getLunchFat() - consumedFood.getFat());
+                this.lunchKcal = Math.max(0.0, round(this.getLunchKcal() - consumedFood.getKcal()));
+                this.lunchCarbo = Math.max(0.0, round(this.getLunchCarbo() - consumedFood.getCarbo()));
+                this.lunchProtein = Math.max(0.0, round(this.getLunchProtein() - consumedFood.getProtein()));
+                this.lunchFat = Math.max(0.0, round(this.getLunchFat() - consumedFood.getFat()));
             }
             case DINNER -> {
-                this.dinnerKcal = round(this.getDinnerKcal() - consumedFood.getKcal());
-                this.dinnerCarbo = round(this.getDinnerCarbo() - consumedFood.getCarbo());
-                this.dinnerProtein = round(this.getDinnerProtein() - consumedFood.getProtein());
-                this.dinnerFat = round(this.getDinnerFat() - consumedFood.getFat());
+                this.dinnerKcal = Math.max(0.0, round(this.getDinnerKcal() - consumedFood.getKcal()));
+                this.dinnerCarbo = Math.max(0.0, round(this.getDinnerCarbo() - consumedFood.getCarbo()));
+                this.dinnerProtein = Math.max(0.0, round(this.getDinnerProtein() - consumedFood.getProtein()));
+                this.dinnerFat = Math.max(0.0, round(this.getDinnerFat() - consumedFood.getFat()));
             }
             case SNACK -> {
-                this.snackKcal = round(this.getSnackKcal() - consumedFood.getKcal());
-                this.snackCarbo = round(this.getSnackCarbo() - consumedFood.getCarbo());
-                this.snackProtein = round(this.getSnackProtein() - consumedFood.getProtein());
-                this.snackFat = round(this.getSnackFat() - consumedFood.getFat());
+                this.snackKcal = Math.max(0.0, round(this.getSnackKcal() - consumedFood.getKcal()));
+                this.snackCarbo = Math.max(0.0, round(this.getSnackCarbo() - consumedFood.getCarbo()));
+                this.snackProtein = Math.max(0.0, round(this.getSnackProtein() - consumedFood.getProtein()));
+                this.snackFat = Math.max(0.0, round(this.getSnackFat() - consumedFood.getFat()));
             }
         }
     }
+
 
     //부동소수점 방지 - 소수점 둘째 자리에서 반올림
     private double round(double value) {
