@@ -1,6 +1,7 @@
 package com.daall.howtoeat.common.security.jwt;
 
 import com.daall.howtoeat.common.enums.ErrorType;
+import com.daall.howtoeat.common.enums.TokenType;
 import com.daall.howtoeat.common.enums.UserRole;
 import com.daall.howtoeat.common.exception.CustomException;
 import io.jsonwebtoken.*;
@@ -39,6 +40,8 @@ public class JwtUtil {
 
     @Value("${jwt.secret.key}")
     private String secretKey;
+    @Value("${COOKIE_SECURE}")
+    private boolean cookieSecure;
     private Key key;
     private final SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
 
@@ -107,7 +110,7 @@ public class JwtUtil {
         return null;
     }
 
-    public boolean validateToken(String token) {
+    public boolean validateToken(String token, TokenType tokenType) {
         try {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
             return true;
@@ -116,7 +119,11 @@ public class JwtUtil {
             throw new CustomException(ErrorType.INVALID_JWT);
         } catch (ExpiredJwtException e) {
             log.error("Expired JWT token, 만료된 JWT token 입니다.");
-            throw new CustomException(ErrorType.EXPIRED_JWT);
+            if (tokenType.equals(TokenType.ACCESS)){
+                return false;
+            } else {
+                throw new CustomException(ErrorType.EXPIRED_JWT);
+            }
         } catch (UnsupportedJwtException e) {
             log.error("Unsupported JWT token, 지원되지 않는 JWT 토큰 입니다.");
             throw new CustomException(ErrorType.INVALID_JWT);
@@ -124,7 +131,6 @@ public class JwtUtil {
             log.error("JWT claims is empty, 잘못된 JWT 토큰 입니다.");
             throw new CustomException(ErrorType.INVALID_JWT);
         }
-//        return false;
     }
 
     // 토큰에서 사용자 정보 가져오기
@@ -143,8 +149,7 @@ public class JwtUtil {
 
         ResponseCookie cookie = ResponseCookie.from("RefreshToken", tokenValue)
                 .httpOnly(true)
-                .secure(false) // HTTPS 환경에서만 사용
-//                .sameSite("None") // Strict? 나중에 테스트
+                .secure(cookieSecure) // HTTPS 환경에서만 사용
                 .path("/")
                 .maxAge(REFRESH_TOKEN_EXPIRE_TIME / 1000)
                 .build();

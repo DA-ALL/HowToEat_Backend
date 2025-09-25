@@ -1,6 +1,7 @@
 package com.daall.howtoeat.common.security.jwt;
 
 import com.daall.howtoeat.common.enums.ErrorType;
+import com.daall.howtoeat.common.enums.TokenType;
 import com.daall.howtoeat.common.enums.UserRole;
 import com.daall.howtoeat.common.exception.CustomException;
 import com.daall.howtoeat.common.security.UserDetailsImpl;
@@ -33,7 +34,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String path = request.getRequestURI();
-        System.out.println("path: " + path);
+
         // 로그인 요청은 토큰 검증하지 않음
         if ("/admin/login".equals(path) || "/signup".equals(path)) {
             filterChain.doFilter(request, response);
@@ -42,7 +43,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
         String accessToken = jwtUtil.getAccessTokenFromHeader(request);
 
-        if (StringUtils.hasText(accessToken) && jwtUtil.validateToken(accessToken)) {
+        if (StringUtils.hasText(accessToken) && jwtUtil.validateToken(accessToken, TokenType.ACCESS)) {
             authenticateWithAccessToken(accessToken);
         } else {
             // accessToken이 없거나 유효하지 않은 경우
@@ -72,7 +73,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             throw new CustomException(ErrorType.MISSING_REFRESH_TOKEN);
         }
 
-        if (!jwtUtil.validateToken(refreshToken)) {
+        if (!jwtUtil.validateToken(refreshToken, TokenType.REFRESH)) {
             throw new CustomException(ErrorType.INVALID_REFRESH_TOKEN);
         }
 
