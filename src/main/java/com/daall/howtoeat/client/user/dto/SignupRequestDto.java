@@ -31,7 +31,7 @@ public class SignupRequestDto {
     private Double weight;
     private UserGoal goal;
     private UserActivityLevel activityLevel;
-    private boolean isNextGym;
+    private Boolean isNextGym;
     @NotNull(message = "signup provider를 입력해 주세요.")
     private SignupProvider signupProvider;
     private String profileImageUrl;

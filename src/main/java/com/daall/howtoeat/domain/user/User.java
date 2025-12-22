@@ -76,7 +76,7 @@ public class User extends Timestamped {
         this.email = requestDto.getEmail();
         this.gender = requestDto.getGender();
         this.birth = requestDto.getBirthday();
-        this.isNextGym = requestDto.isNextGym();
+        this.isNextGym = requestDto.getIsNextGym();
         this.profileImageUrl = requestDto.getProfileImageUrl();
         this.userRole = UserRole.USER;
         this.userStatus = UserStatus.ACTIVATE;
