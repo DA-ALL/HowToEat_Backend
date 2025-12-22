@@ -36,7 +36,6 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          platforms: linux/amd64,linux/arm64
           tags: ${{ env.DOCKER_IMAGE_BACKEND }}:latest
 
       - name: Deploy to EC2 via SSH
